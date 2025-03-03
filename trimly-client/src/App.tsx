@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 // import { PublicRoutes } from "./components/routes/PublicRoutes";
 import { ToastContainer } from "react-toastify";
-import { ClientRoutes } from "./components/routes/ClientRoutes";
+import { ClientRoutes } from "./routes/ClientRoutes";
 import ScrollToTop from "./utils/ScrollToTop";
 
 function App() {
