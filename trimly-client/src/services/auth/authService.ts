@@ -1,0 +1,20 @@
+// import { userAxiosInstance } from "@/api/user.axios";
+import { authAxiosInstance } from "@/api/auth.axios";
+import { ILoginData, UserDTO } from "@/types/User";
+import { IAuthResponse, IAxiosResponse } from "@/types/Response";
+
+export const signup = async (user: UserDTO): Promise<IAxiosResponse> => {
+	const response = await authAxiosInstance.post<IAxiosResponse>(
+		"/signup",
+		user
+	);
+	return response.data;
+};
+
+export const signin = async (user: ILoginData): Promise<IAuthResponse> => {
+	const response = await authAxiosInstance.post<IAuthResponse>(
+		"/signin",
+		user
+	);
+	return response.data;
+};
