@@ -7,13 +7,16 @@ import "@fontsource/roboto/700.css";
 import "./index.css";
 import App from "./App.tsx";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { ToastContainer } from "./hooks/ui/providers/ToastContainer.tsx";
 
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
 		<QueryClientProvider client={queryClient}>
-			<App />
+			<ToastContainer>
+				<App />
+			</ToastContainer>
 		</QueryClientProvider>
 	</StrictMode>
 );

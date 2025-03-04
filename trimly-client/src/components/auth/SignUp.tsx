@@ -13,7 +13,7 @@ import { PublicHeader } from "../headers/PublicHeader";
 import OTPModal from "../modals/OTPModal";
 import { useSendOTPMutation } from "@/hooks/auth/useSendOTP";
 import { useVerifyOTPMutation } from "@/hooks/auth/useVerifyOTP";
-import { toast } from "react-toastify";
+import { useToaster } from "@/hooks/ui/useToaster";
 
 interface SignUpProps {
 	userType: UserRole;
@@ -30,6 +30,7 @@ const SignUp = ({ userType, onSubmit, setLogin }: SignUpProps) => {
 
 	const { mutate: sendVerificationOTP } = useSendOTPMutation();
 	const { mutate: verifyOTP } = useVerifyOTPMutation();
+	const { successToast, errorToast } = useToaster();
 
 	const submitRegister = () => {
 		onSubmit(userData);
@@ -48,27 +49,31 @@ const SignUp = ({ userType, onSubmit, setLogin }: SignUpProps) => {
 		setIsSending(() => true);
 		sendVerificationOTP(email ?? userData.email, {
 			onSuccess(data) {
-				toast.success(data.message);
+				successToast(data.message);
 				setIsSending(false);
+				handleOpenOTPModal();
 			},
 			onError(error: any) {
-				toast.error(error.response.data.message);
+				errorToast(error.response.data.message);
 				// handleCloseOTPModal();
 			},
 		});
 	};
 
 	const handleVerifyOTP = (otp: string) => {
-		verifyOTP({email: userData.email, otp}, {
-			onSuccess(data) {
-				toast.success(data.message)
-				submitRegister()
-				handleCloseOTPModal()
-			},
-			onError(error: any) {
-				toast.error(error.response.data.message)
+		verifyOTP(
+			{ email: userData.email, otp },
+			{
+				onSuccess(data) {
+					successToast(data.message);
+					submitRegister();
+					handleCloseOTPModal();
+				},
+				onError(error: any) {
+					errorToast(error.response.data.message);
+				},
 			}
-		})
+		);
 	};
 
 	const formik = useFormik({
@@ -84,7 +89,6 @@ const SignUp = ({ userType, onSubmit, setLogin }: SignUpProps) => {
 		onSubmit: (values) => {
 			setUserData(() => values);
 			handleSendOTP(values.email);
-			handleOpenOTPModal();
 		},
 	});
 
