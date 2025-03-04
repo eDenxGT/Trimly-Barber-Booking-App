@@ -1,28 +1,30 @@
+import { Request, Response } from "express";
+import { IVerifyOtpController } from "../../../entities/controllerInterfaces/auth/verify-otp.interface";
 import { inject, injectable } from "tsyringe";
-import { ISendOtpEmailController } from "../../../entities/controllerInterfaces/auth/send-otp-email.interface";
-import { ISendOtpEmailUseCase } from "../../../entities/useCaseInterfaces/auth/sent-otp-usecase.interface";
-import { CustomError } from "../../../entities/utils/custom.error";
-import { ZodError } from "zod";
+import { IVerifyOtpUseCase } from "./../../../entities/useCaseInterfaces/auth/verify-otp.usecase.interface";
+import { otpMailValidationSchema } from "./validations/otp-mail.validation.schema";
 import {
 	ERROR_MESSAGES,
 	HTTP_STATUS,
 	SUCCESS_MESSAGES,
 } from "../../../shared/constants";
-import { Request, Response } from "express";
+import { ZodError } from "zod";
+import { CustomError } from "../../../entities/utils/custom.error";
 
 @injectable()
-export class SendOtpEmailController implements ISendOtpEmailController {
+export class VerifyOtpController implements IVerifyOtpController {
 	constructor(
-		@inject("ISendOtpEmailUseCase")
-		private sendOtpEmailUseCase: ISendOtpEmailUseCase
+		@inject("IVerifyOtpUseCase") private verifyOtpUseCase: IVerifyOtpUseCase
 	) {}
 	async handle(req: Request, res: Response): Promise<void> {
 		try {
-			const { email } = req.body;
-			await this.sendOtpEmailUseCase.execute(email);
+			const { email, otp } = req.body;
+			const validatedData = otpMailValidationSchema.parse({ email, otp });
+			await this.verifyOtpUseCase.execute(validatedData);
+
 			res.status(HTTP_STATUS.OK).json({
-				message: SUCCESS_MESSAGES.OTP_SEND_SUCCESS,
 				success: true,
+				message: SUCCESS_MESSAGES.VERIFICATION_SUCCESS,
 			});
 		} catch (error) {
 			if (error instanceof ZodError) {
@@ -44,7 +46,7 @@ export class SendOtpEmailController implements ISendOtpEmailController {
 				});
 				return;
 			}
-			console.log("Error at Send-otp-controller", error);
+			console.log("Error at Verify-otp-controller", error);
 			res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
 				success: false,
 				message: ERROR_MESSAGES.SERVER_ERROR,

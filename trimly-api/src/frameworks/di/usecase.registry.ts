@@ -10,7 +10,7 @@ import { OtpBcrypt } from "../security/otp.bcrypt";
 import { ClientRegisterStrategy } from "../../useCases/auth/register-strategies/client-register.strategy";
 
 //* ====== UseCase Imports ====== *//
-import { IRegisterUserUseCase } from "../../entities/useCaseInterfaces/register-usecase.interface";
+import { IRegisterUserUseCase } from "../../entities/useCaseInterfaces/auth/register-usecase.interface";
 import { RegisterUserUseCase } from "../../useCases/auth/register-user.usecase";
 import { IOtpService } from "../../entities/services/otp-service.interface";
 import { OtpService } from "../../interfaceAdapters/services/otp.service";
@@ -19,7 +19,9 @@ import { EmailService } from "../../interfaceAdapters/services/email.service";
 import { IUserExistenceService } from "../../entities/services/user-existence-service.interface";
 import { UserExistenceService } from "../../interfaceAdapters/services/user-existence.service";
 import { SendOtpEmailUseCase } from "../../useCases/auth/send-otp-email.usecase";
-import { ISendOtpEmailUseCase } from "../../entities/useCaseInterfaces/sent-otp-usecase.interface";
+import { ISendOtpEmailUseCase } from "../../entities/useCaseInterfaces/auth/sent-otp-usecase.interface";
+import { IVerifyOtpUseCase } from "../../entities/useCaseInterfaces/auth/verify-otp.usecase.interface";
+import { VerifyOtpUseCase } from "../../useCases/auth/verify-otp.usecase";
 
 export class UseCaseRegistry {
 	static registerUseCases(): void {
@@ -31,6 +33,10 @@ export class UseCaseRegistry {
 		container.register<ISendOtpEmailUseCase>("ISendOtpEmailUseCase", {
 			useClass: SendOtpEmailUseCase,
 		});
+
+		container.register<IVerifyOtpUseCase>("IVerifyOtpUseCase", {
+			useClass: VerifyOtpUseCase
+		})
 
 		//* ====== Register Bcrypt ====== *//
 		container.register<IBcrypt>("IPasswordBcrypt", {

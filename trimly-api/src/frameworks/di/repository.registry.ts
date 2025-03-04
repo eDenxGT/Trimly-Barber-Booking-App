@@ -9,6 +9,7 @@ import { OtpRepository } from "../../interfaceAdapters/repositories/auth/otp.rep
 
 export class RepositoryRegistry {
 	static registerRepositories(): void {
+		//* ====== Register Repositories ====== *//
 		container.register<IClientRepository>("IClientRepository", {
 			useClass: ClientRepository,
 		});
