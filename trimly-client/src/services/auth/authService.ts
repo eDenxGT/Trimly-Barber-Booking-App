@@ -18,3 +18,20 @@ export const signin = async (user: ILoginData): Promise<IAuthResponse> => {
 	);
 	return response.data;
 };
+
+export const sendOtp = async (email: string): Promise<IAxiosResponse> => {
+	const response = await authAxiosInstance.post<IAxiosResponse>(
+		"/send-otp", {
+		email,
+	});
+	return response.data;
+};
+
+export const verifyOtp = async (data: { email: string; otp: string }): Promise<IAxiosResponse> => {
+	const response = await authAxiosInstance.post<IAxiosResponse>(
+		"/verify-otp",
+		data
+	);
+	return response.data;
+};
+

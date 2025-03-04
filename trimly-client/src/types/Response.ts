@@ -7,7 +7,7 @@ export interface IAxiosResponse {
 
 export interface IAuthResponse extends IAxiosResponse {
    user: {
-      _id: string;
+      id: string;
       firstName: string;
       lastName: string;
       email: string;

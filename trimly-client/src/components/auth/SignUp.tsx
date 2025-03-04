@@ -10,6 +10,10 @@ import { User } from "@/types/User";
 import { useFormik } from "formik";
 import { signupSchema } from "@/utils/validations/signup.validator";
 import { PublicHeader } from "../headers/PublicHeader";
+import OTPModal from "../modals/OTPModal";
+import { useSendOTPMutation } from "@/hooks/auth/useSendOTP";
+import { useVerifyOTPMutation } from "@/hooks/auth/useVerifyOTP";
+import { toast } from "react-toastify";
 
 interface SignUpProps {
 	userType: UserRole;
@@ -20,11 +24,52 @@ interface SignUpProps {
 const SignUp = ({ userType, onSubmit, setLogin }: SignUpProps) => {
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-	// const [userData, setUserData] = useState<User>({} as User);
+	const [isOTPModalOpen, setIsOTPModalOpen] = useState(false);
+	const [isSending, setIsSending] = useState(false);
+	const [userData, setUserData] = useState<User>({} as User);
 
-	// const submitRegister = () => {
-	// 	onSubmit(userData);
-	// };
+	const { mutate: sendVerificationOTP } = useSendOTPMutation();
+	const { mutate: verifyOTP } = useVerifyOTPMutation();
+
+	const submitRegister = () => {
+		onSubmit(userData);
+	};
+
+	const handleOpenOTPModal = () => {
+		setIsOTPModalOpen(true);
+	};
+
+	const handleCloseOTPModal = () => {
+		setIsSending(false);
+		setIsOTPModalOpen(false);
+	};
+
+	const handleSendOTP = (email?: string) => {
+		setIsSending(() => true);
+		sendVerificationOTP(email ?? userData.email, {
+			onSuccess(data) {
+				toast.success(data.message);
+				setIsSending(false);
+			},
+			onError(error: any) {
+				toast.error(error.response.data.message);
+				// handleCloseOTPModal();
+			},
+		});
+	};
+
+	const handleVerifyOTP = (otp: string) => {
+		verifyOTP({email: userData.email, otp}, {
+			onSuccess(data) {
+				toast.success(data.message)
+				submitRegister()
+				handleCloseOTPModal()
+			},
+			onError(error: any) {
+				toast.error(error.response.data.message)
+			}
+		})
+	};
 
 	const formik = useFormik({
 		initialValues: {
@@ -37,19 +82,16 @@ const SignUp = ({ userType, onSubmit, setLogin }: SignUpProps) => {
 		},
 		validationSchema: signupSchema,
 		onSubmit: (values) => {
-			console.log(values);
-			// setUserData(()=>values);
-			// console.log(userData);  
-			onSubmit(values)
-			// submitRegister();
+			setUserData(() => values);
+			handleSendOTP(values.email);
+			handleOpenOTPModal();
 		},
 	});
 
 	return (
 		<>
 			<PublicHeader />
-			<motion.div
-				className="min-h-screen flex flex-col md:flex-row">
+			<motion.div className="min-h-screen flex flex-col md:flex-row">
 				{/* Left Section with Image */}
 				<div className="hidden md:flex w-1/2 bg-[var(--bg-yellow)] relative overflow-hidden justify-center items-end">
 					<div className="absolute inset-0 pattern-bg opacity-10"></div>
@@ -77,7 +119,8 @@ const SignUp = ({ userType, onSubmit, setLogin }: SignUpProps) => {
 						className="max-w-md mx-auto w-full space-y-8">
 						<div className="text-center mb-8">
 							<h2 className="text-3xl font-bold tracking-tight">
-								Create your {userType === "client" ? '' : userType} account
+								Create your{" "}
+								{userType === "client" ? "" : userType} account
 							</h2>
 							<p className="text-muted-foreground mt-2">
 								Enter your details to get started
@@ -429,6 +472,13 @@ const SignUp = ({ userType, onSubmit, setLogin }: SignUpProps) => {
 					</motion.div>
 				</div>
 			</motion.div>
+			<OTPModal
+				isOpen={isOTPModalOpen}
+				onClose={handleCloseOTPModal}
+				onVerify={handleVerifyOTP}
+				onResend={handleSendOTP}
+				isSending={isSending}
+			/>
 		</>
 	);
 };
