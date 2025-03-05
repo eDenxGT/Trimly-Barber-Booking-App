@@ -46,6 +46,7 @@ export const ERROR_MESSAGES = {
 	CATEGORY_EXISTS: "Category Already Exists",
 	CATEGORY_NOT_FOUND: "Category Not Found",
 	INVALID_TOKEN: "Invalid token",
+	INVALID_ROLE: "Invalid user role",
 	INVALID_CREDENTIALS: "Invalid credentials provided.",
 	USER_NOT_FOUND: "User not found.",
 	ROUTE_NOT_FOUND: "Route not found",

@@ -5,14 +5,17 @@ import { AnimatePresence, motion } from "framer-motion";
 import SignUp from "@/components/auth/SignUp";
 import SignIn from "@/components/auth/SignIn";
 import { useToaster } from "@/hooks/ui/useToaster";
+import { useLoginMutation } from "@/hooks/auth/useLogin";
 
 export const ClientAuth = () => {
 	const [isLogin, setIsLogin] = useState(false);
+
+	const { mutate: loginClient } = useLoginMutation();
 	const { mutate: registerClient } = useRegisterMutation();
-	const { errorToast, successToast} = useToaster();
+
+	const { errorToast, successToast } = useToaster();
 
 	const handleSignUpSubmit = (data: Omit<User, "role">) => {
-		console.log(data);
 		registerClient(
 			{ ...data, role: "client" },
 			{
@@ -24,7 +27,17 @@ export const ClientAuth = () => {
 		setIsLogin(true);
 	};
 	const handleLoginSubmit = (data: Omit<ILoginData, "role">) => {
-		console.log(data);
+		loginClient(
+			{...data, role: "client"},
+			{
+				onSuccess: (data) => {
+					successToast(data.message);
+				},
+				onError: (error: any) => {
+					errorToast(error.response.data.message);
+				},
+			}
+		);
 	};
 
 	return (

@@ -5,6 +5,7 @@ import { container } from "tsyringe";
 import { RegisterUserController } from "../../interfaceAdapters/controllers/auth/register.controller";
 import { SendOtpEmailController } from "../../interfaceAdapters/controllers/auth/send-otp-email.controller";
 import { VerifyOtpController } from "../../interfaceAdapters/controllers/auth/verify-otp.controller";
+import { LoginUserController } from "../../interfaceAdapters/controllers/auth/login.controller";
 
 export class ControllerRegistry {
 	static registerControllers(): void {
@@ -12,6 +13,10 @@ export class ControllerRegistry {
 		container.register("RegisterUserController", {
 			useClass: RegisterUserController,
 		});
+
+		container.register("LoginUserController", {
+			useClass: LoginUserController
+		})
 		
 		container.register("SendOtpEmailController", {
 			useClass: SendOtpEmailController,
