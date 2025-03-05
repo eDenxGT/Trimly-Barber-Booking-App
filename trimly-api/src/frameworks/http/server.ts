@@ -10,6 +10,7 @@ import morgan from "morgan";
 import { AuthRoutes } from "../routes/auth/auth.route";
 import { config } from "../../shared/config";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../shared/constants";
+import { notFound } from "../../interfaceAdapters/middlewares/not-found.middleware";
 
 //* ====== Express App ====== *//
 export class Server {
@@ -57,12 +58,7 @@ export class Server {
 		this._app.use("/api/v1/auth", new AuthRoutes().router);
 		// this._app.use("/api/v1/pvt", new )
 
-		this._app.use("*", (req: Request, res: Response) => {
-			res.status(HTTP_STATUS.NOT_FOUND).json({
-				success: false,
-				message: ERROR_MESSAGES.ROUTE_NOT_FOUND,
-			});
-		});
+		this._app.use("*", notFound);
 	}
 
 	//* ====== Error Configurations ====== *//
