@@ -9,7 +9,6 @@ import morgan from "morgan";
 //* ====== Other Imports ====== *//
 import { AuthRoutes } from "../routes/auth/auth.route";
 import { config } from "../../shared/config";
-import { ERROR_MESSAGES, HTTP_STATUS } from "../../shared/constants";
 import { notFound } from "../../interfaceAdapters/middlewares/not-found.middleware";
 import { errorHandler } from "../../interfaceAdapters/middlewares/error.middleware";
 

@@ -1,3 +1,5 @@
+import { JwtPayload } from "jsonwebtoken"
+
 export interface ITokenService {
    generateAccessToken(payload: {
       id: string,
@@ -9,5 +11,5 @@ export interface ITokenService {
       email: string,
       role: string
    }): string
-   // verifyAccessToken(token: string): string | 
+   verifyAccessToken(token: string): string | JwtPayload | null
 }

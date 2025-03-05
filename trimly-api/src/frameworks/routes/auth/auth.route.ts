@@ -6,6 +6,7 @@ import {
 	sendOtpEmailController,
 	verifyOtpController,
 } from "../../di/resolver";
+import { verifyAuth } from "../../../interfaceAdapters/middlewares/auth.middleware";
 
 export class AuthRoutes extends BaseRoute {
 	constructor() {
@@ -15,7 +16,7 @@ export class AuthRoutes extends BaseRoute {
 		this.router.post("/signup", (req: Request, res: Response) => {
 			registerController.handle(req, res);
 		});
-		this.router.post("/signin", (req: Request, res: Response) => {
+		this.router.post("/signin", verifyAuth, (req: Request, res: Response) => {
 			console.log("LOgin req", req.body);
 			loginController.handle(req, res);
 		});

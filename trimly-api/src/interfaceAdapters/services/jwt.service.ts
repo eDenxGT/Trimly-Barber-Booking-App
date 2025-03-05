@@ -42,4 +42,12 @@ export class JWTService implements ITokenService {
 			expiresIn: this.refreshExpiresIn as ms.StringValue,
 		});
 	}
+	verifyAccessToken(token: string): JwtPayload | null {
+		try {
+			return jwt.verify(token, this.accessSecret) as JwtPayload;
+		} catch (error) {
+			console.error("Access token verification failed:", error);
+			return null;
+		}
+	}
 }

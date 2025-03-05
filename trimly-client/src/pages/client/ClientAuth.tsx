@@ -6,9 +6,12 @@ import SignUp from "@/components/auth/SignUp";
 import SignIn from "@/components/auth/SignIn";
 import { useToaster } from "@/hooks/ui/useToaster";
 import { useLoginMutation } from "@/hooks/auth/useLogin";
+import { useDispatch } from "react-redux";
+import { clientLogin } from "@/store/slices/client.slice";
 
 export const ClientAuth = () => {
 	const [isLogin, setIsLogin] = useState(false);
+	const dispatch = useDispatch();
 
 	const { mutate: loginClient } = useLoginMutation();
 	const { mutate: registerClient } = useRegisterMutation();
@@ -28,10 +31,11 @@ export const ClientAuth = () => {
 	};
 	const handleLoginSubmit = (data: Omit<ILoginData, "role">) => {
 		loginClient(
-			{...data, role: "client"},
+			{ ...data, role: "client" },
 			{
 				onSuccess: (data) => {
 					successToast(data.message);
+					dispatch(clientLogin(data.user));
 				},
 				onError: (error: any) => {
 					errorToast(error.response.data.message);

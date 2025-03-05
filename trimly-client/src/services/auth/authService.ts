@@ -16,6 +16,7 @@ export const signin = async (user: ILoginData): Promise<IAuthResponse> => {
 		"/signin",
 		user
 	);
+	console.log(response)
 	return response.data;
 };
 

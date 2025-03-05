@@ -28,6 +28,13 @@ export const config = {
 		REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN || "7d",
 	},
 
+	redis: {
+		REDIS_USERNAME: process.env.REDIS_USERNAME || "default",
+		REDIS_PASS: process.env.REDIS_PASS,
+		REDIS_HOST: process.env.REDIS_HOST,
+		REDIS_PORT: process.env.REDIS_PORT || "16807"
+	},
+
 	OtpExpiry: process.env.OTP_EXPIRY_IN_MINUTES || "2",
 
 	loggerStatus: process.env.LOGGER_STATUS || "dev",

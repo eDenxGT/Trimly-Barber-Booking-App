@@ -18,24 +18,25 @@ export const HTTP_STATUS = {
 } as const;
 
 export const SUCCESS_MESSAGES = {
-	BOOKING_SUCCESS: "Booking completed.",
-	CREATED: "Created successfully.",
-	LOGIN_SUCCESS: "Login successful.",
-	REGISTRATION_SUCCESS: "Registration completed successfully.",
+	BOOKING_SUCCESS: "Booking completed",
+	CREATED: "Created successfully",
+	LOGIN_SUCCESS: "Login successful",
+	REGISTRATION_SUCCESS: "Registration completed successfully",
 	OTP_SEND_SUCCESS: "OTP sent successfully",
-	LOGOUT_SUCCESS: "Logged out successfully.",
-	UPDATE_SUCCESS: "Updated successfully.",
-	DELETE_SUCCESS: "Deleted successfully.",
-	OPERATION_SUCCESS: "Operation completed successfully.",
-	PASSWORD_RESET_SUCCESS: "Password reset successfully.",
-	VERIFICATION_SUCCESS: "Verification completed successfully.",
-	DATA_RETRIEVED: "Data retrieved successfully.",
-	ACTION_SUCCESS: "Action performed successfully.",
+	LOGOUT_SUCCESS: "Logged out successfully",
+	UPDATE_SUCCESS: "Updated successfully",
+	DELETE_SUCCESS: "Deleted successfully",
+	OPERATION_SUCCESS: "Operation completed successfully",
+	PASSWORD_RESET_SUCCESS: "Password reset successfully",
+	VERIFICATION_SUCCESS: "Verification completed successfully",
+	DATA_RETRIEVED: "Data retrieved successfully",
+	ACTION_SUCCESS: "Action performed successfully",
 } as const;
 
 export const ERROR_MESSAGES = {
 	WRONG_ID: "Wrong ID",
 	TOKEN_EXPIRED: "Token Expired",
+	TOKEN_BLACKLISTED: "Token is Blacklisted",
 	EMAIL_NOT_FOUND: "Email Not Found",
 	FORBIDDEN:
 		"Access denied. You do not have permission to access this resource.",
