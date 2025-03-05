@@ -11,6 +11,7 @@ import { AuthRoutes } from "../routes/auth/auth.route";
 import { config } from "../../shared/config";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../shared/constants";
 import { notFound } from "../../interfaceAdapters/middlewares/not-found.middleware";
+import { errorHandler } from "../../interfaceAdapters/middlewares/error.middleware";
 
 //* ====== Express App ====== *//
 export class Server {
@@ -63,17 +64,7 @@ export class Server {
 
 	//* ====== Error Configurations ====== *//
 	private configureErrorHandling(): void {
-		this._app.use(
-			(err: any, req: Request, res: Response, next: NextFunction) => {
-				const statusCode: number = err.statusCode || 500;
-				const message = err.message || "Internal server error";
-				res.status(statusCode).json({
-					success: false,
-					statusCode,
-					message,
-				});
-			}
-		);
+		this._app.use(errorHandler);
 	}
 
 	//* ====== Get App ====== *//
