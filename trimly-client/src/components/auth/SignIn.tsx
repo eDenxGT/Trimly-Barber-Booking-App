@@ -214,8 +214,8 @@ const SignIn = ({ userType, onSubmit, setRegister }: SignInProps) => {
 							</Button>
 
 							{/* Social SignIn */}
-							<div className="text-center my-4 text-muted-foreground text-sm">
-								OR SIGN IN WITH
+							<div className="text-center my-4 text-muted-foreground text-xs">
+								OR
 							</div>
 							<Button
 								fullWidth

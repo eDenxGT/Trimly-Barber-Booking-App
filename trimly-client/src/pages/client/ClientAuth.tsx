@@ -8,10 +8,12 @@ import { useToaster } from "@/hooks/ui/useToaster";
 import { useLoginMutation } from "@/hooks/auth/useLogin";
 import { useDispatch } from "react-redux";
 import { clientLogin } from "@/store/slices/client.slice";
+import { useNavigate } from "react-router-dom";
 
 export const ClientAuth = () => {
 	const [isLogin, setIsLogin] = useState(false);
 	const dispatch = useDispatch();
+	const navigate = useNavigate()
 
 	const { mutate: loginClient } = useLoginMutation();
 	const { mutate: registerClient } = useRegisterMutation();
@@ -36,6 +38,7 @@ export const ClientAuth = () => {
 				onSuccess: (data) => {
 					successToast(data.message);
 					dispatch(clientLogin(data.user));
+					navigate("/home")
 				},
 				onError: (error: any) => {
 					errorToast(error.response.data.message);

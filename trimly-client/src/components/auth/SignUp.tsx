@@ -455,8 +455,8 @@ const SignUp = ({ userType, onSubmit, setLogin }: SignUpProps) => {
 							</Button>
 
 							{/* Social SignUp */}
-							<div className="text-center my-4 text-muted-foreground text-sm">
-								OR SIGN UP WITH
+							<div className="text-center my-4 text-muted-foreground text-xs">
+								OR
 							</div>
 							<Button
 								fullWidth

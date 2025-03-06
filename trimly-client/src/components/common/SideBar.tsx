@@ -1,248 +1,214 @@
-"use client"
-
-import * as React from "react"
-import { Calendar, Home, Users, Scissors, Settings, LogOut, Menu, BarChart3, Clock, User, CalendarDays } from 'lucide-react'
-import { FaChair } from "react-icons/fa"
-import { MdOutlineRateReview } from "react-icons/md"
-import { BiSolidOffer } from "react-icons/bi"
-
-import { UserRole } from "@/types/UserRoles"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { useEffect, useState } from "react";
+import { LogOut, ArrowLeftCircle } from "lucide-react";
+import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
-  SidebarProvider,
-  SidebarRail,
-  SidebarTrigger,
-} from "@/components/ui/sidebar"
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+	DialogFooter,
+} from "@/components/ui/dialog";
 
-interface AppSidebarProps {
-  userRole: UserRole
-  userName: string
-  userAvatar?: string
-  onLogout: () => void
+interface NavItemProps {
+	item: {
+		name: string;
+		path: string;
+		icon: React.ElementType;
+	};
+	isActive: boolean;
+	onClick: () => void;
 }
 
-export function AppSidebar({ 
-  userRole, 
-  userName, 
-  userAvatar, 
-  onLogout 
-}: AppSidebarProps) {
-  const nameInitial = userName.charAt(0).toUpperCase()
+const NavItem = ({ item, isActive, onClick }: NavItemProps) => {
+	const Icon = item.icon;
 
-  const getNavItems = () => {
-    const commonItems = [
-      {
-        title: "Dashboard",
-        icon: Home,
-        url: "/dashboard",
-      },
-      {
-        title: "Appointments",
-        icon: Calendar,
-        url: "/appointments",
-      },
-    ]
+	return (
+		<Link
+			to={item.path}
+			className={cn(
+				"flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
+				isActive
+					? "bg-[var(--yellow)] text-black font-medium"
+					: "text-gray-400 hover:bg-[#2a2a2a] hover:text-white"
+			)}
+			onClick={onClick}>
+			<Icon className="h-5 w-5" />
+			<span>{item.name}</span>
+		</Link>
+	);
+};
 
-    const adminItems = [
-      ...commonItems,
-      {
-        title: "Barbers",
-        icon: Scissors,
-        url: "/barbers",
-      },
-      {
-        title: "Clients",
-        icon: Users,
-        url: "/clients",
-      },
-      {
-        title: "Analytics",
-        icon: BarChart3,
-        url: "/analytics",
-        items: [
-          {
-            title: "Revenue",
-            url: "/analytics/revenue",
-          },
-          {
-            title: "Appointments",
-            url: "/analytics/appointments",
-          },
-          {
-            title: "Customer Retention",
-            url: "/analytics/retention",
-          },
-        ],
-      },
-      {
-        title: "Services",
-        icon: FaChair,
-        url: "/services",
-      },
-      {
-        title: "Promotions",
-        icon: BiSolidOffer,
-        url: "/promotions",
-      },
-      {
-        title: "Settings",
-        icon: Settings,
-        url: "/settings",
-      },
-    ]
+interface SidebarProps {
+	isVisible: boolean;
+	onClose: () => void;
+	handleLogout?: () => void;
+	className?: string;
+	navItems?: Array<{
+		name: string;
+		path: string;
+		icon: React.ElementType;
+	}>;
+}
 
-    const barberItems = [
-      ...commonItems,
-      {
-        title: "My Schedule",
-        icon: Clock,
-        url: "/schedule",
-      },
-      {
-        title: "My Clients",
-        icon: Users,
-        url: "/my-clients",
-      },
-      {
-        title: "Reviews",
-        icon: MdOutlineRateReview,
-        url: "/reviews",
-      },
-      {
-        title: "Settings",
-        icon: Settings,
-        url: "/settings",
-      },
-    ]
+export function AppSidebar({
+	isVisible,
+	onClose,
+	handleLogout,
+	className,
+	navItems = [],
+}: SidebarProps) {
+	const [activeIndex, setActiveIndex] = useState(0);
+	const [isConfirmationModalOpen, setIsConfirmationModalOpen] =
+		useState(false);
 
-    const clientItems = [
-      ...commonItems,
-      {
-        title: "Book Appointment",
-        icon: CalendarDays,
-        url: "/book",
-      },
-      {
-        title: "My Profile",
-        icon: User,
-        url: "/profile",
-      },
-      {
-        title: "Reviews",
-        icon: MdOutlineRateReview,
-        url: "/reviews",
-      },
-    ]
+	useEffect(() => {
+		if (typeof window !== "undefined") {
+			const storedIndex = localStorage.getItem("activeItem");
+			if (storedIndex) {
+				setActiveIndex(Number.parseInt(storedIndex, 10));
+			}
+		}
+	}, []);
 
-    switch (userRole) {
-      case "admin":
-        return adminItems
-      case "barber":
-        return barberItems
-      case "client":
-        return clientItems
-      default:
-        return commonItems
-    }
-  }
+	useEffect(() => {
+		if (typeof window !== "undefined") {
+			localStorage.setItem("activeItem", activeIndex.toString());
+		}
+	}, [activeIndex]);
 
-  const navItems = getNavItems()
+	// Lock body scroll when sidebar is open
+	useEffect(() => {
+		if (isVisible) {
+			document.body.style.overflow = "hidden";
+		} else {
+			document.body.style.overflow = "";
+		}
 
-  return (
-    <Sidebar collapsible="icon">
-      <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
-              <div className="flex items-center">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-[var(--yellow)] text-black">
-                  <Scissors className="size-4" />
-                </div>
-                <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-semibold">BarberBook</span>
-                  <span className="text-xs text-muted-foreground capitalize">{userRole}</span>
-                </div>
-              </div>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarHeader>
-      
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {navItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild tooltip={item.title}>
-                    <a href={item.url}>
-                      {typeof item.icon === 'function' ? (
-                        React.createElement(item.icon, { className: "size-4" })
-                      ) : (
-                        <Menu className="size-4" />
-                      )}
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                  
-                  {item.items && (
-                    <SidebarMenuSub>
-                      {item.items.map((subItem) => (
-                        <SidebarMenuSubItem key={subItem.title}>
-                          <SidebarMenuSubButton asChild>
-                            <a href={subItem.url}>{subItem.title}</a>
-                          </SidebarMenuSubButton>
-                        </SidebarMenuSubItem>
-                      ))}
-                    </SidebarMenuSub>
-                  )}
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-      
-      <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip="Profile">
-              <a href="/profile" className="flex items-center">
-                <Avatar className="size-6 mr-1">
-                  <AvatarImage src={userAvatar} alt={userName} />
-                  <AvatarFallback className="bg-[var(--yellow)] text-black">
-                    {nameInitial}
-                  </AvatarFallback>
-                </Avatar>
-                <span className="truncate">{userName}</span>
-              </a>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          
-          <SidebarMenuItem>
-            <SidebarMenuButton onClick={onLogout} tooltip="Logout">
-              <LogOut className="size-4" />
-              <span>Logout</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
-      
-      <SidebarRail />
-    </Sidebar>
-  )
+		return () => {
+			document.body.style.overflow = "";
+		};
+	}, [isVisible]);
+
+	const handleLogoutClick = () => {
+		setIsConfirmationModalOpen(true);
+	};
+
+	const onConfirmLogout = () => {
+		if (handleLogout) {
+			handleLogout();
+		}
+		setIsConfirmationModalOpen(false);
+		if (typeof window !== "undefined") {
+			localStorage.removeItem("activeItem");
+		}
+	};
+
+	return (
+		<>
+			{/* Overlay with AnimatePresence for smooth transitions */}
+			<AnimatePresence>
+				{isVisible && (
+					<motion.div
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						exit={{ opacity: 0 }}
+						transition={{ duration: 0.2 }}
+						className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+						onClick={onClose}
+					/>
+				)}
+			</AnimatePresence>
+
+			{/* Sidebar */}
+			<div
+				className={cn(
+					"fixed left-0 z-50 h-full w-64 transform transition-transform duration-300 ease-in-out",
+					isVisible ? "translate-x-0" : "-translate-x-full",
+					className
+				)}>
+				<div className="flex flex-col h-full bg-[#121212] border-r border-[#2a2a2a] shadow-[5px_0_15px_rgba(0,0,0,0.3)]">
+					{/* Sidebar Header */}
+					<div className="flex justify-between items-center px-6 py-3.5 border-b border-[#2a2a2a]">
+						<div className="flex items-center gap-2">
+							<img
+								src="/logo.svg"
+								alt="Logo"
+								className="w-7 h-7"
+							/>
+							<span className="text-2xl font-young text-white">
+								Trimly
+							</span>
+						</div>
+						<Button
+							variant="ghost"
+							size="icon"
+							onClick={onClose}
+							className="text-white hover:text-[var(--yellow)] hover:bg-transparent">
+							<ArrowLeftCircle className="h-6 w-6" />
+						</Button>
+					</div>
+
+					{/* Navigation Items */}
+					<nav className="flex-1 mt-1 px-3 overflow-y-auto">
+						<div className="space-y-1 py-2">
+							{navItems.map((item, index) => (
+								<NavItem
+									key={index}
+									item={item}
+									isActive={index === activeIndex}
+									onClick={() => {
+										setActiveIndex(index);
+										onClose();
+									}}
+								/>
+							))}
+						</div>
+					</nav>
+
+					{/* Logout Button */}
+					<div className="mt-auto p-4 border-t border-[#2a2a2a]">
+						<Button
+							variant="ghost"
+							className="w-full justify-start text-gray-400 hover:bg-red-600 hover:text-white"
+							onClick={handleLogoutClick}>
+							<LogOut className="h-5 w-5 mr-2" />
+							Sign-out
+						</Button>
+					</div>
+				</div>
+			</div>
+
+			{/* Confirmation Modal for Logout */}
+			<Dialog
+				open={isConfirmationModalOpen}
+				onOpenChange={setIsConfirmationModalOpen}>
+				<DialogContent className="sm:max-w-[425px] bg-[#1e1e1e] text-white border-[#2a2a2a]">
+					<DialogHeader>
+						<DialogTitle>Logout</DialogTitle>
+						<DialogDescription className="text-gray-400">
+							Are you sure you want to logout from Trimly?
+						</DialogDescription>
+					</DialogHeader>
+					<DialogFooter className="flex gap-2 sm:justify-end">
+						<Button
+							variant="outline"
+							onClick={() => setIsConfirmationModalOpen(false)}
+							className="border-[#2a2a2a] text-white hover:bg-[#2a2a2a] hover:text-white">
+							Cancel
+						</Button>
+						<Button
+							variant="destructive"
+							onClick={onConfirmLogout}
+							className="bg-red-600 hover:bg-red-700">
+							Logout
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
+		</>
+	);
 }

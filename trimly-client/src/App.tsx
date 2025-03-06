@@ -2,16 +2,17 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 // import { PublicRoutes } from "./components/routes/PublicRoutes";
 import { ClientRoutes } from "./routes/ClientRoutes";
 import ScrollToTop from "./utils/ScrollToTop";
+import UnauthorizedPage from "./pages/common/UnAuthorizedPage";
 
 function App() {
 	return (
 		<Router>
-      <ScrollToTop />
+			<ScrollToTop />
 			<Routes>
 				<Route path="/*" element={<ClientRoutes />} />
-        {/* <Route path="/barber/*" element={<VendorRoutes />} /> */}
-				{/* <Route path="/admin/*" element={<AdminRoutes />} />
-        <Route path="/unauthorized" element={<UnauthorizedPage />} /> */}
+				{/* <Route path="/barber/*" element={<VendorRoutes />} /> */}
+				{/* <Route path="/admin/*" element={<AdminRoutes />} />*/}
+				<Route path="/unauthorized" element={<UnauthorizedPage />} />
 			</Routes>
 		</Router>
 	);
