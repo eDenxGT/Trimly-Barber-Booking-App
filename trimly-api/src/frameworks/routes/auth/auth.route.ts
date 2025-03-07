@@ -1,5 +1,10 @@
+//* ====== Module Imports ====== *//
 import { Request, Response } from "express";
+
+//* ====== BaseRoute Import ====== *//
 import { BaseRoute } from "../base.route";
+
+//* ====== Controller Imports ====== *//
 import {
 	loginController,
 	registerController,

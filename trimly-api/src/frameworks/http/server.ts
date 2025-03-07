@@ -6,11 +6,16 @@ import express, { Application, NextFunction, Request, Response } from "express";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 
-//* ====== Other Imports ====== *//
-import { AuthRoutes } from "../routes/auth/auth.route";
+//* ====== Config Import ====== *//
 import { config } from "../../shared/config";
+
+//* ====== Middleware Imports ====== *//
 import { notFound } from "../../interfaceAdapters/middlewares/not-found.middleware";
 import { errorHandler } from "../../interfaceAdapters/middlewares/error.middleware";
+
+//* ====== Route Imports ====== *//
+import { AuthRoutes } from "../routes/auth/auth.route";
+import { PrivateRoutes } from "../routes/private/private.route";
 
 //* ====== Express App ====== *//
 export class Server {
@@ -56,7 +61,7 @@ export class Server {
 	//* ====== Routes Configurations ====== *//
 	private configureRoutes(): void {
 		this._app.use("/api/v1/auth", new AuthRoutes().router);
-		// this._app.use("/api/v1/pvt", new )
+		this._app.use("/api/v1/pvt", new PrivateRoutes().router)
 
 		this._app.use("*", notFound);
 	}

@@ -50,4 +50,20 @@ export class JWTService implements ITokenService {
 			return null;
 		}
 	}
+	verifyRefreshToken(token: string): string | JwtPayload | null {
+		try {
+			return jwt.verify(token, this.refreshSecret) as JwtPayload;
+		} catch (error) {
+			console.error("Access token verification failed:", error);
+			return null;
+		}
+	}
+	decodeAccessToken(token: string): JwtPayload | null {
+		try {
+			return jwt.decode(token) as JwtPayload;
+		} catch (error) {
+			console.error("Access token decoding failed", error);
+			return null;
+		}
+	}
 }

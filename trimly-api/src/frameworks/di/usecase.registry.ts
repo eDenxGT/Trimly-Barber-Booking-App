@@ -34,6 +34,8 @@ import { IGenerateTokenUseCase } from "../../entities/useCaseInterfaces/auth/gen
 import { GenerateTokenUseCase } from "../../useCases/auth/generate-token.usecase";
 import { IBlackListTokenUseCase } from "../../entities/useCaseInterfaces/auth/blacklist-token-usecase.interface";
 import { BlackListTokenUseCase } from "../../useCases/auth/blacklist-token.usecase";
+import { IRevokeRefreshTokenUseCase } from "../../entities/useCaseInterfaces/auth/revoke-refresh-token-usecase.interface";
+import { RevokeRefreshTokenUseCase } from "../../useCases/auth/revoke-refresh-token.usecase";
 
 export class UseCaseRegistry {
 	static registerUseCases(): void {
@@ -60,6 +62,10 @@ export class UseCaseRegistry {
 
 		container.register<IBlackListTokenUseCase>("IBlackListTokenUseCase", {
 			useClass: BlackListTokenUseCase
+		})
+
+		container.register<IRevokeRefreshTokenUseCase>("IRevokeRefreshTokenUseCase", {
+			useClass: RevokeRefreshTokenUseCase
 		})
 
 		//* ====== Register Bcrypts ====== *//

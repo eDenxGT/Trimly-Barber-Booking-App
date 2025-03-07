@@ -20,6 +20,7 @@ export class ClientRepository implements IClientRepository {
 	}
 
 	async findById(id: any): Promise<IClientEntity | null> {
+		console.log("Repository wirking")
 		const client = await ClientModel.findById(id).lean();
 		if (!client) return null;
 

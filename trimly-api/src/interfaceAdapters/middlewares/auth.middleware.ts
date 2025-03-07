@@ -44,7 +44,6 @@ export const verifyAuth = async (
 		const user = tokenService.verifyAccessToken(
 			token.access_token
 		) as CustomJwtPayload;
-		console.log(user);
 		if (!user || !user.id) {
 			res.status(HTTP_STATUS.UNAUTHORIZED).json({
 				message: ERROR_MESSAGES.UNAUTHORIZED_ACCESS,
@@ -78,8 +77,7 @@ const extractToken = (
 	req: Request
 ): { access_token: string; refresh_token: string } | null => {
 	const pathSegments = req.path.split("/");
-	const privateRouteIndex = pathSegments.indexOf("pvt");
-
+	const privateRouteIndex = pathSegments.indexOf("");
 	if (privateRouteIndex !== -1 && pathSegments[privateRouteIndex + 1]) {
 		const userType = pathSegments[privateRouteIndex + 1];
 		return {
@@ -101,12 +99,49 @@ export const authorizeRole = (allowedRoles: string[]) => {
 		const user = (req as CustomRequest).user;
 
 		if (!user || !allowedRoles.includes(user.role)) {
-			console.log("Role rejected");
 			res.status(HTTP_STATUS.FORBIDDEN).json({
 				success: false,
 				message: ERROR_MESSAGES.NOT_ALLOWED,
 				userRole: user ? user.role : "none",
 			});
 		}
+		next()
 	};
 };
+
+
+export const decodeToken = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+ ) => {
+	try {
+	  const token = extractToken(req);
+
+	  if (!token) {
+		 console.log("no token");
+		 res
+			.status(HTTP_STATUS.UNAUTHORIZED)
+			.json({ message: ERROR_MESSAGES.UNAUTHORIZED_ACCESS });
+		 return;
+	  }
+	  if (await isBlacklisted(token.access_token)) {
+		 console.log("token is black listed is worked");
+		 res
+			.status(HTTP_STATUS.FORBIDDEN)
+			.json({ message: "Token is blacklisted" });
+		 return;
+	  }
+ 
+	  const user = tokenService.decodeAccessToken(token?.access_token);
+	  console.log("decoded", user);
+	  (req as CustomRequest).user = {
+		 id: user?.id,
+		 email: user?.email,
+		 role: user?.role,
+		 access_token: token.access_token,
+		 refresh_token: token.refresh_token,
+	  };
+	  next();
+	} catch (error) {}
+ };

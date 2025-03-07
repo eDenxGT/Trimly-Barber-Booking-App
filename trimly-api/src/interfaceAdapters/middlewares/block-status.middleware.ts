@@ -11,13 +11,17 @@ import { clearAuthCookies } from "../../shared/utils/cookieHelper";
 export class BlockStatusMiddleware {
 	constructor(
 		@inject("IClientRepository")
-		private clientRepository: IClientRepository,
+		private readonly clientRepository: IClientRepository,
 		@inject("IBlackListTokenUseCase")
-		private blacklistTokenUseCase: IBlackListTokenUseCase,
+		private readonly blacklistTokenUseCase: IBlackListTokenUseCase,
 		@inject("IRevokeRefreshTokenUseCase")
-		private revokeTokenUseCase: IRevokeRefreshTokenUseCase
+		private readonly revokeRefreshTokenUseCase: IRevokeRefreshTokenUseCase
 	) {}
-	async checkStatus(req: CustomRequest, res: Response, next: NextFunction) {
+	checkStatus = async (
+		req: CustomRequest,
+		res: Response,
+		next: NextFunction
+	) => {
 		try {
 			if (!req.user) {
 				res.status(HTTP_STATUS.UNAUTHORIZED).json({
@@ -48,7 +52,9 @@ export class BlockStatusMiddleware {
 			if (status !== "active") {
 				await this.blacklistTokenUseCase.execute(req.user.access_token);
 
-				await this.revokeTokenUseCase.execute(req.user.refresh_token);
+				await this.revokeRefreshTokenUseCase.execute(
+					req.user.refresh_token
+				);
 
 				const accessTokenName = `${role}_access_token`;
 				const refreshTokenName = `${role}_refresh_token`;
@@ -59,6 +65,7 @@ export class BlockStatusMiddleware {
 				});
 				return;
 			}
+			next();
 		} catch (error) {
 			console.log("Block Status MiddleWare Error: ", error);
 			res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
@@ -67,5 +74,5 @@ export class BlockStatusMiddleware {
 			});
 			return;
 		}
-	}
+	};
 }

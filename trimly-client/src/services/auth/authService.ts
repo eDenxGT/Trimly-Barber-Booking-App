@@ -40,6 +40,6 @@ export const verifyOtp = async (data: {
 };
 
 export const logoutClient = async (): Promise<IAxiosResponse> => {
-	const response = await clientAxiosInstance.post("/client/logout");
+	const response = await clientAxiosInstance.post("/_cl/client/logout");
 	return response.data;
 };

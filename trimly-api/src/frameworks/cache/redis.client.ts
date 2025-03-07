@@ -1,20 +1,21 @@
-import { createClient } from 'redis';
-import { config } from '../../shared/config';
+import { createClient } from "redis";
+import { config } from "../../shared/config";
 
 const client = createClient({
-    username: config.redis.REDIS_USERNAME,
-    password: config.redis.REDIS_PASS,
-    socket: {
-        host: config.redis.REDIS_HOST,
-        port: parseInt(config.redis.REDIS_PORT)
-    }
+	username: config.redis.REDIS_USERNAME,
+	password: config.redis.REDIS_PASS,
+	socket: {
+		host: config.redis.REDIS_HOST,
+		port: parseInt(config.redis.REDIS_PORT),
+	},
 });
 
-client.on('error', (err) => console.log('Redis Client Error', err));
+client.on("error", (err) => console.log("Redis Client Error", err));
 
-(async ()=> {
-   await client.connect();
-   console.log("Redis connected successfully!📦")
-})()
+(async () => {
+	await client.connect();
+	console.log(`\t|          📦 Redis connected successfully!           |`);
+	//    console.log("Redis connected successfully!📦")
+})();
 
 export default client;

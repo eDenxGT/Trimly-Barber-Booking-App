@@ -1,8 +1,14 @@
 import { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { PrivateHeader } from "@/components/headers/PrivateHeader";
 import { AppSidebar } from "@/components/common/SideBar";
 import { UserRole } from "@/types/UserRoles";
+import { useLogout } from "@/hooks/auth/useLogout";
+import { logoutClient } from "@/services/auth/authService";
+import { useDispatch, useSelector } from "react-redux";
+import { clientLogout } from "@/store/slices/client.slice";
+import { useToaster } from "@/hooks/ui/useToaster";
+import { RootState } from "@/store/store";
 
 interface ClientLayoutProps {
 	userRole?: UserRole;
@@ -18,10 +24,23 @@ export const ClientLayout = ({
 }: ClientLayoutProps) => {
 	const [isSideBarVisible, setIsSideBarVisible] = useState(false);
 	const [notifications] = useState(2);
+	const { successToast, errorToast } = useToaster();
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	const user = useSelector((state: RootState) => state.client.client)
+	const { mutate: logoutReq } = useLogout(logoutClient);
 
 	const handleLogout = () => {
-		console.log("Logging out...");
-		// Add your logout logic here
+		logoutReq(undefined, {
+			onSuccess: (data) => {
+				dispatch(clientLogout());
+				successToast(data.message);
+				navigate("/")
+			},
+			onError: (err: any) => {
+				errorToast(err.response.data.message);
+			},
+		});
 	};
 
 	return (
@@ -31,7 +50,7 @@ export const ClientLayout = ({
 				className="z-40"
 				userName={userName}
 				userLocation={userLocation}
-        onLogout={handleLogout}
+				onLogout={handleLogout}
 				userAvatar={userAvatar}
 				notifications={notifications}
 				onSidebarToggle={() => setIsSideBarVisible(!isSideBarVisible)}

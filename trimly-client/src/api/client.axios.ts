@@ -21,7 +21,7 @@ clientAxiosInstance.interceptors.response.use(
 			if (!isRefreshing) {
 				isRefreshing = true;
 				try {
-					await clientAxiosInstance.post("/client/refresh-token");
+					await clientAxiosInstance.post("/_cl/client/refresh-token");
 					isRefreshing = false;
 					return clientAxiosInstance(originalRequest);
 				} catch (refreshError) {
@@ -47,6 +47,7 @@ clientAxiosInstance.interceptors.response.use(
 					"Access denied: Your account has been blocked" &&
 				!originalRequest._retry)
 		) {
+			console.log("Session ended")
 			store.dispatch(clientLogout());
 
 			window.location.href = "/";
