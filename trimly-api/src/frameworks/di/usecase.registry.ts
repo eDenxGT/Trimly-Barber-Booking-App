@@ -25,13 +25,15 @@ import { IRegisterUserUseCase } from "../../entities/useCaseInterfaces/auth/regi
 import { RegisterUserUseCase } from "../../useCases/auth/register-user.usecase";
 import { SendOtpEmailUseCase } from "../../useCases/auth/send-otp-email.usecase";
 import { ISendOtpEmailUseCase } from "../../entities/useCaseInterfaces/auth/sent-otp-usecase.interface";
-import { IVerifyOtpUseCase } from "../../entities/useCaseInterfaces/auth/verify-otp.usecase.interface";
+import { IVerifyOtpUseCase } from "../../entities/useCaseInterfaces/auth/verify-otp-usecase.interface";
 import { VerifyOtpUseCase } from "../../useCases/auth/verify-otp.usecase";
 import { ILoginUserUseCase } from "../../entities/useCaseInterfaces/auth/login-usecase.interface";
 import { LoginUserUseCase } from "../../useCases/auth/login-user.usecase";
 import { ITokenService } from "../../entities/services/token-service.interface";
-import { IGenerateTokenUseCase } from "../../entities/useCaseInterfaces/auth/generate-token.interface";
+import { IGenerateTokenUseCase } from "../../entities/useCaseInterfaces/auth/generate-token-usecase.interface";
 import { GenerateTokenUseCase } from "../../useCases/auth/generate-token.usecase";
+import { IBlackListTokenUseCase } from "../../entities/useCaseInterfaces/auth/blacklist-token-usecase.interface";
+import { BlackListTokenUseCase } from "../../useCases/auth/blacklist-token.usecase";
 
 export class UseCaseRegistry {
 	static registerUseCases(): void {
@@ -54,6 +56,10 @@ export class UseCaseRegistry {
 
 		container.register<IGenerateTokenUseCase>("IGenerateTokenUseCase", {
 			useClass: GenerateTokenUseCase
+		})
+
+		container.register<IBlackListTokenUseCase>("IBlackListTokenUseCase", {
+			useClass: BlackListTokenUseCase
 		})
 
 		//* ====== Register Bcrypts ====== *//

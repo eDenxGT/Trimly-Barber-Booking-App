@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { IVerifyOtpController } from "../../../entities/controllerInterfaces/auth/verify-otp.interface";
 import { inject, injectable } from "tsyringe";
-import { IVerifyOtpUseCase } from "./../../../entities/useCaseInterfaces/auth/verify-otp.usecase.interface";
+import { IVerifyOtpUseCase } from "../../../entities/useCaseInterfaces/auth/verify-otp-usecase.interface";
 import { otpMailValidationSchema } from "./validations/otp-mail.validation.schema";
 import {
 	ERROR_MESSAGES,

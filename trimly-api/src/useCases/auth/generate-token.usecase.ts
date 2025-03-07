@@ -1,5 +1,5 @@
 import { inject, injectable } from "tsyringe";
-import { IGenerateTokenUseCase } from "../../entities/useCaseInterfaces/auth/generate-token.interface";
+import { IGenerateTokenUseCase } from "../../entities/useCaseInterfaces/auth/generate-token-usecase.interface";
 import { ITokenService } from "../../entities/services/token-service.interface";
 import { IRefreshTokenRepository } from "../../entities/repositoryInterfaces/auth/refresh-token-repository.interface";
 import { TRole } from "../../shared/constants";

@@ -23,3 +23,12 @@ export const setAuthCookies = (
 	});
 };
 
+export const clearAuthCookies = (
+	res: Response,
+	accessTokenName: string,
+	refreshTokenName: string
+ ) => {
+	res.clearCookie(accessTokenName);
+	res.clearCookie(refreshTokenName);
+ };
+ 

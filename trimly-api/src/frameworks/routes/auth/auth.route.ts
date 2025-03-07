@@ -6,7 +6,6 @@ import {
 	sendOtpEmailController,
 	verifyOtpController,
 } from "../../di/resolver";
-import { verifyAuth } from "../../../interfaceAdapters/middlewares/auth.middleware";
 
 export class AuthRoutes extends BaseRoute {
 	constructor() {

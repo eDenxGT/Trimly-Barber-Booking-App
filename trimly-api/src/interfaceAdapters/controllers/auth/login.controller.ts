@@ -11,7 +11,7 @@ import {
 import { CustomError } from "../../../entities/utils/custom.error";
 import { LoginUserDTO } from "../../../shared/dtos/user.dto";
 import { loginSchema } from "./validations/user-login.validation.schema";
-import { IGenerateTokenUseCase } from "../../../entities/useCaseInterfaces/auth/generate-token.interface";
+import { IGenerateTokenUseCase } from "../../../entities/useCaseInterfaces/auth/generate-token-usecase.interface";
 import { setAuthCookies } from "../../../shared/utils/cookieHelper";
 
 @injectable()
