@@ -1,48 +1,51 @@
-import { useRegisterMutation } from "@/hooks/auth/useRegister";
-import { ILoginData, User } from "@/types/User";
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import SignUp from "@/components/auth/SignUp";
 import SignIn from "@/components/auth/SignIn";
-import { useToaster } from "@/hooks/ui/useToaster";
+import SignUp from "@/components/auth/SignUp";
 import { useLoginMutation } from "@/hooks/auth/useLogin";
+import { useRegisterMutation } from "@/hooks/auth/useRegister";
+import { useToaster } from "@/hooks/ui/useToaster";
+import { barberLogin } from "@/store/slices/barber.slice";
+import { ILoginData, User } from "@/types/User";
+import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { clientLogin } from "@/store/slices/client.slice";
 import { useNavigate } from "react-router-dom";
 
-export const ClientAuth = () => {
+const BarberAuth = () => {
 	const [isLogin, setIsLogin] = useState(true);
-	const dispatch = useDispatch();
-	const navigate = useNavigate()
 
-	const { mutate: loginClient } = useLoginMutation();
-	const { mutate: registerClient } = useRegisterMutation();
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+
+	const { mutate: registerBarber } = useRegisterMutation();
+	const { mutate: loginBarber } = useLoginMutation();
 
 	const { errorToast, successToast } = useToaster();
 
 	const handleSignUpSubmit = (data: Omit<User, "role">) => {
-		registerClient(
-			{ ...data, role: "client" },
+		registerBarber(
+			{ ...data, role: "barber" },
 			{
 				onSuccess: (data) => successToast(data.message),
 				onError: (error: any) =>
 					errorToast(error.response.data.message),
 			}
 		);
-		setIsLogin(true);
 	};
+
 	const handleLoginSubmit = (data: Omit<ILoginData, "role">) => {
-		loginClient(
-			{ ...data, role: "client" },
+		loginBarber(
+			{
+				...data,
+				role: "barber",
+			},
 			{
 				onSuccess: (data) => {
 					successToast(data.message);
-					dispatch(clientLogin(data.user));
-					navigate("/home")
+					dispatch(barberLogin(data.user));
+					navigate("/barber/dashboard");
 				},
-				onError: (error: any) => {
-					errorToast(error.response.data.message);
-				},
+				onError: (error: any) =>
+					errorToast(error.response.data.message),
 			}
 		);
 	};
@@ -58,13 +61,13 @@ export const ClientAuth = () => {
 					transition={{ duration: 0.5 }}>
 					{isLogin ? (
 						<SignIn
-							userType="client"
+							userType="barber"
 							onSubmit={handleLoginSubmit}
 							setRegister={() => setIsLogin(false)}
 						/>
 					) : (
 						<SignUp
-							userType="client"
+							userType="barber"
 							onSubmit={handleSignUpSubmit}
 							setLogin={() => setIsLogin(true)}
 						/>
@@ -74,3 +77,5 @@ export const ClientAuth = () => {
 		</>
 	);
 };
+
+export default BarberAuth;

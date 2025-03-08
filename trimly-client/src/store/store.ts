@@ -1,6 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
 import clientReducer from "./slices/client.slice";
+import barberReducer from "./slices/barber.slice";
 import { persistStore } from "redux-persist";
 import persistReducer from "redux-persist/es/persistReducer";
 
@@ -9,8 +10,14 @@ const clientPersistConfig = {
 	storage,
 };
 
+const barberPersistConfig = {
+	key: "barber",
+	storage,
+};
+
 const rootReducer = combineReducers({
 	client: persistReducer(clientPersistConfig, clientReducer),
+	barber: persistReducer(barberPersistConfig, barberReducer),
 });
 
 export const store = configureStore({
@@ -20,7 +27,7 @@ export const store = configureStore({
 			serializableCheck: {
 				ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
 			},
-		}),	
+		}),
 });
 
 export const persistor = persistStore(store);

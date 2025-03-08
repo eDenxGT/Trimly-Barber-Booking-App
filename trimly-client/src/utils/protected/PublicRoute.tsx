@@ -18,3 +18,17 @@ export const NoAuthRoute = ({ element }: NoAuthRouteProps) => {
 
   return element;
 };
+
+export const NoBarberAuthRoute = ({ element }: NoAuthRouteProps) => {
+  const user = useSelector((state: RootState) => state.barber.barber);
+
+  if (user && user?.role !== "barber") {
+    return <Navigate to={"/unauthorized"} />;
+  }
+
+  if (user) {
+    return <Navigate to="/barber/dashboard" />;
+  }
+
+  return element;
+};

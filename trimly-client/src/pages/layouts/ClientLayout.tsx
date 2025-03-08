@@ -48,7 +48,7 @@ export const ClientLayout = ({
 			{/* Header */}
 			<PrivateHeader
 				className="z-40"
-				userName={userName}
+				userName={user?.firstName}
 				userLocation={userLocation}
 				onLogout={handleLogout}
 				userAvatar={userAvatar}
