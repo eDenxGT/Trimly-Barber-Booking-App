@@ -29,7 +29,7 @@ export class ClientLoginStrategy implements ILoginStrategy {
 			);
 		}
 		if (user.password) {
-			const isPasswordMatch = this.passwordBcrypt.compare(
+			const isPasswordMatch = await this.passwordBcrypt.compare(
 				user.password,
 				client.password
 			);
