@@ -26,7 +26,6 @@ export const verifyAuth = async (
 	try {
 		const token = extractToken(req);
 		if (!token) {
-			console.log("No token provided");
 			res.status(HTTP_STATUS.UNAUTHORIZED).json({
 				success: false,
 				message: ERROR_MESSAGES.UNAUTHORIZED_ACCESS,
@@ -34,7 +33,6 @@ export const verifyAuth = async (
 			return;
 		}
 		if (await isBlacklisted(token.access_token)) {
-			console.log("is blacklisted worked");
 			res.status(HTTP_STATUS.FORBIDDEN).json({
 				success: false,
 				message: ERROR_MESSAGES.TOKEN_BLACKLISTED,
@@ -58,7 +56,7 @@ export const verifyAuth = async (
 		next();
 	} catch (error: any) {
 		if (error.name === "TokenExpiredError") {
-			console.log("token is expired is worked");
+			console.log(error.name);
 			res.status(HTTP_STATUS.UNAUTHORIZED).json({
 				message: ERROR_MESSAGES.TOKEN_EXPIRED,
 			});
@@ -105,43 +103,42 @@ export const authorizeRole = (allowedRoles: string[]) => {
 				userRole: user ? user.role : "none",
 			});
 		}
-		next()
+		next();
 	};
 };
-
 
 export const decodeToken = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
- ) => {
+) => {
 	try {
-	  const token = extractToken(req);
+		const token = extractToken(req);
 
-	  if (!token) {
-		 console.log("no token");
-		 res
-			.status(HTTP_STATUS.UNAUTHORIZED)
-			.json({ message: ERROR_MESSAGES.UNAUTHORIZED_ACCESS });
-		 return;
-	  }
-	  if (await isBlacklisted(token.access_token)) {
-		 console.log("token is black listed is worked");
-		 res
-			.status(HTTP_STATUS.FORBIDDEN)
-			.json({ message: "Token is blacklisted" });
-		 return;
-	  }
- 
-	  const user = tokenService.decodeAccessToken(token?.access_token);
-	  console.log("decoded", user);
-	  (req as CustomRequest).user = {
-		 id: user?.id,
-		 email: user?.email,
-		 role: user?.role,
-		 access_token: token.access_token,
-		 refresh_token: token.refresh_token,
-	  };
-	  next();
+		if (!token) {
+			console.log("no token");
+			res.status(HTTP_STATUS.UNAUTHORIZED).json({
+				message: ERROR_MESSAGES.UNAUTHORIZED_ACCESS,
+			});
+			return;
+		}
+		if (await isBlacklisted(token.access_token)) {
+			console.log("token is black listed is worked");
+			res.status(HTTP_STATUS.FORBIDDEN).json({
+				message: "Token is blacklisted",
+			});
+			return;
+		}
+
+		const user = tokenService.decodeAccessToken(token?.access_token);
+		console.log("decoded", user);
+		(req as CustomRequest).user = {
+			id: user?.id,
+			email: user?.email,
+			role: user?.role,
+			access_token: token.access_token,
+			refresh_token: token.refresh_token,
+		};
+		next();
 	} catch (error) {}
- };
+};

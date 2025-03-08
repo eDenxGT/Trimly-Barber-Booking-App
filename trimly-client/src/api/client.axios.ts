@@ -17,7 +17,6 @@ clientAxiosInstance.interceptors.response.use(
 
 		if (error.response?.status === 401 && !originalRequest._retry) {
 			originalRequest._retry = true;
-
 			if (!isRefreshing) {
 				isRefreshing = true;
 				try {
@@ -47,7 +46,7 @@ clientAxiosInstance.interceptors.response.use(
 					"Access denied: Your account has been blocked" &&
 				!originalRequest._retry)
 		) {
-			console.log("Session ended")
+			console.log("Session ended");
 			store.dispatch(clientLogout());
 
 			window.location.href = "/";

@@ -19,7 +19,6 @@ import { IUserExistenceService } from "../../entities/services/user-existence-se
 import { UserExistenceService } from "../../interfaceAdapters/services/user-existence.service";
 import { JWTService } from "../../interfaceAdapters/services/jwt.service";
 
-
 //* ====== UseCase Imports ====== *//
 import { IRegisterUserUseCase } from "../../entities/useCaseInterfaces/auth/register-usecase.interface";
 import { RegisterUserUseCase } from "../../useCases/auth/register-user.usecase";
@@ -36,6 +35,8 @@ import { IBlackListTokenUseCase } from "../../entities/useCaseInterfaces/auth/bl
 import { BlackListTokenUseCase } from "../../useCases/auth/blacklist-token.usecase";
 import { IRevokeRefreshTokenUseCase } from "../../entities/useCaseInterfaces/auth/revoke-refresh-token-usecase.interface";
 import { RevokeRefreshTokenUseCase } from "../../useCases/auth/revoke-refresh-token.usecase";
+import { IRefreshTokenUseCase } from "../../entities/useCaseInterfaces/auth/refresh-token-usecase.interface";
+import { RefreshTokenUseCase } from "../../useCases/auth/refresh-token.usecase";
 
 export class UseCaseRegistry {
 	static registerUseCases(): void {
@@ -57,16 +58,20 @@ export class UseCaseRegistry {
 		});
 
 		container.register<IGenerateTokenUseCase>("IGenerateTokenUseCase", {
-			useClass: GenerateTokenUseCase
-		})
+			useClass: GenerateTokenUseCase,
+		});
 
 		container.register<IBlackListTokenUseCase>("IBlackListTokenUseCase", {
-			useClass: BlackListTokenUseCase
-		})
+			useClass: BlackListTokenUseCase,
+		});
 
 		container.register<IRevokeRefreshTokenUseCase>("IRevokeRefreshTokenUseCase", {
-			useClass: RevokeRefreshTokenUseCase
-		})
+			useClass: RevokeRefreshTokenUseCase,
+		});
+
+		container.register<IRefreshTokenUseCase>("IRefreshTokenUseCase", {
+			useClass: RefreshTokenUseCase,
+		});
 
 		//* ====== Register Bcrypts ====== *//
 		container.register<IBcrypt>("IPasswordBcrypt", {
@@ -91,8 +96,8 @@ export class UseCaseRegistry {
 		});
 
 		container.register<ITokenService>("ITokenService", {
-			useClass: JWTService
-		})
+			useClass: JWTService,
+		});
 
 		//* ====== Register Strategies ====== *//
 		container.register("ClientRegisterStrategy", {
