@@ -125,7 +125,7 @@ export const decodeToken = async (
 		if (await isBlacklisted(token.access_token)) {
 			console.log("token is black listed is worked");
 			res.status(HTTP_STATUS.FORBIDDEN).json({
-				message: "Token is blacklisted",
+				message: ERROR_MESSAGES.TOKEN_BLACKLISTED,
 			});
 			return;
 		}
