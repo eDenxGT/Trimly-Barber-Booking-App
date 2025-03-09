@@ -12,6 +12,8 @@ import { IRedisTokenRepository } from "../../entities/repositoryInterfaces/redis
 import { RedisTokenRepository } from "../../interfaceAdapters/repositories/redis/redis-token.repository";
 import { IBarberRepository } from "../../entities/repositoryInterfaces/barber/barber-repository.interface";
 import { BarberRepository } from "../../interfaceAdapters/repositories/barber/barber.repository";
+import { IAdminRepository } from "@/entities/repositoryInterfaces/admin/admin-repository.interface";
+import { AdminRepository } from "@/interfaceAdapters/repositories/admin/admin.repository";
 
 export class RepositoryRegistry {
 	static registerRepositories(): void {
@@ -35,5 +37,9 @@ export class RepositoryRegistry {
 		container.register<IBarberRepository>("IBarberRepository", {
 			useClass: BarberRepository,
 		});
+
+		container.register<IAdminRepository>("IAdminRepository", {
+			useClass: AdminRepository
+		})
 	}
 }

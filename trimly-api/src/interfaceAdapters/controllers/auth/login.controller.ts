@@ -59,8 +59,10 @@ export class LoginUserController implements ILoginUserController {
 				success: true,
 				message: SUCCESS_MESSAGES.LOGIN_SUCCESS,
 				user: {
+					id: user.id,
 					firstName: user.firstName,
 					lastName: user.lastName,
+					profileImage: user?.profileImage,
 					email: user.email,
 					role: user.role,
 				},

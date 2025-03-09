@@ -1,8 +1,12 @@
 import { TRole } from "../constants";
 
 export interface AdminDTO {
+  adminId?: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
+  isSuperAdmin: boolean;
   role: "admin";
 }
 

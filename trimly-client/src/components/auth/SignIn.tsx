@@ -221,25 +221,30 @@ const SignIn = ({
 								}}>
 								Sign In
 							</Button>
-
+							
 							{/* Social SignIn */}
-							<div className="text-center my-4 text-muted-foreground text-xs">
-								OR
-							</div>
-							<Button
-								fullWidth
-								variant="outlined"
-								startIcon={<FcGoogle />}
-								sx={{
-									borderColor: "var(--yellow)",
-									color: "var(--yellow)",
-									"&:hover": {
-										borderColor: "var(--yellow-hover)",
-										color: "var(--yellow-hover)",
-									},
-								}}>
-								Google
-							</Button>
+							{userType !== "admin" && (
+								<>
+									<div className="text-center my-4 text-muted-foreground text-xs">
+										OR
+									</div>
+									<Button
+										fullWidth
+										variant="outlined"
+										startIcon={<FcGoogle />}
+										sx={{
+											borderColor: "var(--yellow)",
+											color: "var(--yellow)",
+											"&:hover": {
+												borderColor:
+													"var(--yellow-hover)",
+												color: "var(--yellow-hover)",
+											},
+										}}>
+										Google
+									</Button>
+								</>
+							)}
 						</form>
 					</motion.div>
 				</div>

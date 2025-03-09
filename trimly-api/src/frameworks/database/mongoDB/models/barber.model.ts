@@ -6,4 +6,4 @@ export interface IBarberModel extends Omit<IBarberEntity, "id">, Document {
 	_id: ObjectId;
 }
 
-export const barberModel = model<IBarberModel>("Barber", barberSchema)
+export const BarberModel = model<IBarberModel>("Barber", barberSchema);

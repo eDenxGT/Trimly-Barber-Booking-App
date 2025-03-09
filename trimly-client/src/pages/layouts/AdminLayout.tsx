@@ -6,7 +6,6 @@ import { UserRole } from "@/types/UserRoles";
 import { useLogout } from "@/hooks/auth/useLogout";
 import { logoutClient } from "@/services/auth/authService";
 import { useDispatch, useSelector } from "react-redux";
-import { clientLogout } from "@/store/slices/client.slice";
 import { useToaster } from "@/hooks/ui/useToaster";
 import { RootState } from "@/store/store";
 
@@ -16,20 +15,20 @@ export const ClientLayout = () => {
 	const { successToast, errorToast } = useToaster();
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const user = useSelector((state: RootState) => state.client.client)
+	const user = useSelector((state: RootState) => state.client.client);
 	const { mutate: logoutReq } = useLogout(logoutClient);
 
 	const handleLogout = () => {
-		logoutReq(undefined, {
-			onSuccess: (data) => {
-				dispatch(clientLogout());
-				successToast(data.message);
-				navigate("/")
-			},
-			onError: (err: any) => {
-				errorToast(err.response.data.message);
-			},
-		});
+		// logoutReq(undefined, {
+		//    onSuccess: (data) => {
+		//       dispatch(clientLogout());
+		//       successToast(data.message);
+		//       navigate("/")
+		//    },
+		//    onError: (err: any) => {
+		//       errorToast(err.response.data.message);
+		//    },
+		// });
 	};
 
 	return (

@@ -1,9 +1,10 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+import persistReducer from "redux-persist/es/persistReducer";
 import clientReducer from "./slices/client.slice";
 import barberReducer from "./slices/barber.slice";
-import { persistStore } from "redux-persist";
-import persistReducer from "redux-persist/es/persistReducer";
+import adminReducer from "./slices/admin.slice";
 
 // const clientPersistConfig = {
 // 	key: "client",
@@ -23,6 +24,7 @@ const rootPersistConfig = {
 const rootReducer = combineReducers({
 	client: clientReducer,
 	barber: barberReducer,
+	admin: adminReducer
 });
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
 

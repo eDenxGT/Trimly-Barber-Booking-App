@@ -21,3 +21,37 @@ export const AuthRoute = ({ element, allowedRoles }: ProtectedRouteProps) => {
 		<Navigate to="/unauthorized" />
 	);
 };
+
+export const BarberAuthRoute = ({
+	element,
+	allowedRoles,
+}: ProtectedRouteProps) => {
+	const userRole = useSelector(
+		(state: RootState) => state.barber.barber?.role
+	);
+	if (!userRole) {
+		return <Navigate to="/" />;
+	}
+
+	return allowedRoles.includes(userRole) ? (
+		element
+	) : (
+		<Navigate to="/unauthorized" />
+	);
+};
+
+export const AdminAuthRoute = ({
+	element,
+	allowedRoles,
+}: ProtectedRouteProps) => {
+	const userRole = useSelector((state: RootState) => state.admin.admin?.role);
+	if (!userRole) {
+		return <Navigate to="/" />;
+	}
+
+	return allowedRoles.includes(userRole) ? (
+		element
+	) : (
+		<Navigate to="/unauthorized" />
+	);
+};

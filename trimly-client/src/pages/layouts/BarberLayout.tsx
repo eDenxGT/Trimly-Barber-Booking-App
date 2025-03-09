@@ -10,16 +10,9 @@ import { RootState } from "@/store/store";
 
 interface BarberLayoutProps {
    userRole?: UserRole;
-   userName?: string;
-   userLocation?: string;
-   userAvatar?: string;
 }
 
-export const ClientLayout = ({
-   userName = "Eden",
-   userLocation = "India",
-   userAvatar,
-}: BarberLayoutProps) => {
+export const ClientLayout = () => {
    const [isSideBarVisible, setIsSideBarVisible] = useState(false);
    const [notifications] = useState(2);
    const { successToast, errorToast } = useToaster();
@@ -47,9 +40,9 @@ export const ClientLayout = ({
          <PrivateHeader
             className="z-40"
             userName={user?.firstName}
-            userLocation={userLocation}
+            // userLocation={user?.location}
             onLogout={handleLogout}
-            userAvatar={userAvatar}
+            // userAvatar={userAvatar}
             notifications={notifications}
             onSidebarToggle={() => setIsSideBarVisible(!isSideBarVisible)}
          />

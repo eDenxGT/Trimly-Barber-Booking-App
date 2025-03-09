@@ -11,6 +11,7 @@ import { ClientRegisterStrategy } from "../../useCases/auth/register-strategies/
 import { ClientLoginStrategy } from "../../useCases/auth/login-strategies/client-login.strategy";
 import { BarberRegisterStrategy } from "../../useCases/auth/register-strategies/barber-register.strategy";
 import { BarberLoginStrategy } from "@/useCases/auth/login-strategies/barber-login.strategy";
+import { AdminLoginStrategy } from "@/useCases/auth/login-strategies/admin-login.strategy";
 
 //* ====== Service Imports ====== *//
 import { IOtpService } from "../../entities/services/otp-service.interface";
@@ -118,7 +119,11 @@ export class UseCaseRegistry {
 		});
 
 		container.register("BarberLoginStrategy", {
-			useClass: BarberLoginStrategy
-		})
+			useClass: BarberLoginStrategy,
+		});
+
+		container.register("AdminLoginStrategy", {
+			useClass: AdminLoginStrategy,
+		});
 	}
 }

@@ -3,32 +3,46 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 
 interface NoAuthRouteProps {
-  element: JSX.Element;
+	element: JSX.Element;
 }
 
 export const NoAuthRoute = ({ element }: NoAuthRouteProps) => {
-  const user = useSelector((state: RootState) => state.client.client);
-  if (user && user?.role !== "client") {
-    return <Navigate to={"/unauthorized"} />;
-  }
+	const user = useSelector((state: RootState) => state.client.client);
+	if (user && user?.role !== "client") {
+		return <Navigate to={"/unauthorized"} />;
+	}
 
-  if (user) {
-    return <Navigate to="/home" />;
-  }
+	if (user) {
+		return <Navigate to="/home" />;
+	}
 
-  return element;
+	return element;
 };
 
 export const NoBarberAuthRoute = ({ element }: NoAuthRouteProps) => {
-  const user = useSelector((state: RootState) => state.barber.barber);
+	const user = useSelector((state: RootState) => state.barber.barber);
 
-  if (user && user?.role !== "barber") {
-    return <Navigate to={"/unauthorized"} />;
-  }
+	if (user && user?.role !== "barber") {
+		return <Navigate to={"/unauthorized"} />;
+	}
 
-  if (user) {
-    return <Navigate to="/barber/dashboard" />;
-  }
+	if (user) {
+		return <Navigate to="/barber/dashboard" />;
+	}
 
-  return element;
+	return element;
+};
+
+export const NoAdminAuthRoute = ({ element }: NoAuthRouteProps) => {
+	const user = useSelector((state: RootState) => state.admin.admin);
+
+	if (user && user?.role !== "admin") {
+		return <Navigate to={"/unauthorized"} />;
+	}
+
+	if (user) {
+		return <Navigate to="/admin/dashboard" />;
+	}
+
+	return element;
 };
