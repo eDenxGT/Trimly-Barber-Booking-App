@@ -10,6 +10,7 @@ import { OtpBcrypt } from "../security/otp.bcrypt";
 import { ClientRegisterStrategy } from "../../useCases/auth/register-strategies/client-register.strategy";
 import { ClientLoginStrategy } from "../../useCases/auth/login-strategies/client-login.strategy";
 import { BarberRegisterStrategy } from "../../useCases/auth/register-strategies/barber-register.strategy";
+import { BarberLoginStrategy } from "@/useCases/auth/login-strategies/barber-login.strategy";
 
 //* ====== Service Imports ====== *//
 import { IOtpService } from "../../entities/services/otp-service.interface";
@@ -18,6 +19,7 @@ import { IEmailService } from "../../entities/services/email-service.interface";
 import { EmailService } from "../../interfaceAdapters/services/email.service";
 import { IUserExistenceService } from "../../entities/services/user-existence-service.interface";
 import { UserExistenceService } from "../../interfaceAdapters/services/user-existence.service";
+import { ITokenService } from "../../entities/services/token-service.interface";
 import { JWTService } from "../../interfaceAdapters/services/jwt.service";
 
 //* ====== UseCase Imports ====== *//
@@ -29,7 +31,6 @@ import { IVerifyOtpUseCase } from "../../entities/useCaseInterfaces/auth/verify-
 import { VerifyOtpUseCase } from "../../useCases/auth/verify-otp.usecase";
 import { ILoginUserUseCase } from "../../entities/useCaseInterfaces/auth/login-usecase.interface";
 import { LoginUserUseCase } from "../../useCases/auth/login-user.usecase";
-import { ITokenService } from "../../entities/services/token-service.interface";
 import { IGenerateTokenUseCase } from "../../entities/useCaseInterfaces/auth/generate-token-usecase.interface";
 import { GenerateTokenUseCase } from "../../useCases/auth/generate-token.usecase";
 import { IBlackListTokenUseCase } from "../../entities/useCaseInterfaces/auth/blacklist-token-usecase.interface";
@@ -115,5 +116,9 @@ export class UseCaseRegistry {
 		container.register("BarberRegisterStrategy", {
 			useClass: BarberRegisterStrategy,
 		});
+
+		container.register("BarberLoginStrategy", {
+			useClass: BarberLoginStrategy
+		})
 	}
 }

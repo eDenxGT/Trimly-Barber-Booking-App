@@ -1,11 +1,11 @@
 import { inject, injectable } from "tsyringe";
-import { IUserEntity } from "../../../entities/models/user.entity";
 import { LoginUserDTO } from "../../../shared/dtos/user.dto";
 import { ILoginStrategy } from "./login-strategy.interface";
 import { IBcrypt } from "./../../../frameworks/security/bcrypt.interface";
 import { IClientRepository } from "../../../entities/repositoryInterfaces/client/client-repository.interface";
 import { CustomError } from "../../../entities/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
+import { IClientEntity } from "@/entities/models/client.entity";
 
 @injectable()
 export class ClientLoginStrategy implements ILoginStrategy {
@@ -14,11 +14,11 @@ export class ClientLoginStrategy implements ILoginStrategy {
 		private clientRepository: IClientRepository,
 		@inject("IPasswordBcrypt") private passwordBcrypt: IBcrypt
 	) {}
-	async login(user: LoginUserDTO): Promise<Partial<IUserEntity>> {
+	async login(user: LoginUserDTO): Promise<Partial<IClientEntity>> {
 		const client = await this.clientRepository.findByEmail(user.email);
 		if (!client) {
 			throw new CustomError(
-				ERROR_MESSAGES.EMAIL_NOT_FOUND,
+				ERROR_MESSAGES.USER_NOT_FOUND,
 				HTTP_STATUS.NOT_FOUND
 			);
 		}

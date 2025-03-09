@@ -10,10 +10,12 @@ import { IUserEntity } from './../../entities/models/user.entity';
 export class LoginUserUseCase implements ILoginUserUseCase {
 	private strategies: Record<string, ILoginStrategy>;
 	constructor(
-		@inject("ClientLoginStrategy") private clientLogin: ILoginStrategy
+		@inject("ClientLoginStrategy") private clientLogin: ILoginStrategy,
+		@inject("BarberLoginStrategy") private barberLogin: ILoginStrategy
 	) {
 		this.strategies = {
 			client: clientLogin,
+			barber: barberLogin
 		};
 	}
 

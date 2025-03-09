@@ -9,7 +9,7 @@ export class BarberRepository implements IBarberRepository {
 		return await barberModel.create(data);
 	}
 	async findByEmail(email: string): Promise<IBarberEntity | null> {
-		const barber = await barberModel.findOne({ email });
+		const barber = await barberModel.findOne({ email }).lean();
 		if (!barber) return null;
 
 		return {
