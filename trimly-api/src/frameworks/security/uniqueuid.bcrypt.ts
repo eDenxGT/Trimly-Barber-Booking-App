@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
 
-export const generateUniqueUid = (prefix: string = "trimly") => {
+export const generateUniqueId = (prefix: string = "user") => {
 	return `trimly-${prefix}-${randomUUID().slice(10)}`;
 };

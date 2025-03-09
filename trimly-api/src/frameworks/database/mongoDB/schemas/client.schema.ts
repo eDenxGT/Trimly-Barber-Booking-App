@@ -1,8 +1,8 @@
 import { Schema } from "mongoose";
-import { ROLES } from "../../../shared/constants";
 import { IClientModel } from "../models/client.model";
+import { ROLES } from "@/shared/constants";
 
-export const ClientSchema = new Schema<IClientModel>(
+export const clientSchema = new Schema<IClientModel>(
   {
     clientId: { type: String, required: true },
     firstName: { type: String, required: true },

@@ -1,5 +1,5 @@
 import { model, ObjectId } from "mongoose";
-import { IOtpEntity } from "../../../entities/models/otp.entity";
+import { IOtpEntity } from "../../../../entities/models/otp.entity";
 import { OtpSchema } from "../schemas/otp.schema";
 
 export interface IOtpModel extends Omit<IOtpEntity, "id">, Document {

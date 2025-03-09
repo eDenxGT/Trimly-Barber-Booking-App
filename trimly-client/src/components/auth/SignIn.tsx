@@ -14,9 +14,15 @@ interface SignInProps {
 	userType: UserRole;
 	onSubmit: (data: { email: string; password: string }) => void;
 	setRegister?: () => void;
+	isLoading: boolean;
 }
 
-const SignIn = ({ userType, onSubmit, setRegister }: SignInProps) => {
+const SignIn = ({
+	userType,
+	onSubmit,
+	setRegister,
+	isLoading,
+}: SignInProps) => {
 	const [showPassword, setShowPassword] = useState(false);
 
 	const formik = useFormik({
@@ -91,7 +97,7 @@ const SignIn = ({ userType, onSubmit, setRegister }: SignInProps) => {
 									onChange={formik.handleChange}
 									onBlur={formik.handleBlur}
 									fullWidth
-									label="Email or Username"
+									label="Email"
 									placeholder="Enter your email"
 									variant="outlined"
 									sx={{
@@ -201,6 +207,9 @@ const SignIn = ({ userType, onSubmit, setRegister }: SignInProps) => {
 
 							{/* Submit Button */}
 							<Button
+								disabled={isLoading}
+								loadingPosition="center"
+								loading={isLoading}
 								type="submit"
 								fullWidth
 								variant="contained"

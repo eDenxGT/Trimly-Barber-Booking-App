@@ -23,6 +23,8 @@ export interface BarberDTO {
   email: string;
   phoneNumber: string;
   password: string;
+  shopId?: string;
+  isOwner?: boolean;
   role: "barber";
 }
 

@@ -123,7 +123,7 @@ export default function OTPModal({
 
 					<Button
 						onClick={handleVerify}
-						disabled={otp.length !== 4 || isVerifying}
+						disabled={otp.length !== 4 || isVerifying}						
 						className="w-full bg-[var(--yellow)] hover:bg-[var(--yellow-hover)] text-white font-medium">
 						{isVerifying ? "Verifying..." : "Verify"}
 					</Button>

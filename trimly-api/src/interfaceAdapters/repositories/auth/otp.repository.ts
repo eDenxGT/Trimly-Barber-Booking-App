@@ -1,7 +1,7 @@
 import { injectable } from "tsyringe";
-import { IOtpEntity } from "../../../entities/models/otp.entity";
-import { IOtpRepository } from "../../../entities/repositoryInterfaces/auth/otp-repository.interface";
-import { OtpModel } from "../../../frameworks/database/models/otp.model";
+import { IOtpEntity } from "@/entities/models/otp.entity";
+import { IOtpRepository } from "@/entities/repositoryInterfaces/auth/otp-repository.interface";
+import { OtpModel } from "@/frameworks/database/mongoDB/models/otp.model";
 
 @injectable()
 export class OtpRepository implements IOtpRepository {

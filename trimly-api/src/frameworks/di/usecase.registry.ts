@@ -9,6 +9,7 @@ import { OtpBcrypt } from "../security/otp.bcrypt";
 //* ====== Strategy Imports ====== *//
 import { ClientRegisterStrategy } from "../../useCases/auth/register-strategies/client-register.strategy";
 import { ClientLoginStrategy } from "../../useCases/auth/login-strategies/client-login.strategy";
+import { BarberRegisterStrategy } from "../../useCases/auth/register-strategies/barber-register.strategy";
 
 //* ====== Service Imports ====== *//
 import { IOtpService } from "../../entities/services/otp-service.interface";
@@ -65,9 +66,12 @@ export class UseCaseRegistry {
 			useClass: BlackListTokenUseCase,
 		});
 
-		container.register<IRevokeRefreshTokenUseCase>("IRevokeRefreshTokenUseCase", {
-			useClass: RevokeRefreshTokenUseCase,
-		});
+		container.register<IRevokeRefreshTokenUseCase>(
+			"IRevokeRefreshTokenUseCase",
+			{
+				useClass: RevokeRefreshTokenUseCase,
+			}
+		);
 
 		container.register<IRefreshTokenUseCase>("IRefreshTokenUseCase", {
 			useClass: RefreshTokenUseCase,
@@ -106,6 +110,10 @@ export class UseCaseRegistry {
 
 		container.register("ClientLoginStrategy", {
 			useClass: ClientLoginStrategy,
+		});
+
+		container.register("BarberRegisterStrategy", {
+			useClass: BarberRegisterStrategy,
 		});
 	}
 }

@@ -1,7 +1,7 @@
 import { injectable } from "tsyringe";
-import { IClientEntity } from "../../../entities/models/client.entity";
-import { ClientModel } from "../../../frameworks/database/models/client.model";
-import { IClientRepository } from "./../../../entities/repositoryInterfaces/client/client-repository.interface";
+import { IClientRepository } from "@/entities/repositoryInterfaces/client/client-repository.interface";
+import { ClientModel } from "@/frameworks/database/mongoDB/models/client.model";
+import { IClientEntity } from "@/entities/models/client.entity";
 
 @injectable()
 export class ClientRepository implements IClientRepository {
@@ -20,7 +20,6 @@ export class ClientRepository implements IClientRepository {
 	}
 
 	async findById(id: any): Promise<IClientEntity | null> {
-		console.log("Repository wirking")
 		const client = await ClientModel.findById(id).lean();
 		if (!client) return null;
 

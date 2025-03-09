@@ -5,7 +5,7 @@ import { IClientRepository } from "../../../entities/repositoryInterfaces/client
 import { CustomError } from "../../../entities/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../../shared/constants";
 import { IBcrypt } from "../../../frameworks/security/bcrypt.interface";
-import { generateUniqueUid } from "../../../frameworks/security/uniqueuid.bcrypt";
+import { generateUniqueId } from "../../../frameworks/security/uniqueuid.bcrypt";
 import { IUserEntity } from './../../../entities/models/user.entity';
 
 @injectable()
@@ -32,7 +32,7 @@ export class ClientRegisterStrategy implements IRegisterStrategy {
          if(password) {
             hashedPassword = await this.passwordBcrypt.hash(password)
          }
-         const clientId = generateUniqueUid("client")
+         const clientId = generateUniqueId("client")
          return await this.clientRepository.save({
             firstName,
             lastName,

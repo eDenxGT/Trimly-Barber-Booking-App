@@ -10,6 +10,8 @@ import { IRefreshTokenRepository } from "../../entities/repositoryInterfaces/aut
 import { RefreshTokenRepository } from "../../interfaceAdapters/repositories/auth/refresh-token.repository";
 import { IRedisTokenRepository } from "../../entities/repositoryInterfaces/redis/redis-token-repository.interface";
 import { RedisTokenRepository } from "../../interfaceAdapters/repositories/redis/redis-token.repository";
+import { IBarberRepository } from "../../entities/repositoryInterfaces/barber/barber-repository.interface";
+import { BarberRepository } from "../../interfaceAdapters/repositories/barber/barber.repository";
 
 export class RepositoryRegistry {
 	static registerRepositories(): void {
@@ -28,6 +30,10 @@ export class RepositoryRegistry {
 
 		container.register<IRedisTokenRepository>("IRedisTokenRepository", {
 			useClass: RedisTokenRepository,
+		});
+
+		container.register<IBarberRepository>("IBarberRepository", {
+			useClass: BarberRepository,
 		});
 	}
 }

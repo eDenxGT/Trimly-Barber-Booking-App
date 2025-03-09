@@ -1,3 +1,6 @@
+//* ====== Node module-alias Imports ====== *//
+import 'module-alias/register';
+
 //* ====== DI Imports ====== *//
 import "reflect-metadata";
 import "./frameworks/di/resolver";

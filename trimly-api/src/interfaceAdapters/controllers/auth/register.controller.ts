@@ -20,7 +20,6 @@ export class RegisterUserController {
 	async handle(req: Request, res: Response): Promise<void> {
 		try {
 			const { role } = req.body as UserDTO;
-			console.log(role);
 			const schema = userSchemas[role];
 			if (!schema) {
 				res.status(HTTP_STATUS.BAD_REQUEST).json({

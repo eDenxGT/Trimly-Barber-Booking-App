@@ -1,6 +1,7 @@
-import { IRefreshTokenRepository } from "../../../entities/repositoryInterfaces/auth/refresh-token-repository.interface";
-import { RefreshTokenModel } from "../../../frameworks/database/models/refresh-token.model";
-import { TRole } from "../../../shared/constants";
+import { IRefreshTokenRepository } from "@/entities/repositoryInterfaces/auth/refresh-token-repository.interface";
+import { RefreshTokenModel } from "@/frameworks/database/mongoDB/models/refresh-token.model";
+import { TRole } from "@/shared/constants";
+
 
 export class RefreshTokenRepository implements IRefreshTokenRepository {
 	async save(data: {

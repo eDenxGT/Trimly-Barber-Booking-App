@@ -14,22 +14,26 @@ import OTPModal from "../modals/OTPModal";
 import { useSendOTPMutation } from "@/hooks/auth/useSendOTP";
 import { useVerifyOTPMutation } from "@/hooks/auth/useVerifyOTP";
 import { useToaster } from "@/hooks/ui/useToaster";
+import { Spinner } from "../common/progress/Spinner";
 
 interface SignUpProps {
 	userType: UserRole;
 	onSubmit: (data: User) => void;
 	setLogin?: () => void;
+	isLoading: boolean;
 }
 
-const SignUp = ({ userType, onSubmit, setLogin }: SignUpProps) => {
+const SignUp = ({ userType, onSubmit, setLogin, isLoading }: SignUpProps) => {
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 	const [isOTPModalOpen, setIsOTPModalOpen] = useState(false);
 	const [isSending, setIsSending] = useState(false);
 	const [userData, setUserData] = useState<User>({} as User);
 
-	const { mutate: sendVerificationOTP } = useSendOTPMutation();
-	const { mutate: verifyOTP } = useVerifyOTPMutation();
+	const { mutate: sendVerificationOTP, isPending: isSendOtpPending } =
+		useSendOTPMutation();
+	const { mutate: verifyOTP, isPending: isVerifyOtpPending } =
+		useVerifyOTPMutation();
 	const { successToast, errorToast } = useToaster();
 
 	const submitRegister = () => {
@@ -65,7 +69,7 @@ const SignUp = ({ userType, onSubmit, setLogin }: SignUpProps) => {
 			{ email: userData.email, otp },
 			{
 				onSuccess(data) {
-					successToast(data.message);
+					// successToast(data.message);
 					submitRegister();
 					handleCloseOTPModal();
 				},
@@ -443,6 +447,17 @@ const SignUp = ({ userType, onSubmit, setLogin }: SignUpProps) => {
 							{/* Submit Button */}
 							<Button
 								type="submit"
+								disabled={
+									isLoading ||
+									isSendOtpPending ||
+									isVerifyOtpPending
+								}
+								loadingPosition="center"
+								loading={
+									isLoading ||
+									isSendOtpPending ||
+									isVerifyOtpPending
+								}
 								fullWidth
 								variant="contained"
 								sx={{

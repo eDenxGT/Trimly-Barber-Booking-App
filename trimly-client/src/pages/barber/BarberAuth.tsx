@@ -16,8 +16,8 @@ const BarberAuth = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	const { mutate: registerBarber } = useRegisterMutation();
-	const { mutate: loginBarber } = useLoginMutation();
+	const { mutate: registerBarber, isPending: isRegisterPending } = useRegisterMutation();
+	const { mutate: loginBarber, isPending: isLoginPending } = useLoginMutation();
 
 	const { errorToast, successToast } = useToaster();
 
@@ -64,12 +64,14 @@ const BarberAuth = () => {
 							userType="barber"
 							onSubmit={handleLoginSubmit}
 							setRegister={() => setIsLogin(false)}
-						/>
-					) : (
-						<SignUp
+							isLoading={isLoginPending}
+							/>
+						) : (
+							<SignUp
 							userType="barber"
 							onSubmit={handleSignUpSubmit}
 							setLogin={() => setIsLogin(true)}
+							isLoading={isRegisterPending}
 						/>
 					)}
 				</motion.div>

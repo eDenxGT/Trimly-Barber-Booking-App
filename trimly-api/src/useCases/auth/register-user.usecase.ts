@@ -10,17 +10,23 @@ export class RegisterUserUseCase implements IRegisterUserUseCase {
 	private strategies: Record<string, IRegisterStrategy>;
 	constructor(
 		@inject("ClientRegisterStrategy")
-		private clientRegister: IRegisterStrategy
+		private clientRegister: IRegisterStrategy,
+		@inject("BarberRegisterStrategy")
+		private barberRegister: IRegisterStrategy
 	) {
 		this.strategies = {
 			client: this.clientRegister,
+			barber: this.barberRegister
 		};
 	}
 
 	async execute(user: UserDTO): Promise<void> {
 		const strategy = this.strategies[user.role];
 		if (!strategy) {
-			throw new CustomError(ERROR_MESSAGES.INVALID_ROLE, HTTP_STATUS.FORBIDDEN);
+			throw new CustomError(
+				ERROR_MESSAGES.INVALID_ROLE,
+				HTTP_STATUS.FORBIDDEN
+			);
 		}
 		await strategy.register(user);
 	}
