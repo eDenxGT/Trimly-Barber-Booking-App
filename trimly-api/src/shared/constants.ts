@@ -31,6 +31,7 @@ export const SUCCESS_MESSAGES = {
 	VERIFICATION_SUCCESS: "Verification completed successfully",
 	DATA_RETRIEVED: "Data retrieved successfully",
 	ACTION_SUCCESS: "Action performed successfully",
+	EMAIL_SENT_SUCCESSFULLY: "Email Sent Successfully",
 } as const;
 
 export const ERROR_MESSAGES = {
@@ -80,7 +81,7 @@ export const VERIFICATION_MAIL_CONTENT = (
    <div style="background-color: #f9f9f9; border-radius: 8px; padding: 20px; margin: 25px 0; text-align: center;">
       <p style="margin-bottom: 10px; font-size: 16px;">Your verification code is:</p>
       <h1 style="background-color: #f2f2f2; color: #FEBA43; font-size: 36px; margin: 10px 0; padding: 20px; border-radius: 8px; letter-spacing: 5px;">
-         ${otp}
+         \${otp}
       </h1>
       <p style="color: #666; font-size: 14px;">
          ⏰ Code expires in 2 minutes
@@ -103,3 +104,84 @@ export const VERIFICATION_MAIL_CONTENT = (
    </div>
 </div>
 `;
+
+export const PASSWORD_RESET_MAIL_CONTENT = (
+	resetLink: string
+) => `<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333; background: #fff;">
+   <!-- Logo Text Section -->
+   <div style="text-align: center; margin-bottom: 30px;">
+      <h1 style="font-size: 48px; font-weight: bold; margin: 0;">
+         ✂️ <span style="color: #FEBA43;">Trimly</span>
+      </h1>
+   </div>
+
+   <div style="text-align: center; margin-bottom: 30px;">
+      <h2 style="color: #FEBA43; font-size: 28px; margin: 0;">
+         Password Reset Request 🔐
+      </h2>
+      <p style="color: #666; font-size: 16px; margin: 10px 0 0 0;">
+         Don't worry, we'll help you get back in style! ✨
+      </p>
+   </div>
+
+   <div style="border-radius: 15px; padding: 25px; margin-bottom: 25px; background: linear-gradient(to bottom, #fff, #fcfcfc);">
+      <p style="font-size: 16px; line-height: 1.6; margin-bottom: 20px; text-align: center;">
+         We received a request to reset your password for your Trimly account. 
+         Your security is our top priority! 🛡️
+      </p>
+      
+      <!-- Action Button Section -->
+      <div style="border-radius: 12px; padding: 25px; margin: 25px 0; text-align: center;">
+         <p style="margin-bottom: 20px; font-size: 16px; color: #444;">
+            Click the button below to securely reset your password:
+         </p>
+         
+         <a href="${resetLink}" 
+            style="background-color: #FEBA43; color: white; padding: 16px 40px; 
+                   text-decoration: none; border-radius: 8px; font-weight: 500; 
+                   display: inline-block; margin: 10px 0; font-size: 16px; 
+                   box-shadow: 0 2px 4px rgba(254, 186, 67, 0.2); transition: all 0.3s ease;
+                   max-width: 100%;"
+            onmouseover="this.style.backgroundColor='#E6A936'"
+            onmouseout="this.style.backgroundColor='#FEBA43'"
+            rel="noopener noreferrer"
+         >
+            Reset Password 🔐
+         </a>
+
+         <p style="color: #666; font-size: 14px; margin-top: 20px;">
+            ⏰ For security, this link expires in 10 minutes
+         </p>
+      </div>
+   </div>
+
+   <div style="border-radius: 8px; padding: 20px; margin: 25px 0; background-color: #FFF8E1; box-shadow: 0 2px 8px rgba(254, 186, 67, 0.15);">
+      <div style="text-align: left; margin-bottom: 15px; display: flex; align-items: center;">
+         <span style="font-size: 24px; margin-right: 10px;">⚠️</span>
+         <h3 style="color: #B76E00; margin: 0; font-size: 18px;">Security Reminders</h3>
+      </div>
+      <ul style="list-style: none; padding: 0; margin: 0;">
+         <li style="font-size: 14px; color: #8B5800; margin: 8px 0; display: flex; align-items: center;">
+            <span style="color: #FEBA43; margin-right: 8px;">•</span> Never share this link with anyone
+         </li>
+         <li style="font-size: 14px; color: #8B5800; margin: 8px 0; display: flex; align-items: center;">
+            <span style="color: #FEBA43; margin-right: 8px;">•</span> Trimly will never ask for your password
+         </li>
+         <li style="font-size: 14px; color: #8B5800; margin: 8px 0; display: flex; align-items: center;">
+            <span style="color: #FEBA43; margin-right: 8px;">•</span> Ensure you're on our official website before logging in
+         </li>
+      </ul>
+   </div>
+
+   <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: center;">
+      <p style="font-size: 14px; color: #888;">
+         Need help? We're here for you! 💡<br>
+         Contact us at <a href="mailto:support@trimly.in" style="color: #FEBA43; text-decoration: none;">support@trimly.in</a>
+      </p>
+   </div>
+
+   <div style="text-align: center; margin-top: 20px; font-size: 12px; color: #888;">
+      © ${new Date().getFullYear()} Trimly. All rights reserved.<br>
+      <span style="color: #FEBA43;">✦</span> Your Style, Our Priority <span style="color: #FEBA43;">✦</span>
+   </div>
+</div>`;

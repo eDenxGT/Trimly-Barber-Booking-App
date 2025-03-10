@@ -6,6 +6,7 @@ import { BaseRoute } from "../base.route";
 
 //* ====== Controller Imports ====== *//
 import {
+	forgotPasswordController,
 	loginController,
 	registerController,
 	sendOtpEmailController,
@@ -34,8 +35,7 @@ export class AuthRoutes extends BaseRoute {
 		});
 
 		this.router.post("/forgot-password", (req: Request, res: Response) => {
-			console.log(req.body);
-			// verifyOtpController.handle(req, res);
+			forgotPasswordController.handle(req, res);
 		});
 	}
 }

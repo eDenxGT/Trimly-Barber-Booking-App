@@ -9,10 +9,16 @@ export class ForgotPasswordUseCase implements IForgotPasswordUseCase {
 	private strategies: Record<string, IForgotPasswordStrategy>;
 	constructor(
 		@inject("ClientForgotPasswordStrategy")
-		private clientForgotPassword: IForgotPasswordStrategy
+		private clientForgotPassword: IForgotPasswordStrategy,
+		@inject("BarberForgotPasswordStrategy")
+		private barberForgotPassword: IForgotPasswordStrategy,
+		@inject("AdminForgotPasswordStrategy")
+		private adminForgotPassword: IForgotPasswordStrategy
 	) {
 		this.strategies = {
 			client: clientForgotPassword,
+			barber: barberForgotPassword,
+			admin: adminForgotPassword,
 		};
 	}
 	async execute({

@@ -13,6 +13,8 @@ import { BarberRegisterStrategy } from "../../useCases/auth/register-strategies/
 import { BarberLoginStrategy } from "@/useCases/auth/login-strategies/barber-login.strategy";
 import { AdminLoginStrategy } from "@/useCases/auth/login-strategies/admin-login.strategy";
 import { ClientForgotPasswordStrategy } from "@/useCases/auth/forgot-password-strategies/client-forgot-password.strategy";
+import { AdminForgotPasswordStrategy } from "@/useCases/auth/forgot-password-strategies/admin-forgot-password.strategy";
+import { BarberForgotPasswordStrategy } from "@/useCases/auth/forgot-password-strategies/barber-forgot-password.strategy";
 
 //* ====== Service Imports ====== *//
 import { IOtpService } from "../../entities/services/otp-service.interface";
@@ -132,9 +134,17 @@ export class UseCaseRegistry {
 		container.register("AdminLoginStrategy", {
 			useClass: AdminLoginStrategy,
 		});
-		
+
 		container.register("ClientForgotPasswordStrategy", {
 			useClass: ClientForgotPasswordStrategy,
+		});
+
+		container.register("BarberForgotPasswordStrategy", {
+			useClass: BarberForgotPasswordStrategy,
+		});
+
+		container.register("AdminForgotPasswordStrategy", {
+			useClass: AdminForgotPasswordStrategy,
 		});
 	}
 }

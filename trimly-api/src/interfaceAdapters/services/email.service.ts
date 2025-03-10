@@ -1,8 +1,8 @@
+import { injectable } from "tsyringe";
 import nodemailer from "nodemailer";
 import { IEmailService } from "../../entities/services/email-service.interface";
 import { config } from "../../shared/config";
-import { VERIFICATION_MAIL_CONTENT } from "../../shared/constants";
-import { injectable } from "tsyringe";
+import { PASSWORD_RESET_MAIL_CONTENT, VERIFICATION_MAIL_CONTENT } from "../../shared/constants";
 
 @injectable()
 export class EmailService implements IEmailService {
@@ -31,10 +31,22 @@ export class EmailService implements IEmailService {
 		};
 		await this.transporter.sendMail(mailOptions);
 	}
-
-	async sendEmail(
+	
+	async sendResetEmail(
 		to: string,
 		subject: string,
-		content: string
-	): Promise<void> {}
+		resetLink: string
+	): Promise<void> {
+		const mailOptions = {
+			from: `"Trimly" <${config.nodemailer.EMAIL_USER}>`,
+			to,
+			subject,
+			html: PASSWORD_RESET_MAIL_CONTENT(resetLink),
+		}
+		await this.transporter.sendMail(mailOptions);
+	}
+
+	async sendEmail(to: string, subject: string, content: string): Promise<void> {
+		
+	}
 }

@@ -1,26 +1,26 @@
 import { inject, injectable } from "tsyringe";
 import { IForgotPasswordStrategy } from "./forgot-password-strategy.interface";
-import { IClientRepository } from "@/entities/repositoryInterfaces/client/client-repository.interface";
 import { CustomError } from "@/entities/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "@/shared/constants";
 import { ITokenService } from "@/entities/services/token-service.interface";
 import { IRedisTokenRepository } from "@/entities/repositoryInterfaces/redis/redis-token-repository.interface";
 import { IEmailService } from "@/entities/services/email-service.interface";
 import { config } from "@/shared/config";
+import { IBarberRepository } from "@/entities/repositoryInterfaces/barber/barber-repository.interface";
 
 @injectable()
-export class ClientForgotPasswordStrategy implements IForgotPasswordStrategy {
+export class BarberForgotPasswordStrategy implements IForgotPasswordStrategy {
 	constructor(
-		@inject("IClientRepository")
-		private clientRepository: IClientRepository,
+		@inject("IBarberRepository")
+		private barberRepository: IBarberRepository,
 		@inject("ITokenService") private tokenService: ITokenService,
 		@inject("IRedisTokenRepository")
 		private redisTokenRepository: IRedisTokenRepository,
 		@inject("IEmailService") private emailService: IEmailService
 	) {}
 	async forgotPassword(email: string): Promise<void> {
-		const client = await this.clientRepository.findByEmail(email);
-		if (!client) {
+		const barber = await this.barberRepository.findByEmail(email);
+		if (!barber) {
 			throw new CustomError(
 				ERROR_MESSAGES.EMAIL_NOT_FOUND,
 				HTTP_STATUS.NOT_FOUND
@@ -30,7 +30,7 @@ export class ClientForgotPasswordStrategy implements IForgotPasswordStrategy {
 
 		try {
 			await this.redisTokenRepository.storeResetToken(
-				client.id ?? "",
+				barber.id ?? "",
 				resetToken
 			);
 		} catch (error) {
@@ -41,7 +41,7 @@ export class ClientForgotPasswordStrategy implements IForgotPasswordStrategy {
 			);
 		}
 		const resetUrl = new URL(
-			`/reset-password/${resetToken}`,
+			`/barber/reset-password/${resetToken}`,
 			config.cors.ALLOWED_ORIGIN
 		).toString();
 

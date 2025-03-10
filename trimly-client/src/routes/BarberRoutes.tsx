@@ -1,4 +1,5 @@
 import ForgotPassword from "@/components/auth/ForgotPassword";
+import ResetPassword from "@/components/auth/ResetPassword";
 import BarberAuth from "@/pages/barber/BarberAuth";
 import { BarberDashboard } from "@/pages/barber/BarberDashboard";
 import { BarberLayout } from "@/pages/layouts/BarberLayout";
@@ -22,6 +23,16 @@ export const BarberRoutes = () => {
 								role="barber"
 								signInPath="/barber"
 							/>
+						}
+					/>
+				}
+			/>
+			<Route
+				path="/reset-password/:token"
+				element={
+					<NoBarberAuthRoute
+						element={
+							<ResetPassword role="barber" signInPath="/barber" />
 						}
 					/>
 				}

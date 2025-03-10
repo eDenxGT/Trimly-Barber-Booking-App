@@ -9,33 +9,47 @@ import { PublicHeader } from "../headers/PublicHeader";
 import { emailSchema } from "@/utils/validations/email.validator";
 import { useNavigate } from "react-router-dom";
 import { useForgotPasswordMutation } from "@/hooks/auth/useForgotPassword";
+import { useToaster } from "@/hooks/ui/useToaster";
 
 interface ForgotPasswordProps {
 	role: string;
 	signInPath: string;
-	isLoading?: boolean;
 }
 
-const ForgotPassword = ({
-	role,
-	signInPath,
-	isLoading,
-}: ForgotPasswordProps) => {
+const ForgotPassword = ({ role, signInPath }: ForgotPasswordProps) => {
 	const [emailSent, setEmailSent] = useState(false);
 
-   const navigate = useNavigate()
+	const navigate = useNavigate();
 
-   const {mutate: forgotPassReq} = useForgotPasswordMutation()
+	const {
+		mutate: forgotPassReq,
+		isPending,
+		isError,
+		isSuccess,
+	} = useForgotPasswordMutation();
+	const { successToast, errorToast } = useToaster();
 
+	const handleForgotPasswordSubmit = ({ email }: { email: string }) => {
+		forgotPassReq(
+			{ email, role },
+			{
+				onSuccess: (data) => {
+					successToast(data.message);
+					setEmailSent(true);
+				},
+				onError: (error: any) => {
+					errorToast(error.response.data.message);
+				},
+			}
+		);
+	};
 	const formik = useFormik({
 		initialValues: {
 			email: "",
 		},
 		validationSchema: emailSchema,
 		onSubmit: (values) => {
-			console.log(values);
-			forgotPassReq({...values, role});
-			setEmailSent(true);
+			handleForgotPasswordSubmit({ ...values });
 		},
 	});
 
@@ -76,7 +90,7 @@ const ForgotPassword = ({
 							Back to Sign In
 						</button>
 
-						{emailSent ? (
+						{emailSent && !isPending && !isError && isSuccess ? (
 							// Success State
 							<motion.div
 								initial={{ opacity: 0, scale: 0.95 }}
@@ -172,9 +186,9 @@ const ForgotPassword = ({
 
 									{/* Submit Button */}
 									<Button
-										disabled={isLoading}
+										disabled={isPending}
 										loadingPosition="center"
-										loading={isLoading}
+										loading={isPending}
 										type="submit"
 										fullWidth
 										variant="contained"

@@ -1,4 +1,5 @@
 import ForgotPassword from "@/components/auth/ForgotPassword";
+import ResetPassword from "@/components/auth/ResetPassword";
 import { AdminAuth } from "@/pages/admin/AdminAuth";
 import { AdminDashboard } from "@/pages/admin/AdminDashboard";
 import { AdminLayout } from "@/pages/layouts/AdminLayout";
@@ -14,11 +15,21 @@ export const AdminRoutes = () => {
 				element={<NoAdminAuthRoute element={<AdminAuth />} />}
 			/>
 			<Route
-				path="/admin/forgot-password"
+				path="/forgot-password"
 				element={
 					<NoAdminAuthRoute
 						element={
 							<ForgotPassword role="admin" signInPath="/admin" />
+						}
+					/>
+				}
+			/>
+			<Route
+				path="/reset-password/:token"
+				element={
+					<NoAdminAuthRoute
+						element={
+							<ResetPassword role="admin" signInPath="/admin" />
 						}
 					/>
 				}

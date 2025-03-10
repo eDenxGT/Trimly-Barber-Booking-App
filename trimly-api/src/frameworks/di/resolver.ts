@@ -13,6 +13,7 @@ import { VerifyOtpController } from "./../../interfaceAdapters/controllers/auth/
 import { LoginUserController } from "../../interfaceAdapters/controllers/auth/login.controller";
 import { LogoutUserController } from "../../interfaceAdapters/controllers/auth/logout.controller";
 import { RefreshTokenController } from "../../interfaceAdapters/controllers/auth/refresh-token.controller";
+import { ForgotPasswordController } from "@/interfaceAdapters/controllers/auth/forgot-password.controller";
 
 // Registering all registries using a single class
 DependencyInjection.registerAll();
@@ -32,3 +33,5 @@ export const sendOtpEmailController = container.resolve(SendOtpEmailController);
 export const verifyOtpController = container.resolve(VerifyOtpController);
 
 export const refreshTokenController = container.resolve(RefreshTokenController);
+
+export const forgotPasswordController = container.resolve(ForgotPasswordController)

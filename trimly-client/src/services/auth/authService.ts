@@ -70,3 +70,20 @@ export const forgotPassword = async ({
 	);
 	return response.data
 };
+
+export const resetPassword = async ({
+	password,
+	role,
+}: {
+	password: string;
+	role: string;
+}) => {
+	const response = await authAxiosInstance.post<IAxiosResponse>(
+		"/reset-password",
+		{
+			password,
+			role,
+		}
+	);
+	return response.data
+};

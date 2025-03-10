@@ -5,6 +5,7 @@ import ClientHomePage from "@/pages/client/ClientHomePage";
 import { AuthRoute } from "@/utils/protected/ProtectedRoute";
 import { NoAuthRoute } from "@/utils/protected/PublicRoute";
 import ForgotPassword from "@/components/auth/ForgotPassword";
+import ResetPassword from "@/components/auth/ResetPassword";
 
 export const ClientRoutes = () => {
 	return (
@@ -15,11 +16,16 @@ export const ClientRoutes = () => {
 				element={
 					<NoAuthRoute
 						element={
-							<ForgotPassword
-								role="client"
-								signInPath="/"
-							/>
+							<ForgotPassword role="client" signInPath="/" />
 						}
+					/>
+				}
+			/>
+			<Route
+				path="/reset-password/:token"
+				element={
+					<NoAuthRoute
+						element={<ResetPassword role="client" signInPath="/" />}
 					/>
 				}
 			/>
