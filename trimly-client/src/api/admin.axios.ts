@@ -1,16 +1,16 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 import { store } from "@/store/store";
-import { clientLogout } from "@/store/slices/client.slice";
+import { adminLogout } from "@/store/slices/admin.slice";
 
-export const clientAxiosInstance = axios.create({
-	baseURL: import.meta.env.VITE_PRIVATE_API_URL + "/_cl",
+export const adminAxiosInstance = axios.create({
+	baseURL: import.meta.env.VITE_PRIVATE_API_URL + "/_ad",
 	withCredentials: true,
 });
 
 let isRefreshing = false;
 
-clientAxiosInstance.interceptors.response.use(
+adminAxiosInstance.interceptors.response.use(
 	(response) => response,
 	async (error) => {
 		const originalRequest = error.config;
@@ -20,15 +20,15 @@ clientAxiosInstance.interceptors.response.use(
 			if (!isRefreshing) {
 				isRefreshing = true;
 				try {
-					await clientAxiosInstance.post("/client/refresh-token");
+					await adminAxiosInstance.post("/admin/refresh-token");
 					isRefreshing = false;
-					return clientAxiosInstance(originalRequest);
+					return adminAxiosInstance(originalRequest);
 				} catch (refreshError) {
 					isRefreshing = false;
 
-					store.dispatch(clientLogout());
+					store.dispatch(adminLogout());
 
-					window.location.href = "/";
+					window.location.href = "/admin";
 					toast("Please login again");
 					return Promise.reject(refreshError);
 				}
@@ -44,9 +44,9 @@ clientAxiosInstance.interceptors.response.use(
 				!originalRequest._retry)
 		) {
 			console.log("Session ended");
-			store.dispatch(clientLogout());
+			store.dispatch(adminLogout());
 
-			window.location.href = "/";
+			window.location.href = "/admin";
 			toast("Please login again");
 			return Promise.reject(error);
 		}

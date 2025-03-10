@@ -1,0 +1,47 @@
+//* ====== Module Imports ====== *//
+import { Request, RequestHandler, Response } from "express";
+
+//* ====== Middleware Imports ====== *//
+import {
+	authorizeRole,
+	decodeToken,
+	verifyAuth,
+} from "../../../interfaceAdapters/middlewares/auth.middleware";
+
+
+//* ====== BaseRoute Import ====== *//
+import { BaseRoute } from "../base.route";
+
+//* ====== Controller Imports ====== *//
+import {
+	blockStatusMiddleware,
+	logoutController,
+	refreshTokenController,
+} from "../../di/resolver";
+
+export class BarberRoutes extends BaseRoute {
+	constructor() {
+		super();
+	}
+	protected initializeRoutes(): void {
+		// logout
+		this.router.post(
+			"/barber/logout",
+			verifyAuth,
+			authorizeRole(["barber"]),
+			blockStatusMiddleware.checkStatus as RequestHandler,
+			(req: Request, res: Response) => {
+				logoutController.handle(req, res);
+			}
+		);
+
+		this.router.post(
+			"/barber/refresh-token",
+			decodeToken,
+			(req: Request, res: Response) => {
+				console.log("refreshing barber", req.body);
+				refreshTokenController.handle(req, res);
+			}
+		);
+	}
+}

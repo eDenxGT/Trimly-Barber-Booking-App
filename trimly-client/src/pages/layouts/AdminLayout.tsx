@@ -1,34 +1,39 @@
 import { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { PrivateHeader } from "@/components/headers/PrivateHeader";
-import { AppSidebar } from "@/components/common/SideBar";
+import { AppSidebar } from "@/components/sidebars/SideBar";
 import { UserRole } from "@/types/UserRoles";
 import { useLogout } from "@/hooks/auth/useLogout";
-import { logoutClient } from "@/services/auth/authService";
 import { useDispatch, useSelector } from "react-redux";
 import { useToaster } from "@/hooks/ui/useToaster";
 import { RootState } from "@/store/store";
+import { logoutAdmin } from "@/services/auth/authService";
+import { adminLogout } from "@/store/slices/admin.slice";
 
-export const ClientLayout = () => {
+// interface AdminLayoutProps {
+// 	userRole?: UserRole;
+// }
+
+export const AdminLayout = () => {
 	const [isSideBarVisible, setIsSideBarVisible] = useState(false);
 	const [notifications] = useState(2);
 	const { successToast, errorToast } = useToaster();
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const user = useSelector((state: RootState) => state.client.client);
-	const { mutate: logoutReq } = useLogout(logoutClient);
+	const user = useSelector((state: RootState) => state.admin.admin);
+	const { mutate: logoutReq } = useLogout(logoutAdmin);
 
 	const handleLogout = () => {
-		// logoutReq(undefined, {
-		//    onSuccess: (data) => {
-		//       dispatch(clientLogout());
-		//       successToast(data.message);
-		//       navigate("/")
-		//    },
-		//    onError: (err: any) => {
-		//       errorToast(err.response.data.message);
-		//    },
-		// });
+		logoutReq(undefined, {
+		   onSuccess: (data) => {
+		      dispatch(adminLogout());
+		      successToast(data.message);
+		      navigate("/admin")
+		   },
+		   onError: (err: any) => {
+		      errorToast(err.response.data.message);
+		   },
+		});
 	};
 
 	return (
@@ -37,7 +42,7 @@ export const ClientLayout = () => {
 			<PrivateHeader
 				className="z-40"
 				userName={user?.firstName}
-				// userLocation={userLocation}
+				// userLocation={user?.location}
 				onLogout={handleLogout}
 				// userAvatar={userAvatar}
 				notifications={notifications}

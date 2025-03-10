@@ -6,12 +6,15 @@ import { CustomRequest } from "./auth.middleware";
 import { NextFunction, Response } from "express";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../shared/constants";
 import { clearAuthCookies } from "../../shared/utils/cookieHelper";
+import { IBarberRepository } from "@/entities/repositoryInterfaces/barber/barber-repository.interface";
 
 @injectable()
 export class BlockStatusMiddleware {
 	constructor(
 		@inject("IClientRepository")
 		private readonly clientRepository: IClientRepository,
+		@inject("IBarberRepository")
+		private readonly barberRepository: IBarberRepository,
 		@inject("IBlackListTokenUseCase")
 		private readonly blacklistTokenUseCase: IBlackListTokenUseCase,
 		@inject("IRevokeRefreshTokenUseCase")
@@ -37,11 +40,21 @@ export class BlockStatusMiddleware {
 				if (!client) {
 					res.status(HTTP_STATUS.NOT_FOUND).json({
 						success: false,
-						message: "Client not found",
+						message: ERROR_MESSAGES.USER_NOT_FOUND,
 					});
 					return;
 				}
 				status = client.status;
+			} else if (role === "barber") {
+				const barber = await this.barberRepository.findById(id);
+				if (!barber) {
+					res.status(HTTP_STATUS.NOT_FOUND).json({
+						success: false,
+						message: ERROR_MESSAGES.USER_NOT_FOUND,
+					});
+					return;
+				}
+				status = barber.status;
 			} else {
 				res.status(HTTP_STATUS.BAD_REQUEST).json({
 					success: false,

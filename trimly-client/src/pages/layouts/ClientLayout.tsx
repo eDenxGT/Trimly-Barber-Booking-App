@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { PrivateHeader } from "@/components/headers/PrivateHeader";
-import { AppSidebar } from "@/components/common/SideBar";
-import { UserRole } from "@/types/UserRoles";
+import { AppSidebar } from "@/components/sidebars/SideBar";
 import { useLogout } from "@/hooks/auth/useLogout";
 import { logoutClient } from "@/services/auth/authService";
 import { useDispatch, useSelector } from "react-redux";

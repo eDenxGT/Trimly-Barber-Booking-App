@@ -1,8 +1,9 @@
-// import { userAxiosInstance } from "@/api/user.axios";
 import { authAxiosInstance } from "@/api/auth.axios";
 import { ILoginData, UserDTO } from "@/types/User";
 import { IAuthResponse, IAxiosResponse } from "@/types/Response";
 import { clientAxiosInstance } from "@/api/client.axios";
+import { barberAxiosInstance } from "@/api/barber.axios";
+import { adminAxiosInstance } from "@/api/admin.axios";
 
 export const signup = async (user: UserDTO): Promise<IAxiosResponse> => {
 	const response = await authAxiosInstance.post<IAxiosResponse>(
@@ -17,7 +18,6 @@ export const signin = async (user: ILoginData): Promise<IAuthResponse> => {
 		"/signin",
 		user
 	);
-	console.log(response);
 	return response.data;
 };
 
@@ -40,6 +40,16 @@ export const verifyOtp = async (data: {
 };
 
 export const logoutClient = async (): Promise<IAxiosResponse> => {
-	const response = await clientAxiosInstance.post("/_cl/client/logout");
+	const response = await clientAxiosInstance.post("/client/logout");
+	return response.data;
+};
+
+export const logoutBarber = async (): Promise<IAxiosResponse> => {
+	const response = await barberAxiosInstance.post("/barber/logout");
+	return response.data;
+};
+
+export const logoutAdmin = async (): Promise<IAxiosResponse> => {
+	const response = await adminAxiosInstance.post("/admin/logout");
 	return response.data;
 };
