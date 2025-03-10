@@ -53,3 +53,20 @@ export const logoutAdmin = async (): Promise<IAxiosResponse> => {
 	const response = await adminAxiosInstance.post("/admin/logout");
 	return response.data;
 };
+
+export const forgotPassword = async ({
+	email,
+	role,
+}: {
+	email: string;
+	role: string;
+}) => {
+	const response = await authAxiosInstance.post<IAxiosResponse>(
+		"/forgot-password",
+		{
+			email,
+			role,
+		}
+	);
+	return response.data
+};

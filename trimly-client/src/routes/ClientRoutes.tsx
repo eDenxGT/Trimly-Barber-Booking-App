@@ -4,11 +4,25 @@ import { ClientLayout } from "@/pages/layouts/ClientLayout";
 import ClientHomePage from "@/pages/client/ClientHomePage";
 import { AuthRoute } from "@/utils/protected/ProtectedRoute";
 import { NoAuthRoute } from "@/utils/protected/PublicRoute";
+import ForgotPassword from "@/components/auth/ForgotPassword";
 
 export const ClientRoutes = () => {
 	return (
 		<Routes>
 			<Route index element={<NoAuthRoute element={<ClientAuth />} />} />
+			<Route
+				path="/forgot-password"
+				element={
+					<NoAuthRoute
+						element={
+							<ForgotPassword
+								role="client"
+								signInPath="/"
+							/>
+						}
+					/>
+				}
+			/>
 			<Route
 				path="/"
 				element={

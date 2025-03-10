@@ -1,3 +1,4 @@
+import ForgotPassword from "@/components/auth/ForgotPassword";
 import { AdminAuth } from "@/pages/admin/AdminAuth";
 import { AdminDashboard } from "@/pages/admin/AdminDashboard";
 import { AdminLayout } from "@/pages/layouts/AdminLayout";
@@ -11,6 +12,16 @@ export const AdminRoutes = () => {
 			<Route
 				index
 				element={<NoAdminAuthRoute element={<AdminAuth />} />}
+			/>
+			<Route
+				path="/admin/forgot-password"
+				element={
+					<NoAdminAuthRoute
+						element={
+							<ForgotPassword role="admin" signInPath="/admin" />
+						}
+					/>
+				}
 			/>
 			<Route
 				path="/"

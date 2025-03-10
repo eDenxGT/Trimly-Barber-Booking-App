@@ -9,6 +9,7 @@ import { PublicHeader } from "../headers/PublicHeader";
 import { signinSchema } from "@/utils/validations/signin.validator";
 import { UserRole } from "@/types/UserRoles";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 interface SignInProps {
 	userType: UserRole;
@@ -25,6 +26,8 @@ const SignIn = ({
 }: SignInProps) => {
 	const [showPassword, setShowPassword] = useState(false);
 
+	const navigate = useNavigate();
+
 	const formik = useFormik({
 		initialValues: {
 			email: "",
@@ -36,6 +39,20 @@ const SignIn = ({
 			onSubmit(values);
 		},
 	});
+
+	const handleForgotPasswordRedirection = () => {
+		switch (userType) {
+			case "barber":
+				navigate("/barber/forgot-password");
+				break;
+			case "admin":
+				navigate("/admin/forgot-password");
+				break;
+			default:
+				navigate("/forgot-password");
+				break;
+		}
+	};
 
 	return (
 		<>
@@ -183,11 +200,13 @@ const SignIn = ({
 							{/* Forgot Password & Register Now */}
 							<div className="flex items-center justify-between space-x-2">
 								<div className="text-sm">
-									<a
-										href="#"
-										className="text-[var(--yellow)] hover:text-[var(--yellow-hover)]">
+									<span
+										onClick={
+											handleForgotPasswordRedirection
+										}
+										className="text-[var(--yellow)] hover:text-[var(--yellow-hover)] hover:cursor-pointer">
 										Forgot password?
-									</a>
+									</span>
 								</div>
 								{userType !== "admin" && (
 									<div className="flex items-center gap-1.5">
@@ -221,7 +240,7 @@ const SignIn = ({
 								}}>
 								Sign In
 							</Button>
-							
+
 							{/* Social SignIn */}
 							{userType !== "admin" && (
 								<>

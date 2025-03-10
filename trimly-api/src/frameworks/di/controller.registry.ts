@@ -11,6 +11,7 @@ import { VerifyOtpController } from "../../interfaceAdapters/controllers/auth/ve
 import { LoginUserController } from "../../interfaceAdapters/controllers/auth/login.controller";
 import { LogoutUserController } from "../../interfaceAdapters/controllers/auth/logout.controller";
 import { RefreshTokenController } from "../../interfaceAdapters/controllers/auth/refresh-token.controller";
+import { ForgotPasswordController } from "@/interfaceAdapters/controllers/auth/forgot-password.controller";
 
 export class ControllerRegistry {
 	static registerControllers(): void {
@@ -42,6 +43,10 @@ export class ControllerRegistry {
 
 		container.register("RefreshTokenController", {
 			useClass: RefreshTokenController,
+		});
+
+		container.register("ForgotPasswordController", {
+			useClass: ForgotPasswordController,
 		});
 	}
 }

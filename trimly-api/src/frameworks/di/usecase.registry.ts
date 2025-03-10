@@ -12,6 +12,7 @@ import { ClientLoginStrategy } from "../../useCases/auth/login-strategies/client
 import { BarberRegisterStrategy } from "../../useCases/auth/register-strategies/barber-register.strategy";
 import { BarberLoginStrategy } from "@/useCases/auth/login-strategies/barber-login.strategy";
 import { AdminLoginStrategy } from "@/useCases/auth/login-strategies/admin-login.strategy";
+import { ClientForgotPasswordStrategy } from "@/useCases/auth/forgot-password-strategies/client-forgot-password.strategy";
 
 //* ====== Service Imports ====== *//
 import { IOtpService } from "../../entities/services/otp-service.interface";
@@ -40,6 +41,8 @@ import { IRevokeRefreshTokenUseCase } from "../../entities/useCaseInterfaces/aut
 import { RevokeRefreshTokenUseCase } from "../../useCases/auth/revoke-refresh-token.usecase";
 import { IRefreshTokenUseCase } from "../../entities/useCaseInterfaces/auth/refresh-token-usecase.interface";
 import { RefreshTokenUseCase } from "../../useCases/auth/refresh-token.usecase";
+import { IForgotPasswordUseCase } from "@/entities/useCaseInterfaces/auth/forgot-password-usecase.interface";
+import { ForgotPasswordUseCase } from "@/useCases/auth/forgot-password.usecase";
 
 export class UseCaseRegistry {
 	static registerUseCases(): void {
@@ -77,6 +80,10 @@ export class UseCaseRegistry {
 
 		container.register<IRefreshTokenUseCase>("IRefreshTokenUseCase", {
 			useClass: RefreshTokenUseCase,
+		});
+
+		container.register<IForgotPasswordUseCase>("IForgotPasswordUseCase", {
+			useClass: ForgotPasswordUseCase,
 		});
 
 		//* ====== Register Bcrypts ====== *//
@@ -124,6 +131,10 @@ export class UseCaseRegistry {
 
 		container.register("AdminLoginStrategy", {
 			useClass: AdminLoginStrategy,
+		});
+		
+		container.register("ClientForgotPasswordStrategy", {
+			useClass: ClientForgotPasswordStrategy,
 		});
 	}
 }

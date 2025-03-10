@@ -32,5 +32,10 @@ export class AuthRoutes extends BaseRoute {
 		this.router.post("/verify-otp", (req: Request, res: Response) => {
 			verifyOtpController.handle(req, res);
 		});
+
+		this.router.post("/forgot-password", (req: Request, res: Response) => {
+			console.log(req.body);
+			// verifyOtpController.handle(req, res);
+		});
 	}
 }

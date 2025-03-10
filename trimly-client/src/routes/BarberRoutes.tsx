@@ -1,3 +1,4 @@
+import ForgotPassword from "@/components/auth/ForgotPassword";
 import BarberAuth from "@/pages/barber/BarberAuth";
 import { BarberDashboard } from "@/pages/barber/BarberDashboard";
 import { BarberLayout } from "@/pages/layouts/BarberLayout";
@@ -11,6 +12,19 @@ export const BarberRoutes = () => {
 			<Route
 				index
 				element={<NoBarberAuthRoute element={<BarberAuth />} />}
+			/>
+			<Route
+				path="/forgot-password"
+				element={
+					<NoBarberAuthRoute
+						element={
+							<ForgotPassword
+								role="barber"
+								signInPath="/barber"
+							/>
+						}
+					/>
+				}
 			/>
 			<Route
 				path="/"
