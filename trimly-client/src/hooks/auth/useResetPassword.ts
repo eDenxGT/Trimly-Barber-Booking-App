@@ -6,7 +6,7 @@ export const useResetPasswordMutation = () => {
 	return useMutation<
 		IAxiosResponse,
 		Error,
-		{ password: string; role: string }
+		{ password: string; role: string; token: string | undefined }
 	>({
 		mutationFn: resetPassword,
 	});

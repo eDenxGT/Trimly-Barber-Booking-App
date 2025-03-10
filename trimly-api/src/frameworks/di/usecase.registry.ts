@@ -15,6 +15,9 @@ import { AdminLoginStrategy } from "@/useCases/auth/login-strategies/admin-login
 import { ClientForgotPasswordStrategy } from "@/useCases/auth/forgot-password-strategies/client-forgot-password.strategy";
 import { AdminForgotPasswordStrategy } from "@/useCases/auth/forgot-password-strategies/admin-forgot-password.strategy";
 import { BarberForgotPasswordStrategy } from "@/useCases/auth/forgot-password-strategies/barber-forgot-password.strategy";
+import { ClientResetPasswordStrategy } from "@/useCases/auth/reset-password-strategies/client-reset-password.strategy";
+import { BarberResetPasswordStrategy } from "@/useCases/auth/reset-password-strategies/barber-reset-password.strategy";
+import { AdminResetPasswordStrategy } from "@/useCases/auth/reset-password-strategies/admin-reset-password.strategy";
 
 //* ====== Service Imports ====== *//
 import { IOtpService } from "../../entities/services/otp-service.interface";
@@ -45,6 +48,8 @@ import { IRefreshTokenUseCase } from "../../entities/useCaseInterfaces/auth/refr
 import { RefreshTokenUseCase } from "../../useCases/auth/refresh-token.usecase";
 import { IForgotPasswordUseCase } from "@/entities/useCaseInterfaces/auth/forgot-password-usecase.interface";
 import { ForgotPasswordUseCase } from "@/useCases/auth/forgot-password.usecase";
+import { IResetPasswordUseCase } from "@/entities/useCaseInterfaces/auth/reset-password-usecase.interface";
+import { ResetPasswordUseCase } from "@/useCases/auth/reset-password.usecase";
 
 export class UseCaseRegistry {
 	static registerUseCases(): void {
@@ -86,6 +91,10 @@ export class UseCaseRegistry {
 
 		container.register<IForgotPasswordUseCase>("IForgotPasswordUseCase", {
 			useClass: ForgotPasswordUseCase,
+		});
+
+		container.register<IResetPasswordUseCase>("IResetPasswordUseCase", {
+			useClass: ResetPasswordUseCase,
 		});
 
 		//* ====== Register Bcrypts ====== *//
@@ -145,6 +154,18 @@ export class UseCaseRegistry {
 
 		container.register("AdminForgotPasswordStrategy", {
 			useClass: AdminForgotPasswordStrategy,
+		});
+
+		container.register("ClientResetPasswordStrategy", {
+			useClass: ClientResetPasswordStrategy,
+		});
+
+		container.register("BarberResetPasswordStrategy", {
+			useClass: BarberResetPasswordStrategy,
+		});
+
+		container.register("AdminResetPasswordStrategy", {
+			useClass: AdminResetPasswordStrategy,
 		});
 	}
 }

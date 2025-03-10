@@ -12,6 +12,7 @@ import { LoginUserController } from "../../interfaceAdapters/controllers/auth/lo
 import { LogoutUserController } from "../../interfaceAdapters/controllers/auth/logout.controller";
 import { RefreshTokenController } from "../../interfaceAdapters/controllers/auth/refresh-token.controller";
 import { ForgotPasswordController } from "@/interfaceAdapters/controllers/auth/forgot-password.controller";
+import { ResetPasswordController } from "@/interfaceAdapters/controllers/auth/reset-password.controller";
 
 export class ControllerRegistry {
 	static registerControllers(): void {
@@ -47,6 +48,10 @@ export class ControllerRegistry {
 
 		container.register("ForgotPasswordController", {
 			useClass: ForgotPasswordController,
+		});
+
+		container.register("ResetPasswordController", {
+			useClass: ResetPasswordController,
 		});
 	}
 }

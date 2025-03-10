@@ -9,6 +9,7 @@ import {
 	forgotPasswordController,
 	loginController,
 	registerController,
+	resetPasswordController,
 	sendOtpEmailController,
 	verifyOtpController,
 } from "../../di/resolver";
@@ -36,6 +37,10 @@ export class AuthRoutes extends BaseRoute {
 
 		this.router.post("/forgot-password", (req: Request, res: Response) => {
 			forgotPasswordController.handle(req, res);
+		});
+
+		this.router.post("/reset-password", (req: Request, res: Response) => {
+			resetPasswordController.handle(req, res);
 		});
 	}
 }

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Calendar } from "@/components/ui/calendar";
 import { 
   Select,
   SelectContent, 
@@ -120,12 +119,12 @@ export const BarberDashboard = () => {
                     </SelectContent>
                   </Select>
                 </div>
-                <Calendar
+                {/* <Calendar
                   mode="single"
                   selected={day}
                   onSelect={setDay}
                   className="rounded-md border"
-                />
+                /> */}
               </div>
               <Separator orientation="vertical" className="hidden md:block" />
               <div className="flex-1">

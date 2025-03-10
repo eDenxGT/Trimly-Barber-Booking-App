@@ -17,4 +17,20 @@ export class AdminRepository implements IAdminRepository {
 			id: admin._id.toString(),
 		};
 	}
+	async updateByEmail(
+		email: string,
+		updates: Partial<IAdminEntity>
+	): Promise<IAdminEntity | null> {
+		const admin = await AdminModel.findOneAndUpdate(
+			{ email },
+			{ $set: updates },
+			{ new: true }
+		).lean();
+		if (!admin) return null;
+
+		return {
+			...admin,
+			id: admin._id.toString(),
+		} as IAdminEntity;
+	}
 }

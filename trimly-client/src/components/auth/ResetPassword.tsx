@@ -1,64 +1,37 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { TextField, Button as MuiButton } from "@mui/material";
 import { ArrowLeft, CheckCircle, Eye, EyeOff } from "lucide-react";
 import { useFormik } from "formik";
 import { motion } from "framer-motion";
 import { PublicHeader } from "../headers/PublicHeader";
 import { passwordSchema } from "@/utils/validations/password.validator";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
+import { useNavigate, useParams } from "react-router-dom";
 import { useResetPasswordMutation } from "@/hooks/auth/useResetPassword";
 import { useToaster } from "@/hooks/ui/useToaster";
 import BarberToolsBG from "@/assets/common/barber-tools.png";
+import BarberWithPhone from "@/assets/common/barber-with-phone.png";
 
 interface ResetPasswordProps {
 	role: string;
 	signInPath: string;
 }
 
-const ResetPassword = ({ role, signInPath }: ResetPasswordProps) => {
-	const [searchParams] = useSearchParams();
-	const token = searchParams.get("token") || "";
+const ResetPassword = ({
+	role,
+	signInPath,
+}: ResetPasswordProps) => {
+	const { token } = useParams();
 	const [passwordReset, setPasswordReset] = useState(false);
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-	const {
-		mutate: resetPasswordReq,
-		isPending,
-		isSuccess,
-		isError,
-	} = useResetPasswordMutation();
+	
 	const navigate = useNavigate();
 	const { successToast, errorToast } = useToaster();
-
-	const getForgotRedirectUrl = () => {
-		switch (role) {
-			case "admin":
-				return "/admin";
-			case "barber":
-				return "/barber";
-			default:
-				return "/";
-		}
-	};
-
-	const formik = useFormik({
-		initialValues: {
-			password: "",
-			confirmPassword: "",
-		},
-		validationSchema: passwordSchema,
-		onSubmit: (values) => {
-			handleResetPasswordSubmit(values);
-		},
-	});
-
-	const handleResetPasswordSubmit = ({ password }: { password: string }) => {
+	const { mutate: resetPasswordReq, isPending } = useResetPasswordMutation();
+	
+	const handleResetPasswordSubmit = (password: string) => {
 		resetPasswordReq(
-			{ password, role },
+			{ password, role, token },
 			{
 				onSuccess: (data) => {
 					successToast(data.message);
@@ -70,41 +43,24 @@ const ResetPassword = ({ role, signInPath }: ResetPasswordProps) => {
 			}
 		);
 	};
-
-	if (!token) {
-		return (
-			<>
-				<PublicHeader />
-				<div className="min-h-screen flex items-center justify-center p-6">
-					<div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
-						<h2 className="text-2xl font-bold mb-4">
-							Invalid or Expired Link
-						</h2>
-						<p className="text-gray-600 mb-6">
-							This password reset link is invalid or has expired.
-							Please request a new password reset link.
-						</p>
-						<Button
-							onClick={() =>
-								navigate(
-									getForgotRedirectUrl() + "/forgot-password"
-								)
-							}
-							className="w-full">
-							Request New Link
-						</Button>
-					</div>
-				</div>
-			</>
-		);
-	}
+	
+	const formik = useFormik({
+		initialValues: {
+			password: "",
+			confirmPassword: "",
+		},
+		validationSchema: passwordSchema,
+		onSubmit: (values) => {
+			handleResetPasswordSubmit(values.password);
+		},
+	});
 
 	return (
 		<>
 			<PublicHeader />
 			<div className="min-h-screen flex flex-col md:flex-row">
 				{/* Left Section with Image */}
-				<div className="hidden md:flex w-1/2 bg-yellow-100 relative overflow-hidden justify-center items-end">
+				<div className="hidden md:flex w-1/2 bg-[var(--bg-yellow)] relative overflow-hidden justify-center items-end">
 					<div className="absolute inset-0 pattern-bg opacity-10"></div>
 					<img
 						src={BarberToolsBG}
@@ -115,9 +71,9 @@ const ResetPassword = ({ role, signInPath }: ResetPasswordProps) => {
 						initial={{ scale: 1.1 }}
 						animate={{ scale: 1 }}
 						transition={{ duration: 2 }}
-						src="/placeholder.svg"
+						src={BarberWithPhone}
 						alt="Thinking person"
-						className="relative z-10 w-[30rem]"
+						className="relative z-10 w-[40rem]"
 					/>
 				</div>
 
@@ -153,11 +109,19 @@ const ResetPassword = ({ role, signInPath }: ResetPasswordProps) => {
 										password.
 									</p>
 								</div>
-								<Button
+								<MuiButton
 									onClick={() => navigate(signInPath)}
-									className="w-full bg-yellow-500 hover:bg-yellow-600">
-									Go to Login
-								</Button>
+									fullWidth
+									variant="contained"
+									sx={{
+										backgroundColor: "var(--yellow)",
+										"&:hover": {
+											backgroundColor:
+												"var(--yellow-hover)",
+										},
+									}}>
+									Go to Sign in
+								</MuiButton>
 							</motion.div>
 						) : (
 							// Form State
@@ -174,134 +138,163 @@ const ResetPassword = ({ role, signInPath }: ResetPasswordProps) => {
 								<form
 									className="space-y-6"
 									onSubmit={formik.handleSubmit}>
-									<div className="space-y-4">
+									<div className="flex flex-col gap-5">
 										{/* Password */}
-										<div className="space-y-2">
-											<Label htmlFor="password">
-												Password
-											</Label>
-											<div className="relative">
-												<Input
-													id="password"
-													name="password"
-													type={
-														showPassword
-															? "text"
-															: "password"
-													}
-													placeholder="Enter your new password"
-													className={cn(
-														"pr-10",
-														formik.touched
-															.password &&
-															formik.errors
-																.password
-															? "border-red-500"
-															: ""
-													)}
-													value={
-														formik.values.password
-													}
-													onChange={
-														formik.handleChange
-													}
-													onBlur={formik.handleBlur}
-												/>
-												<button
-													type="button"
-													onClick={() =>
-														setShowPassword(
-															!showPassword
-														)
-													}
-													className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-													{showPassword ? (
-														<EyeOff className="h-5 w-5" />
-													) : (
-														<Eye className="h-5 w-5" />
-													)}
-												</button>
-											</div>
-											{formik.touched.password &&
-												formik.errors.password && (
-													<p className="text-red-500 text-sm mt-1">
-														{formik.errors.password}
-													</p>
-												)}
-										</div>
+										<TextField
+											id="password"
+											name="password"
+											type={
+												showPassword
+													? "text"
+													: "password"
+											}
+											error={
+												formik.touched.password &&
+												Boolean(formik.errors.password)
+											}
+											helperText={
+												formik.touched.password
+													? formik.errors.password
+													: ""
+											}
+											value={formik.values.password}
+											onChange={formik.handleChange}
+											onBlur={formik.handleBlur}
+											fullWidth
+											label="Password"
+											placeholder="Enter your new password"
+											variant="outlined"
+											InputProps={{
+												endAdornment: (
+													<button
+														type="button"
+														onClick={() =>
+															setShowPassword(
+																!showPassword
+															)
+														}
+														className="text-gray-500">
+														{showPassword ? (
+															<EyeOff className="h-5 w-5" />
+														) : (
+															<Eye className="h-5 w-5" />
+														)}
+													</button>
+												),
+											}}
+											sx={{
+												"& .MuiOutlinedInput-root": {
+													"&:hover fieldset": {
+														borderColor:
+															"var(--yellow)",
+													},
+													"&.Mui-focused fieldset": {
+														borderColor:
+															"var(--yellow)",
+													},
+												},
+												"& .MuiInputLabel-root.Mui-focused":
+													{
+														color: "var(--yellow)",
+													},
+												"& .MuiFormHelperText-root": {
+													fontSize: "0.75rem",
+													lineHeight: "1rem",
+													minHeight: "1rem",
+												},
+											}}
+										/>
 
 										{/* Confirm Password */}
-										<div className="space-y-2">
-											<Label htmlFor="confirmPassword">
-												Confirm Password
-											</Label>
-											<div className="relative">
-												<Input
-													id="confirmPassword"
-													name="confirmPassword"
-													type={
-														showConfirmPassword
-															? "text"
-															: "password"
-													}
-													placeholder="Confirm your new password"
-													className={cn(
-														"pr-10",
-														formik.touched
-															.confirmPassword &&
-															formik.errors
-																.confirmPassword
-															? "border-red-500"
-															: ""
-													)}
-													value={
-														formik.values
+										<TextField
+											id="confirmPassword"
+											name="confirmPassword"
+											type={
+												showConfirmPassword
+													? "text"
+													: "password"
+											}
+											error={
+												formik.touched
+													.confirmPassword &&
+												Boolean(
+													formik.errors
+														.confirmPassword
+												)
+											}
+											helperText={
+												formik.touched.confirmPassword
+													? formik.errors
 															.confirmPassword
-													}
-													onChange={
-														formik.handleChange
-													}
-													onBlur={formik.handleBlur}
-												/>
-												<button
-													type="button"
-													onClick={() =>
-														setShowConfirmPassword(
-															!showConfirmPassword
-														)
-													}
-													className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-													{showConfirmPassword ? (
-														<EyeOff className="h-5 w-5" />
-													) : (
-														<Eye className="h-5 w-5" />
-													)}
-												</button>
-											</div>
-											{formik.touched.confirmPassword &&
-												formik.errors
-													.confirmPassword && (
-													<p className="text-red-500 text-sm mt-1">
-														{
-															formik.errors
-																.confirmPassword
+													: ""
+											}
+											value={
+												formik.values.confirmPassword
+											}
+											onChange={formik.handleChange}
+											onBlur={formik.handleBlur}
+											fullWidth
+											label="Confirm Password"
+											placeholder="Confirm your new password"
+											variant="outlined"
+											InputProps={{
+												endAdornment: (
+													<button
+														type="button"
+														onClick={() =>
+															setShowConfirmPassword(
+																!showConfirmPassword
+															)
 														}
-													</p>
-												)}
-										</div>
+														className="text-gray-500">
+														{showConfirmPassword ? (
+															<EyeOff className="h-5 w-5" />
+														) : (
+															<Eye className="h-5 w-5" />
+														)}
+													</button>
+												),
+											}}
+											sx={{
+												"& .MuiOutlinedInput-root": {
+													"&:hover fieldset": {
+														borderColor:
+															"var(--yellow)",
+													},
+													"&.Mui-focused fieldset": {
+														borderColor:
+															"var(--yellow)",
+													},
+												},
+												"& .MuiInputLabel-root.Mui-focused":
+													{
+														color: "var(--yellow)",
+													},
+												"& .MuiFormHelperText-root": {
+													fontSize: "0.75rem",
+													lineHeight: "1rem",
+													minHeight: "1rem",
+												},
+											}}
+										/>
 									</div>
 
 									{/* Submit Button */}
-									<Button
-										disabled={
-											isPending && !isSuccess && !isError
-										}
+									<MuiButton
+										disabled={isPending}
 										type="submit"
-										className="w-full bg-yellow-500 hover:bg-yellow-600">
-										{isPending && !isSuccess && !isError
-											? "Resetting..."
-											: "Reset Password"}
-									</Button>
+										fullWidth
+										variant="contained"
+										loading={isPending}
+										sx={{
+											backgroundColor: "var(--yellow)",
+											"&:hover": {
+												backgroundColor:
+													"var(--yellow-hover)",
+											},
+										}}>
+										Reset Password
+									</MuiButton>
 								</form>
 							</>
 						)}

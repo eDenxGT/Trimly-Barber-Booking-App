@@ -26,4 +26,20 @@ export class BarberRepository implements IBarberRepository {
 			id: barber._id.toString(),
 		} as IBarberEntity;
 	}
+	async updateByEmail(
+		email: string,
+		updates: Partial<IBarberEntity>
+	): Promise<IBarberEntity | null> {
+		const barber = await BarberModel.findOneAndUpdate(
+			{ email },
+			{ $set: updates },
+			{ new: true }
+		).lean();
+		if (!barber) return null;
+
+		return {
+			...barber,
+			id: barber._id.toString(),
+		} as IBarberEntity;
+	}
 }

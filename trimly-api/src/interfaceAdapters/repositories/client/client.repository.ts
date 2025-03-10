@@ -28,4 +28,21 @@ export class ClientRepository implements IClientRepository {
 			id: client._id.toString(),
 		} as IClientEntity;
 	}
+
+	async updateByEmail(
+		email: string,
+		updates: Partial<IClientEntity>
+	): Promise<IClientEntity | null> {
+		const client = await ClientModel.findOneAndUpdate(
+			{ email },
+			{ $set: updates },
+			{ new: true }
+		).lean();
+		if (!client) return null;
+
+		return {
+			...client,
+			id: client._id.toString(),
+		} as IClientEntity;
+	}
 }

@@ -4,4 +4,8 @@ export interface IClientRepository {
 	save(data: Partial<IClientEntity>): Promise<IClientEntity>;
 	findByEmail(email: string): Promise<IClientEntity | null>;
 	findById(id: any): Promise<IClientEntity | null>;
+	updateByEmail(
+		email: string,
+		updates: Partial<IClientEntity>
+	): Promise<IClientEntity | null>;
 }

@@ -22,7 +22,6 @@ export class LogoutUserController implements ILogoutUserController {
 		private revokeRefreshToken: IRevokeRefreshTokenUseCase
 	) {}
 	async handle(req: Request, res: Response): Promise<void> {
-      console.log("Logotu working")
 		try {
 			await this.blackListTokenUseCase.execute(
 				(req as CustomRequest).user.access_token

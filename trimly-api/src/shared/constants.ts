@@ -57,7 +57,7 @@ export const ERROR_MESSAGES = {
 	VALIDATION_ERROR: "Validation error occurred.",
 	MISSING_PARAMETERS: "Missing required parameters.",
 	WRONG_CURRENT_PASSWORD: "Current password is wrong",
-	SAME_CURR_NEW_PASSWORD: "Please enter a different password from current",
+	SAME_CURR_NEW_PASSWORD: "Please enter a different password from current password",
 } as const;
 
 export const VERIFICATION_MAIL_CONTENT = (

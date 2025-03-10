@@ -10,6 +10,10 @@ interface JWTPayloadData {
 	role: string;
 }
 
+export interface ResetTokenPayload extends JwtPayload {
+	email: string
+}
+
 @injectable()
 export class JWTService implements ITokenService {
 	private accessSecret: Secret;
@@ -76,18 +80,18 @@ export class JWTService implements ITokenService {
 		});
 	}
 
-	verifyResetToken(token: string): JwtPayload | null {
+	verifyResetToken(token: string): ResetTokenPayload | null {
 		try {
-			return jwt.verify(token, this.resetSecret) as JwtPayload;
+			return jwt.verify(token, this.resetSecret) as ResetTokenPayload;
 		} catch (error) {
 			console.error("Reset token verification failed:", error);
 			return null;
 		}
 	}
 
-	decodeResetToken(token: string): JwtPayload | null {
+	decodeResetToken(token: string): ResetTokenPayload | null {
 		try {
-			return jwt.decode(token) as JwtPayload;
+			return jwt.decode(token) as ResetTokenPayload;
 		} catch (error) {
 			console.error("Reset token decoding failed", error);
 			return null;
