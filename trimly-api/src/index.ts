@@ -1,5 +1,5 @@
-//* ====== Node module-alias Imports ====== *//
-import 'module-alias/register';
+//* ====== Node module-alias Imports( to import using @/ ) ====== *//
+import "module-alias/register";
 
 //* ====== DI Imports ====== *//
 import "reflect-metadata";

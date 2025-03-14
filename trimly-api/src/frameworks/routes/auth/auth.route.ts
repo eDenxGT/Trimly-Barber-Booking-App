@@ -23,7 +23,6 @@ export class AuthRoutes extends BaseRoute {
 			registerController.handle(req, res);
 		});
 		this.router.post("/signin", (req: Request, res: Response) => {
-			console.log("LOgin req", req.body);
 			loginController.handle(req, res);
 		});
 

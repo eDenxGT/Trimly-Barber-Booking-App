@@ -15,6 +15,18 @@ export const BarberRoutes = () => {
 				element={<NoBarberAuthRoute element={<BarberAuth />} />}
 			/>
 			<Route
+				path="/"
+				element={
+					<BarberAuthRoute
+						allowedRoles={["barber"]}
+						element={<BarberLayout />}
+					/>
+				}>
+				<Route path="dashboard" element={<BarberDashboard />} />
+			</Route>
+			
+			{/*//? Forgot and reset pages */}
+			<Route
 				path="/forgot-password"
 				element={
 					<NoBarberAuthRoute
@@ -37,16 +49,6 @@ export const BarberRoutes = () => {
 					/>
 				}
 			/>
-			<Route
-				path="/"
-				element={
-					<BarberAuthRoute
-						allowedRoles={["barber"]}
-						element={<BarberLayout />}
-					/>
-				}>
-				<Route path="dashboard" element={<BarberDashboard />} />
-			</Route>
 		</Routes>
 	);
 };

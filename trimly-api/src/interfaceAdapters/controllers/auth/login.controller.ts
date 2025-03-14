@@ -24,7 +24,6 @@ export class LoginUserController implements ILoginUserController {
 	) {}
 	async handle(req: Request, res: Response): Promise<void> {
 		try {
-			console.log("Login controller")
 			const data = req.body as LoginUserDTO;
 			const validatedData = loginSchema.parse(data);
 			if (!validatedData) {

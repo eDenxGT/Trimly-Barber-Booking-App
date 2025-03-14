@@ -42,7 +42,6 @@ export const AdminLayout = () => {
 			<PrivateHeader
 				className="z-40"
 				userName={user?.firstName}
-				// userLocation={user?.location}
 				onLogout={handleLogout}
 				// userAvatar={userAvatar}
 				notifications={notifications}
@@ -51,6 +50,7 @@ export const AdminLayout = () => {
 
 			{/* Main content area with sidebar and outlet */}
 			<AppSidebar
+				role="admin"
 				isVisible={isSideBarVisible}
 				onClose={() => setIsSideBarVisible(false)}
 				handleLogout={handleLogout}

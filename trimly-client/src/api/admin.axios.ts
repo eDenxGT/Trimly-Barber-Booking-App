@@ -14,8 +14,11 @@ adminAxiosInstance.interceptors.response.use(
 	(response) => response,
 	async (error) => {
 		const originalRequest = error.config;
-
-		if (error.response?.status === 401 && !originalRequest._retry) {
+		if (
+			error.response?.status === 401 &&
+			error.response.data.message === "Token Expired" &&
+			!originalRequest._retry
+		) {
 			originalRequest._retry = true;
 			if (!isRefreshing) {
 				isRefreshing = true;
@@ -34,8 +37,9 @@ adminAxiosInstance.interceptors.response.use(
 				}
 			}
 		}
-
 		if (
+			(error.response.status === 401 &&
+				error.response.data.message === "Invalid token") ||
 			(error.response.status === 403 &&
 				error.response.data.message === "Token is blacklisted") ||
 			(error.response.status === 403 &&

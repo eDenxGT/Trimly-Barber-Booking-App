@@ -50,6 +50,8 @@ import { IForgotPasswordUseCase } from "@/entities/useCaseInterfaces/auth/forgot
 import { ForgotPasswordUseCase } from "@/useCases/auth/forgot-password.usecase";
 import { IResetPasswordUseCase } from "@/entities/useCaseInterfaces/auth/reset-password-usecase.interface";
 import { ResetPasswordUseCase } from "@/useCases/auth/reset-password.usecase";
+import { IGetAllUsersUseCase } from "@/entities/useCaseInterfaces/users/get-all-users-usecase.interface";
+import { GetAllUsersUseCase } from "@/useCases/users/get-all-users.usecase";
 
 export class UseCaseRegistry {
 	static registerUseCases(): void {
@@ -96,6 +98,10 @@ export class UseCaseRegistry {
 		container.register<IResetPasswordUseCase>("IResetPasswordUseCase", {
 			useClass: ResetPasswordUseCase,
 		});
+
+		container.register<IGetAllUsersUseCase>("IGetAllUsersUseCase", {
+			useClass: GetAllUsersUseCase
+		})
 
 		//* ====== Register Bcrypts ====== *//
 		container.register<IBcrypt>("IPasswordBcrypt", {

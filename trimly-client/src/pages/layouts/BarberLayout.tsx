@@ -51,6 +51,7 @@ export const BarberLayout = () => {
 
 			{/* Main content area with sidebar and outlet */}
 			<AppSidebar
+				role="barber"
 				isVisible={isSideBarVisible}
 				onClose={() => setIsSideBarVisible(false)}
 				handleLogout={handleLogout}

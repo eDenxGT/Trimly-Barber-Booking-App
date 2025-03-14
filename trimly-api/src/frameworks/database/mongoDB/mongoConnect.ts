@@ -34,4 +34,12 @@ export class MongoConnect {
 			throw new Error("Database connection failed");
 		}
 	}
+	public async disconnectDB(): Promise<void> {
+		try {
+			await mongoose.connection.close();
+			console.log("✅ MongoDB Disconnected");
+		} catch (err) {
+			console.error("❌ Error Disconnecting MongoDB:", err);
+		}
+	}
 }

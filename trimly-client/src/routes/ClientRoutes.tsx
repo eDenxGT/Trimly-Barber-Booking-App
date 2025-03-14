@@ -12,6 +12,18 @@ export const ClientRoutes = () => {
 		<Routes>
 			<Route index element={<NoAuthRoute element={<ClientAuth />} />} />
 			<Route
+				path="/"
+				element={
+					<AuthRoute
+						allowedRoles={["client"]}
+						element={<ClientLayout />}
+					/>
+				}>
+				<Route path="home" element={<ClientHomePage />} />
+			</Route>
+			
+			{/*//? Forgot and reset pages */}
+			<Route
 				path="/forgot-password"
 				element={
 					<NoAuthRoute
@@ -29,16 +41,6 @@ export const ClientRoutes = () => {
 					/>
 				}
 			/>
-			<Route
-				path="/"
-				element={
-					<AuthRoute
-						allowedRoles={["client"]}
-						element={<ClientLayout />}
-					/>
-				}>
-				<Route path="home" element={<ClientHomePage />} />
-			</Route>
 		</Routes>
 	);
 };

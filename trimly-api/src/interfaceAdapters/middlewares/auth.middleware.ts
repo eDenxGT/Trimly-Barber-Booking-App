@@ -44,7 +44,7 @@ export const verifyAuth = async (
 		) as CustomJwtPayload;
 		if (!user || !user.id) {
 			res.status(HTTP_STATUS.UNAUTHORIZED).json({
-				message: ERROR_MESSAGES.UNAUTHORIZED_ACCESS,
+				message: ERROR_MESSAGES.TOKEN_EXPIRED,
 			});
 			return;
 		}
@@ -62,8 +62,8 @@ export const verifyAuth = async (
 			});
 			return;
 		}
-		console.log("token is invalid is worked");
 
+		console.log("Invalid token response sent");
 		res.status(HTTP_STATUS.UNAUTHORIZED).json({
 			message: ERROR_MESSAGES.INVALID_TOKEN,
 		});
@@ -74,22 +74,24 @@ export const verifyAuth = async (
 const extractToken = (
 	req: Request
 ): { access_token: string; refresh_token: string } | null => {
-	const pathSegments = req.path.split("/");
-	const privateRouteIndex = pathSegments.indexOf("");
-	if (privateRouteIndex !== -1 && pathSegments[privateRouteIndex + 1]) {
-		const userType = pathSegments[privateRouteIndex + 1];
-		return {
-			access_token: req.cookies[`${userType}_access_token`] || null,
-			refresh_token: req.cookies[`${userType}_refresh_token`] || null,
-		};
-	}
+	const userType = req.path.split("/")[1];
 
-	return null;
+	if (!userType) return null;
+
+	return {
+		access_token: req.cookies?.[`${userType}_access_token`] ?? null,
+		refresh_token: req.cookies?.[`${userType}_refresh_token`] ?? null,
+	};
 };
 
 const isBlacklisted = async (token: string): Promise<boolean> => {
-	const result = await client.get(token);
-	return result !== null;
+	try {
+		const result = await client.get(token);
+		return result !== null;
+	} catch (error) {
+		console.error("Redis error:", error);
+		return false;
+	}
 };
 
 export const authorizeRole = (allowedRoles: string[]) => {
@@ -101,6 +103,7 @@ export const authorizeRole = (allowedRoles: string[]) => {
 				message: ERROR_MESSAGES.NOT_ALLOWED,
 				userRole: user ? user.role : "none",
 			});
+			return;
 		}
 		next();
 	};

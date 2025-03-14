@@ -15,6 +15,7 @@ import { LogoutUserController } from "../../interfaceAdapters/controllers/auth/l
 import { RefreshTokenController } from "../../interfaceAdapters/controllers/auth/refresh-token.controller";
 import { ForgotPasswordController } from "@/interfaceAdapters/controllers/auth/forgot-password.controller";
 import { ResetPasswordController } from "@/interfaceAdapters/controllers/auth/reset-password.controller";
+import { UserController } from "@/interfaceAdapters/controllers/user.controller";
 
 // Registering all registries using a single class
 DependencyInjection.registerAll();
@@ -23,6 +24,8 @@ DependencyInjection.registerAll();
 export const blockStatusMiddleware = container.resolve(BlockStatusMiddleware);
 
 //* ====== Controller Resolving ====== *//
+export const userController = container.resolve(UserController)
+// 
 export const registerController = container.resolve(RegisterUserController);
 
 export const loginController = container.resolve(LoginUserController);

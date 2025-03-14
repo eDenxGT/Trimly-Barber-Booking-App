@@ -26,6 +26,26 @@ export class BarberRepository implements IBarberRepository {
 			id: barber._id.toString(),
 		} as IBarberEntity;
 	}
+
+	async find(
+		filter: any,
+		skip: number,
+		limit: number
+	): Promise<{ user: IBarberEntity[] | []; total: number }> {
+		const [user, total] = await Promise.all([
+			BarberModel.find(filter)
+				.sort({ createdAt: -1 })
+				.skip(skip)
+				.limit(limit),
+			BarberModel.countDocuments(filter),
+		]);
+
+		return {
+			user,
+			total,
+		};
+	}
+
 	async updateByEmail(
 		email: string,
 		updates: Partial<IBarberEntity>

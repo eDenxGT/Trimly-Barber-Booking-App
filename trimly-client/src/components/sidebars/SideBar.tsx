@@ -12,10 +12,11 @@ import {
 	DialogTitle,
 	DialogFooter,
 } from "@/components/ui/dialog";
+import SideBarItems from "./SideBarConfig";
 
 interface NavItemProps {
 	item: {
-		name: string;
+		title: string;
 		path: string;
 		icon: React.ElementType;
 	};
@@ -37,7 +38,7 @@ const NavItem = ({ item, isActive, onClick }: NavItemProps) => {
 			)}
 			onClick={onClick}>
 			<Icon className="h-5 w-5" />
-			<span>{item.name}</span>
+			<span>{item.title}</span>
 		</Link>
 	);
 };
@@ -47,11 +48,7 @@ interface SidebarProps {
 	onClose: () => void;
 	handleLogout?: () => void;
 	className?: string;
-	navItems?: Array<{
-		name: string;
-		path: string;
-		icon: React.ElementType;
-	}>;
+	role: "admin" | "client" | "barber";
 }
 
 export function AppSidebar({
@@ -59,11 +56,17 @@ export function AppSidebar({
 	onClose,
 	handleLogout,
 	className,
-	navItems = [],
+	role,
 }: SidebarProps) {
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [isConfirmationModalOpen, setIsConfirmationModalOpen] =
 		useState(false);
+
+	const navItems: Array<{
+		title: string;
+		path: string;
+		icon: React.ElementType;
+	}> = SideBarItems[role];
 
 	useEffect(() => {
 		if (typeof window !== "undefined") {

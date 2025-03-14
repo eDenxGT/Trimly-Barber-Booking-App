@@ -46,6 +46,7 @@ export const ClientLayout = () => {
 
 			{/* Main content area with sidebar and outlet */}
 			<AppSidebar
+				role="client"
 				isVisible={isSideBarVisible}
 				onClose={() => setIsSideBarVisible(false)}
 				handleLogout={handleLogout}

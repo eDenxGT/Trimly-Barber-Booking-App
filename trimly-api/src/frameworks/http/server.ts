@@ -20,6 +20,7 @@ import { PrivateRoutes } from "../routes/private/private.route";
 //* ====== Express App ====== *//
 export class Server {
 	private _app: Application;
+	
 	constructor() {
 		this._app = express();
 

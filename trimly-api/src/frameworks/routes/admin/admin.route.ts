@@ -8,7 +8,6 @@ import {
 	verifyAuth,
 } from "../../../interfaceAdapters/middlewares/auth.middleware";
 
-
 //* ====== BaseRoute Import ====== *//
 import { BaseRoute } from "../base.route";
 
@@ -17,6 +16,7 @@ import {
 	blockStatusMiddleware,
 	logoutController,
 	refreshTokenController,
+	userController,
 } from "../../di/resolver";
 
 export class AdminRoutes extends BaseRoute {
@@ -24,6 +24,15 @@ export class AdminRoutes extends BaseRoute {
 		super();
 	}
 	protected initializeRoutes(): void {
+		this.router.get(
+			"/admin/users",
+			verifyAuth,
+			authorizeRole(["admin"]),
+			(req: Request, res: Response) => {
+				userController.getAllUsers(req, res)
+			}
+		);
+
 		// logout
 		this.router.post(
 			"/admin/logout",
@@ -38,9 +47,9 @@ export class AdminRoutes extends BaseRoute {
 			"/admin/refresh-token",
 			decodeToken,
 			(req: Request, res: Response) => {
-				console.log("refreshing admin", req.body);
 				refreshTokenController.handle(req, res);
 			}
 		);
+
 	}
 }
