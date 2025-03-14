@@ -132,7 +132,7 @@ export function PrivateHeader({
 
 				{/* Search */}
 				<div className="flex-1 max-w-2xl mx-auto">
-					<Tooltip
+					{/* <Tooltip
 						title="Press ⌘K to search"
 						arrow
 						placement="bottom">
@@ -192,7 +192,7 @@ export function PrivateHeader({
 								))}
 							</CommandList>
 						</Command>
-					</CommandDialog>
+					</CommandDialog> */}
 				</div>
 
 				{/* Right Section */}

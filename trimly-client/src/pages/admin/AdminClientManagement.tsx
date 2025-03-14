@@ -11,31 +11,17 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
-import { Search, Edit, Trash2, AlertCircle } from "lucide-react";
-import {
-	Pagination,
-	PaginationContent,
-	PaginationItem,
-	PaginationLink,
-	PaginationNext,
-	PaginationPrevious,
-} from "@/components/ui/pagination";
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-} from "@/components/ui/dialog";
+import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { debounce } from "lodash";
-import ConfirmationModal from "@/components/modals/ConfirmationModal";
 import { Pagination1 } from "@/components/common/paginations/Pagination1";
+import { useUpdateUserStatusMutation } from "@/hooks/admin/useUpdateUserStatus";
+import { useToaster } from "@/hooks/ui/useToaster";
 
 export interface IClient {
 	_id: string;
+	clientId: string;
 	firstName: string;
 	lastName: string;
 	email: string;
@@ -44,7 +30,7 @@ export interface IClient {
 }
 
 export type ClientsData = {
-	clients: IClient[];
+	users: IClient[];
 	totalPages: number;
 };
 
@@ -52,12 +38,11 @@ export const AdminClientManagement: React.FC = () => {
 	const [searchQuery, setSearchQuery] = useState("");
 	const [debouncedSearch, setDebouncedSearch] = useState(searchQuery);
 	const [currentPage, setCurrentPage] = useState(1);
-	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-	const [clientToDelete, setClientToDelete] = useState<IClient | null>(null);
-	const [statusDialogOpen, setStatusDialogOpen] = useState(false);
-	const [clientToUpdateStatus, setClientToUpdateStatus] =
-		useState<IClient | null>(null);
+
 	const limit = 10;
+
+	const { mutate: updateUserStatus } = useUpdateUserStatusMutation();
+	const { errorToast, successToast } = useToaster();
 
 	useEffect(() => {
 		const handler = debounce(() => setDebouncedSearch(searchQuery), 300);
@@ -76,30 +61,18 @@ export const AdminClientManagement: React.FC = () => {
 	const clients = (data?.users as ClientsData) || [];
 	const totalPages = data?.totalPages || 1;
 
-	const handleDeleteClick = (client: IClient) => {
-		setClientToDelete(client);
-		setDeleteDialogOpen(true);
-	};
-
 	const handleStatusClick = (client: IClient) => {
-		setClientToUpdateStatus(client);
-		setStatusDialogOpen(true);
-	};
-
-	const confirmDelete = () => {
-		console.log("Deleting client:", clientToDelete?._id);
-		setDeleteDialogOpen(false);
-		setClientToDelete(null);
-	};
-
-	const confirmStatusChange = () => {
-		console.log("Updating status for client:", clientToUpdateStatus?._id);
-		console.log(
-			"New status:",
-			clientToUpdateStatus?.status === "active" ? "inactive" : "active"
+		updateUserStatus(
+			{ userType: "client", userId: client._id },
+			{
+				onSuccess: (data) => {
+					successToast(data.message);
+				},
+				onError: (error: any) => {
+					errorToast(error.response.data.message);
+				},
+			}
 		);
-		setStatusDialogOpen(false);
-		setClientToUpdateStatus(null);
 	};
 
 	const getInitials = (firstName: string, lastName: string) => {
@@ -107,7 +80,7 @@ export const AdminClientManagement: React.FC = () => {
 	};
 
 	return (
-		<div className="min-h-screen mt-14 bg-gray-50">
+		<div className="min-h-screen mt-14 bg-gray-200">
 			<div className="container mx-auto px-4 py-8">
 				<h1 className="text-3xl font-bold mb-6 text-gray-800">
 					Client Management
@@ -149,13 +122,11 @@ export const AdminClientManagement: React.FC = () => {
 						<Table>
 							<TableHeader className="bg-gray-50">
 								<TableRow>
-									<TableHead className="w-12">#</TableHead>
+									<TableHead className="w-12">No.</TableHead>
 									<TableHead>Client</TableHead>
 									<TableHead>Email</TableHead>
+									<TableHead>Phone</TableHead>
 									<TableHead>Status</TableHead>
-									<TableHead className="text-right">
-										Actions
-									</TableHead>
 								</TableRow>
 							</TableHeader>
 							<TableBody>
@@ -180,55 +151,40 @@ export const AdminClientManagement: React.FC = () => {
 												</Avatar>
 												<div>
 													<p className="font-medium">{`${client.firstName} ${client.lastName}`}</p>
-													{client.phoneNumber && (
+													{client.clientId && (
 														<p className="text-sm text-gray-500">
-															{client.phoneNumber}
+															{client.clientId.slice(
+																0,
+																20
+															) + "..."}
 														</p>
 													)}
 												</div>
 											</div>
 										</TableCell>
+
 										<TableCell className="text-gray-600">
 											{client.email}
 										</TableCell>
+										<TableCell className="text-gray-600">
+											{client.phoneNumber}
+										</TableCell>
 										<TableCell>
 											<Button
-												variant={
-													client.status === "active"
-														? "outline"
-														: "destructive"
-												}
+												variant={"outline"}
 												size="sm"
 												className={
 													client.status === "active"
-														? "bg-green-50 text-green-600 hover:bg-green-100 border-green-200"
-														: "bg-red-50 text-red-600 hover:bg-red-100 border-red-200"
+														? "bg-green-50 text-green-600 hover:bg-green-100 cursor-pointer border-green-200"
+														: "bg-red-50 text-red-600 hover:bg-red-100 cursor-pointer border-red-200"
 												}
 												onClick={() =>
 													handleStatusClick(client)
 												}>
 												{client.status === "active"
 													? "Active"
-													: "Inactive"}
+													: "Blocked"}
 											</Button>
-										</TableCell>
-										<TableCell className="text-right">
-											<div className="flex justify-end gap-2">
-												<Button
-													variant="ghost"
-													size="icon"
-													className="h-8 w-8 text-gray-500 hover:text-red-600"
-													onClick={() =>
-														handleDeleteClick(
-															client
-														)
-													}>
-													<Trash2 className="h-4 w-4" />
-													<span className="sr-only">
-														Delete
-													</span>
-												</Button>
-											</div>
 										</TableCell>
 									</TableRow>
 								))}
@@ -246,7 +202,6 @@ export const AdminClientManagement: React.FC = () => {
 						onPagePrev={() => setCurrentPage(currentPage - 1)}
 					/>
 				</div>
-				<ConfirmationModal />
 			</div>
 		</div>
 	);

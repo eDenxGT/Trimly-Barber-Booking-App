@@ -52,6 +52,8 @@ import { IResetPasswordUseCase } from "@/entities/useCaseInterfaces/auth/reset-p
 import { ResetPasswordUseCase } from "@/useCases/auth/reset-password.usecase";
 import { IGetAllUsersUseCase } from "@/entities/useCaseInterfaces/users/get-all-users-usecase.interface";
 import { GetAllUsersUseCase } from "@/useCases/users/get-all-users.usecase";
+import { UpdateUserStatusUseCase } from "./../../useCases/users/update-user-status.usecase";
+import { IUpdateUserStatusUseCase } from "@/entities/useCaseInterfaces/users/update-user-status-usecase.interface";
 
 export class UseCaseRegistry {
 	static registerUseCases(): void {
@@ -100,8 +102,15 @@ export class UseCaseRegistry {
 		});
 
 		container.register<IGetAllUsersUseCase>("IGetAllUsersUseCase", {
-			useClass: GetAllUsersUseCase
-		})
+			useClass: GetAllUsersUseCase,
+		});
+
+		container.register<IUpdateUserStatusUseCase>(
+			"IUpdateUserStatusUseCase",
+			{
+				useClass: UpdateUserStatusUseCase,
+			}
+		);
 
 		//* ====== Register Bcrypts ====== *//
 		container.register<IBcrypt>("IPasswordBcrypt", {

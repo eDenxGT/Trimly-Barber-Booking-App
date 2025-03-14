@@ -1,6 +1,7 @@
 import ForgotPassword from "@/components/auth/ForgotPassword";
 import ResetPassword from "@/components/auth/ResetPassword";
 import { AdminAuth } from "@/pages/admin/AdminAuth";
+import { AdminBarberManagement } from "@/pages/admin/AdminBarberManagement";
 import { AdminClientManagement } from "@/pages/admin/AdminClientManagement";
 import { AdminDashboard } from "@/pages/admin/AdminDashboard";
 import { AdminLayout } from "@/pages/layouts/AdminLayout";
@@ -25,6 +26,7 @@ export const AdminRoutes = () => {
 				}>
 				<Route path="dashboard" element={<AdminDashboard />} />
 				<Route path="clients" element={<AdminClientManagement />}/>
+				<Route path="barbers" element={<AdminBarberManagement />}/>
 			</Route>
 
 			{/*//? Forgot and reset pages */}

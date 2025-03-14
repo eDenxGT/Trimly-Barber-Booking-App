@@ -29,7 +29,16 @@ export class AdminRoutes extends BaseRoute {
 			verifyAuth,
 			authorizeRole(["admin"]),
 			(req: Request, res: Response) => {
-				userController.getAllUsers(req, res)
+				userController.getAllUsers(req, res);
+			}
+		);
+
+		this.router.patch(
+			"/admin/user-status",
+			verifyAuth,
+			authorizeRole(["admin"]),
+			(req: Request, res: Response) => {
+				userController.updateUserStatus(req, res);
 			}
 		);
 
@@ -50,6 +59,5 @@ export class AdminRoutes extends BaseRoute {
 				refreshTokenController.handle(req, res);
 			}
 		);
-
 	}
 }

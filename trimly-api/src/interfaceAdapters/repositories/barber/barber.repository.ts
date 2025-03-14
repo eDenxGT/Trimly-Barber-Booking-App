@@ -62,4 +62,12 @@ export class BarberRepository implements IBarberRepository {
 			id: barber._id.toString(),
 		} as IBarberEntity;
 	}
+
+	async findByIdAndUpdateStatus(id: any, status: string): Promise<void> {
+		await BarberModel.findByIdAndUpdate(id, {
+			$set: {
+				status: status,
+			},
+		});
+	}
 }

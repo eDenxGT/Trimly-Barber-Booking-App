@@ -1,4 +1,10 @@
-import { X, LogOut, CheckCircle } from "lucide-react";
+import {
+	X,
+	LogOut,
+	CheckCircle,
+	FileWarning,
+	TriangleAlert,
+} from "lucide-react";
 
 interface ConfirmationModalProps {
 	isOpen: boolean;
@@ -9,7 +15,7 @@ interface ConfirmationModalProps {
 	confirmText?: string;
 	cancelText?: string;
 	isDarkMode?: boolean;
-	icon?: "success" | "danger";
+	icon?: "success" | "danger" | "logout";
 }
 
 const ConfirmationModal = ({
@@ -24,15 +30,25 @@ const ConfirmationModal = ({
 	icon = "success",
 }: ConfirmationModalProps) => {
 	if (!isOpen) return null;
+	const iconMap = {
+		success: CheckCircle,
+		danger: TriangleAlert,
+		logout: LogOut,
+	};
+	const iconColors = {
+		success: "text-green-500",
+		danger: "text-orange-500",
+		logout: "text-red-500",
+	};
 
-	const Icon = icon === "danger" ? LogOut : CheckCircle;
-	const iconColor = icon === "danger" ? "text-red-500" : "text-green-500";
+	const Icon = icon ? iconMap[icon] : null;
+	const iconColor = icon ? iconColors[icon] : "text-green-500";
 
 	return (
 		<div
 			className={`fixed z-50 inset-0 ${
-				isDarkMode ? "bg-gray-900" : "bg-black"
-			} bg-opacity-50 backdrop-blur-sm flex items-center justify-center transition-opacity duration-300 ${
+				isDarkMode ? "bg-transparent" : "bg-black"
+			} bg-opacity-50 backdrop-blur-xs flex items-center justify-center transition-opacity duration-300 ${
 				isOpen
 					? "opacity-100 pointer-events-auto"
 					: "opacity-0 pointer-events-none"
@@ -50,7 +66,9 @@ const ConfirmationModal = ({
 						isDarkMode ? "border-gray-700" : "border-gray-200"
 					}`}>
 					<div className="p-6 pb-2 flex items-center mb-4">
-						<Icon className={`h-6 w-6 ${iconColor} mr-3`} />
+						{Icon && (
+							<Icon className={`h-6 w-6 ${iconColor} mr-3`} />
+						)}
 						<h2 className="text-xl font-semibold">{title}</h2>
 					</div>
 				</div>

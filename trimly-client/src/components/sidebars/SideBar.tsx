@@ -83,19 +83,6 @@ export function AppSidebar({
 		}
 	}, [activeIndex]);
 
-	// Lock body scroll when sidebar is open
-	useEffect(() => {
-		if (isVisible) {
-			document.body.style.overflow = "hidden";
-		} else {
-			document.body.style.overflow = "";
-		}
-
-		return () => {
-			document.body.style.overflow = "";
-		};
-	}, [isVisible]);
-
 	const handleLogoutClick = () => {
 		setIsConfirmationModalOpen(true);
 	};
@@ -151,7 +138,7 @@ export function AppSidebar({
 							size="icon"
 							onClick={onClose}
 							className="text-white hover:text-[var(--yellow)] hover:bg-transparent">
-							<ArrowLeftCircle className="h-6 w-6" />
+							<ArrowLeftCircle  />
 						</Button>
 					</div>
 

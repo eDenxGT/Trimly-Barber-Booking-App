@@ -106,6 +106,11 @@ const navItems = {
 			icon: Users,
 			path: "/admin/clients",
 		},
+		{
+			title: "Manage Barbers",
+			icon: Users,
+			path: "/admin/barbers",
+		},
 		// {
 		// 	title: "Manage Tutors",
 		// 	icon: <Users className="h-5 w-5" />,

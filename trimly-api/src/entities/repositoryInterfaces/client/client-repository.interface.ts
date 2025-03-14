@@ -7,10 +7,11 @@ export interface IClientRepository {
 		filter: any,
 		skip: number,
 		limit: number
-	 ): Promise<{ user: IClientEntity[] | []; total: number }>;
+	): Promise<{ user: IClientEntity[] | []; total: number }>;
 	findById(id: any): Promise<IClientEntity | null>;
 	updateByEmail(
 		email: string,
 		updates: Partial<IClientEntity>
 	): Promise<IClientEntity | null>;
+	findByIdAndUpdateStatus(id: any, status: string): Promise<void>;
 }
