@@ -25,6 +25,11 @@ import {
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import ConfirmationModal from "@/components/modals/ConfirmationModal";
+import { useDispatch } from "react-redux";
+import { useLogout } from "@/hooks/auth/useLogout";
+import { logoutBarber } from "@/services/auth/authService";
+import { useToaster } from "@/hooks/ui/useToaster";
+import { barberLogout } from "@/store/slices/barber.slice";
 
 export function BarberSettingsPage() {
 	const [emailNotifications, setEmailNotifications] = useState(true);
@@ -32,7 +37,23 @@ export function BarberSettingsPage() {
 	const [marketingEmails, setMarketingEmails] = useState(false);
 	const [confirmDelete, setConfirmDelete] = useState(false);
 	const [confirmLogout, setConfirmLogout] = useState(false);
+	const dispatch = useDispatch();
+	const { mutate: logoutReq } = useLogout(logoutBarber);
+	const { successToast, errorToast } = useToaster();
 
+	const handleLogout = () => {
+		logoutReq(undefined, {
+			onSuccess: (data) => {
+				navigate("/barber");
+				setConfirmLogout(false);
+				dispatch(barberLogout());
+				successToast(data.message);
+			},
+			onError: (err: any) => {
+				errorToast(err.response.data.message);
+			},
+		});
+	};
 	const navigate = useNavigate();
 
 	return (
@@ -40,9 +61,9 @@ export function BarberSettingsPage() {
 			{/* Back Button */}
 
 			<Box sx={{ mb: 4 }}>
-			<IconButton onClick={() => navigate(-1)} sx={{ mb: 2 }}>
-				<ArrowBack />
-			</IconButton>
+				<IconButton onClick={() => navigate(-1)} sx={{ mb: 2 }}>
+					<ArrowBack />
+				</IconButton>
 				<Typography variant="h4" component="h1" fontWeight="bold">
 					Settings
 				</Typography>
@@ -212,7 +233,7 @@ export function BarberSettingsPage() {
 			<ConfirmationModal
 				isOpen={confirmLogout}
 				onClose={() => setConfirmLogout(false)}
-				onConfirm={() => setConfirmLogout(false)}
+				onConfirm={handleLogout}
 				title="Are you sure you want to logout?"
 				description="You will be logged out of your account."
 				confirmText="Logout"

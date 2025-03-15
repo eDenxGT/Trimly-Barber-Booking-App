@@ -6,11 +6,6 @@ import {
   CardContent,
   CardHeader,
   Container,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   Divider,
   FormControlLabel,
   IconButton,
@@ -30,12 +25,37 @@ import {
   Person,
 } from "@mui/icons-material"
 import { useNavigate } from "react-router-dom"
+import ConfirmationModal from "@/components/modals/ConfirmationModal"
+import { useDispatch } from "react-redux"
+import { useLogout } from "@/hooks/auth/useLogout"
+import { logoutClient } from "@/services/auth/authService"
+import { useToaster } from "@/hooks/ui/useToaster"
+import { clientLogout } from "@/store/slices/client.slice"
 
 export function ClientSettingsPage() {
   const [emailNotifications, setEmailNotifications] = useState(true)
   const [appNotifications, setAppNotifications] = useState(true)
   const [marketingEmails, setMarketingEmails] = useState(false)
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+	const [confirmDelete, setConfirmDelete] = useState(false);
+	const [confirmLogout, setConfirmLogout] = useState(false);
+
+	const dispatch = useDispatch()
+	const { mutate: logoutReq } = useLogout(logoutClient);
+	const {successToast, errorToast} = useToaster()
+
+	const handleLogout = () => {
+		logoutReq(undefined, {
+			onSuccess: (data) => {
+				navigate("/");
+				setConfirmLogout(false)
+				dispatch(clientLogout());
+				successToast(data.message);
+			},
+			onError: (err: any) => {
+				errorToast(err.response.data.message);
+			},
+		});
+	};
 
   const navigate = useNavigate()
 
@@ -304,22 +324,27 @@ export function ClientSettingsPage() {
         </Card>
       </Stack>
 
-      {/* Delete Account Dialog */}
-      <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
-        <DialogTitle>Are you absolutely sure?</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            This action cannot be undone. This will permanently delete your account and remove your data from our
-            servers.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
-          <Button color="error" variant="contained" onClick={() => setDeleteDialogOpen(false)}>
-            Delete Account
-          </Button>
-        </DialogActions>
-      </Dialog>
+			<ConfirmationModal
+				isOpen={confirmDelete}
+				onClose={() => setConfirmDelete(false)}
+				onConfirm={() => setConfirmDelete(false)}
+				title="Are you sure you want to delete your account?"
+				description="This action cannot be undone. Your account and data will be permanently deleted."
+				confirmText="Delete"
+				cancelText="Cancel"
+				icon="danger"
+			/>
+
+			<ConfirmationModal
+				isOpen={confirmLogout}
+				onClose={() => setConfirmLogout(false)}
+				onConfirm={handleLogout}
+				title="Are you sure you want to logout?"
+				description="You will be logged out of your account."
+				confirmText="Logout"
+				cancelText="Cancel"
+				icon="logout"
+			/>
     </Container>
   )
 }

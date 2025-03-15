@@ -25,19 +25,19 @@ export const AdminLayout = () => {
 
 	const handleLogout = () => {
 		logoutReq(undefined, {
-		   onSuccess: (data) => {
-		      navigate("/admin")
-		      dispatch(adminLogout());
-		      successToast(data.message);
-		   },
-		   onError: (err: any) => {
-		      errorToast(err.response.data.message);
-		   },
+			onSuccess: (data) => {
+				navigate("/admin");
+				dispatch(adminLogout());
+				successToast(data.message);
+			},
+			onError: (err: any) => {
+				errorToast(err.response.data.message);
+			},
 		});
 	};
 
 	return (
-		<div className="flex flex-col min-h-screen">
+		<div className="flex flex-col min-h-screen bg-gray-100">
 			{/* Header */}
 			<PrivateHeader
 				className="z-40"

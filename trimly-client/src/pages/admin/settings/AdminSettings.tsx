@@ -24,6 +24,11 @@ import {
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import ConfirmationModal from "@/components/modals/ConfirmationModal";
+import { useToaster } from "@/hooks/ui/useToaster";
+import { useLogout } from "@/hooks/auth/useLogout";
+import { logoutAdmin } from "@/services/auth/authService";
+import { useDispatch } from "react-redux";
+import { adminLogout } from "@/store/slices/admin.slice";
 
 export function AdminSettingsPage() {
 	const [emailNotifications, setEmailNotifications] = useState(true);
@@ -31,6 +36,24 @@ export function AdminSettingsPage() {
 	const [marketingEmails, setMarketingEmails] = useState(false);
 	const [confirmDelete, setConfirmDelete] = useState(false);
 	const [confirmLogout, setConfirmLogout] = useState(false);
+
+	const dispatch = useDispatch()
+	const { mutate: logoutReq } = useLogout(logoutAdmin);
+	const {successToast, errorToast} = useToaster()
+
+	const handleLogout = () => {
+		logoutReq(undefined, {
+			onSuccess: (data) => {
+				navigate("/admin");
+				setConfirmLogout(false)
+				dispatch(adminLogout());
+				successToast(data.message);
+			},
+			onError: (err: any) => {
+				errorToast(err.response.data.message);
+			},
+		});
+	};
 
 	const navigate = useNavigate();
 
@@ -205,7 +228,7 @@ export function AdminSettingsPage() {
 			<ConfirmationModal
 				isOpen={confirmLogout}
 				onClose={() => setConfirmLogout(false)}
-				onConfirm={() => setConfirmLogout(false)}
+				onConfirm={handleLogout}
 				title="Are you sure you want to logout?"
 				description="You will be logged out of your account."
 				confirmText="Logout"
