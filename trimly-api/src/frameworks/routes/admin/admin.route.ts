@@ -42,6 +42,15 @@ export class AdminRoutes extends BaseRoute {
 			}
 		);
 
+		this.router.put(
+			"/admin/update-password",
+			verifyAuth,
+			authorizeRole(["admin"]),
+			(req: Request, res: Response) => {
+				userController.changeUserPassword(req, res);
+			}
+		);
+
 		// logout
 		this.router.post(
 			"/admin/logout",

@@ -21,7 +21,7 @@ import { useToaster } from "@/hooks/ui/useToaster";
 
 export interface IBarber {
 	_id: string;
-	barberId: string;
+	userId: string;
 	firstName: string;
 	lastName: string;
 	email: string;
@@ -155,9 +155,9 @@ export const AdminBarberManagement: React.FC = () => {
 												</Avatar>
 												<div>
 													<p className="font-medium">{`${barber.firstName} ${barber.lastName}`}</p>
-													{barber.barberId && (
+													{barber.userId && (
 														<p className="text-sm text-gray-500">
-															{barber.barberId.slice(
+															{barber.userId.slice(
 																0,
 																20
 															) + "..."}

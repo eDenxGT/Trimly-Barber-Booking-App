@@ -1,5 +1,10 @@
 import { adminAxiosInstance } from "@/api/admin.axios";
+import { IAxiosResponse } from "@/types/Response";
 
+export interface UpdatePasswordData {
+	oldPassword: string;
+	newPassword: string;
+}
 export const getAllUsers = async ({
 	userType,
 	page = 1,
@@ -25,17 +30,30 @@ export const getAllUsers = async ({
 export const updateUserStatus = async (data: {
 	userType: string;
 	userId: any;
- }) => {
+}) => {
 	const response = await adminAxiosInstance.patch(
-	  "/admin/user-status",
-	  {},
-	  {
-		 params: {
-			userType: data.userType,
-			userId: data.userId,
-		 },
-	  }
+		"/admin/user-status",
+		{},
+		{
+			params: {
+				userType: data.userType,
+				userId: data.userId,
+			},
+		}
 	);
 	return response.data;
- };
- 
+};
+
+export const updateAdminPassword = async ({
+	oldPassword,
+	newPassword,
+}: UpdatePasswordData) => {
+	const response = await adminAxiosInstance.put<IAxiosResponse>(
+		"/admin/update-password",
+		{
+			oldPassword,
+			newPassword,
+		}
+	);
+	return response.data;
+};

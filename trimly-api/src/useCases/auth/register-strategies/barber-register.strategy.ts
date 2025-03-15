@@ -33,14 +33,14 @@ export class BarberRegisterStrategy implements IRegisterStrategy {
 			if (password) {
 				hashedPassword = await this.passwordBcrypt.hash(password);
 			}
-			const barberId = generateUniqueId("barber");
+			const userId = generateUniqueId("barber");
 			return await this.barberRepository.save({
 				firstName,
 				lastName,
 				email,
 				phoneNumber,
 				password: hashedPassword ?? "",
-				barberId,
+				userId,
 				role: "barber",
 			});
 		} else {

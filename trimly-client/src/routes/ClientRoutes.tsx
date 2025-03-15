@@ -6,6 +6,8 @@ import { AuthRoute } from "@/utils/protected/ProtectedRoute";
 import { NoAuthRoute } from "@/utils/protected/PublicRoute";
 import ForgotPassword from "@/components/auth/ForgotPassword";
 import ResetPassword from "@/components/auth/ResetPassword";
+import { ClientSettingsPage } from "@/pages/client/settings/ClientSettings";
+import { ClientChangePassword } from "@/pages/client/settings/ClientChangePassword";
 
 export const ClientRoutes = () => {
 	return (
@@ -20,6 +22,8 @@ export const ClientRoutes = () => {
 					/>
 				}>
 				<Route path="home" element={<ClientHomePage />} />
+				<Route path="settings" element={<ClientSettingsPage />} />
+				<Route path="settings/change-password" element={<ClientChangePassword />} />
 			</Route>
 			
 			{/*//? Forgot and reset pages */}

@@ -1,3 +1,6 @@
+import { inject, injectable } from "tsyringe";
+import { Request, Response } from "express";
+import { ZodError } from "zod";
 import { IUserController } from "@/entities/controllerInterfaces/user-controller.interface";
 import { IGetAllUsersUseCase } from "@/entities/useCaseInterfaces/users/get-all-users-usecase.interface";
 import { IUpdateUserStatusUseCase } from "@/entities/useCaseInterfaces/users/update-user-status-usecase.interface";
@@ -7,9 +10,8 @@ import {
 	HTTP_STATUS,
 	SUCCESS_MESSAGES,
 } from "@/shared/constants";
-import { Request, Response } from "express";
-import { inject, injectable } from "tsyringe";
-import { ZodError } from "zod";
+import { CustomRequest } from "../middlewares/auth.middleware";
+import { IChangeUserPasswordUseCase } from "@/entities/useCaseInterfaces/users/change-user-password-usecase.interface";
 
 @injectable()
 export class UserController implements IUserController {
@@ -17,7 +19,9 @@ export class UserController implements IUserController {
 		@inject("IGetAllUsersUseCase")
 		private getAllUsersUseCase: IGetAllUsersUseCase,
 		@inject("IUpdateUserStatusUseCase")
-		private updateUserStatusUseCase: IUpdateUserStatusUseCase
+		private updateUserStatusUseCase: IUpdateUserStatusUseCase,
+		@inject("IChangeUserPasswordUseCase")
+		private changePasswordUseCase: IChangeUserPasswordUseCase
 	) {}
 
 	async getAllUsers(req: Request, res: Response): Promise<void> {
@@ -77,15 +81,97 @@ export class UserController implements IUserController {
 				userId: any;
 			};
 
-			console.log("user type => ", userType);
-			console.log("user id => ", userId);
-
 			await this.updateUserStatusUseCase.execute(userType, userId);
 
 			res.status(HTTP_STATUS.OK).json({
 				success: true,
 				message: SUCCESS_MESSAGES.UPDATE_SUCCESS,
 			});
+		} catch (error) {
+			if (error instanceof ZodError) {
+				const errors = error.errors.map((err) => ({
+					message: err.message,
+				}));
+
+				res.status(HTTP_STATUS.BAD_REQUEST).json({
+					success: false,
+					message: ERROR_MESSAGES.VALIDATION_ERROR,
+					errors,
+				});
+				return;
+			}
+			if (error instanceof CustomError) {
+				res.status(error.statusCode).json({
+					success: false,
+					message: error.message,
+				});
+				return;
+			}
+			console.log(error);
+			res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+				success: false,
+				message: ERROR_MESSAGES.SERVER_ERROR,
+			});
+		}
+	}
+
+	async changeUserPassword(req: Request, res: Response): Promise<void> {
+		try {
+			const { oldPassword, newPassword } = req.body;
+			const { email, role } = (req as CustomRequest).user;
+
+			await this.changePasswordUseCase.execute({
+				oldPassword,
+				newPassword,
+				email,
+				role,
+			});
+			res.status(HTTP_STATUS.OK).json({
+				success: true,
+				message: SUCCESS_MESSAGES.UPDATE_SUCCESS,
+			});
+		} catch (error) {
+			if (error instanceof ZodError) {
+				const errors = error.errors.map((err) => ({
+					message: err.message,
+				}));
+
+				res.status(HTTP_STATUS.BAD_REQUEST).json({
+					success: false,
+					message: ERROR_MESSAGES.VALIDATION_ERROR,
+					errors,
+				});
+				return;
+			}
+			if (error instanceof CustomError) {
+				res.status(error.statusCode).json({
+					success: false,
+					message: error.message,
+				});
+				return;
+			}
+			console.log(error);
+			res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+				success: false,
+				message: ERROR_MESSAGES.SERVER_ERROR,
+			});
+		}
+	}
+
+	async updateUserDetails(req: Request, res: Response): Promise<void> {
+		try {
+			// const { oldPassword, newPassword } = req.body;
+			// const { email, role } = (req as CustomRequest).user;
+			// await this.changePasswordUseCase.execute({
+			// 	oldPassword,
+			// 	newPassword,
+			// 	email,
+			// 	role,
+			// });
+			// res.status(HTTP_STATUS.OK).json({
+			// 	success: true,
+			// 	message: SUCCESS_MESSAGES.UPDATE_SUCCESS,
+			// });
 		} catch (error) {
 			if (error instanceof ZodError) {
 				const errors = error.errors.map((err) => ({

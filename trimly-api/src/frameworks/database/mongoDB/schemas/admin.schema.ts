@@ -3,7 +3,7 @@ import { Schema } from "mongoose";
 
 export const adminSchema = new Schema(
 	{
-		adminId: { type: String, required: true },
+		userId: { type: String, required: true },
 		firstName: { type: String, required: true },
 		lastName: { type: String, required: true },
 		email: { type: String, required: true, unique: true },

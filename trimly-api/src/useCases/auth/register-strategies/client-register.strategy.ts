@@ -32,14 +32,14 @@ export class ClientRegisterStrategy implements IRegisterStrategy {
          if(password) {
             hashedPassword = await this.passwordBcrypt.hash(password)
          }
-         const clientId = generateUniqueId("client")
+         const userId = generateUniqueId("client")
          return await this.clientRepository.save({
             firstName,
             lastName,
             phoneNumber,
             email,
             password: hashedPassword ?? "",
-            clientId,
+            userId,
             role: "client",
          })
 		} else {

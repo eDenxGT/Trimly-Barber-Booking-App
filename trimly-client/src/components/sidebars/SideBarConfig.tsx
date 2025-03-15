@@ -1,11 +1,11 @@
-import { Home, LayoutDashboard, Users } from "lucide-react";
+import { Home, LayoutDashboard, Settings, Users } from "lucide-react";
 
 const navItems = {
 	client: [
 		{
 			title: "Home",
 			icon: Home,
-			path: "/student/home",
+			path: "/home",
 		},
 		// {
 		// 	title: "Courses",
@@ -37,11 +37,11 @@ const navItems = {
 		// 	icon: <ShoppingBag className="h-5 w-5" />,
 		// 	href: "/student/purchases",
 		// },
-		// {
-		// 	title: "Settings",
-		// 	icon: <Settings className="h-5 w-5" />,
-		// 	href: "/student/settings",
-		// },
+		{
+			title: "Settings",
+			icon: Settings,
+			path: "/settings",
+		},
 	],
 	barber: [
 		{
@@ -74,11 +74,11 @@ const navItems = {
 		// 	icon: <MessageCircleMore className="h-5 w-5" />,
 		// 	href: "/tutor/chat",
 		// },
-		// {
-		// 	title: "Settings",
-		// 	icon: <Settings className="h-5 w-5" />,
-		// 	href: "/tutor/settings",
-		// },
+		{
+			title: "Settings",
+			icon: Settings,
+			path: "/barber/settings",
+		},
 	],
 	admin: [
 		{
@@ -126,11 +126,11 @@ const navItems = {
 		// 	icon: <PiHandWithdrawDuotone className="h-5 w-5" />,
 		// 	link: "/admin/tutors/withdrawals",
 		// },
-		// {
-		// 	title: "Settings",
-		// 	icon: <Settings className="h-5 w-5" />,
-		// 	link: "/admin/settings",
-		// },
+		{
+			title: "Settings",
+			icon: Settings,
+			path: "/admin/settings",
+		},
 	],
 };
 

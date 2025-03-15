@@ -21,7 +21,7 @@ import { useToaster } from "@/hooks/ui/useToaster";
 
 export interface IClient {
 	_id: string;
-	clientId: string;
+	userId: string;
 	firstName: string;
 	lastName: string;
 	email: string;
@@ -151,9 +151,9 @@ export const AdminClientManagement: React.FC = () => {
 												</Avatar>
 												<div>
 													<p className="font-medium">{`${client.firstName} ${client.lastName}`}</p>
-													{client.clientId && (
+													{client.userId && (
 														<p className="text-sm text-gray-500">
-															{client.clientId.slice(
+															{client.userId.slice(
 																0,
 																20
 															) + "..."}

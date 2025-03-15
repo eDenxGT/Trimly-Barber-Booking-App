@@ -72,6 +72,7 @@ const SignUp = ({ userType, onSubmit, setLogin, isLoading }: SignUpProps) => {
 					// successToast(data.message);
 					submitRegister();
 					handleCloseOTPModal();
+					formik.resetForm()
 				},
 				onError(error: any) {
 					errorToast(error.response.data.message);

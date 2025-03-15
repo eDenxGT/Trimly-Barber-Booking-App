@@ -8,7 +8,6 @@ import {
 	verifyAuth,
 } from "../../../interfaceAdapters/middlewares/auth.middleware";
 
-
 //* ====== BaseRoute Import ====== *//
 import { BaseRoute } from "../base.route";
 
@@ -17,6 +16,7 @@ import {
 	blockStatusMiddleware,
 	logoutController,
 	refreshTokenController,
+	userController,
 } from "../../di/resolver";
 
 export class BarberRoutes extends BaseRoute {
@@ -32,6 +32,15 @@ export class BarberRoutes extends BaseRoute {
 			blockStatusMiddleware.checkStatus as RequestHandler,
 			(req: Request, res: Response) => {
 				logoutController.handle(req, res);
+			}
+		);
+
+		this.router.put(
+			"/barber/update-password",
+			verifyAuth,
+			authorizeRole(["barber"]),
+			(req: Request, res: Response) => {
+				userController.changeUserPassword(req, res);
 			}
 		);
 

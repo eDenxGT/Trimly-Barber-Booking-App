@@ -1,6 +1,5 @@
 import {
 	Bell,
-	Search,
 	Settings2,
 	Menu,
 	MapPin,
@@ -10,7 +9,6 @@ import {
 } from "lucide-react";
 import { Button, IconButton, Tooltip } from "@mui/material";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import {
 	Popover,
 	PopoverContent,
@@ -26,15 +24,6 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import {
-	Command,
-	CommandDialog,
-	CommandEmpty,
-	CommandGroup,
-	CommandInput,
-	CommandItem,
-	CommandList,
-} from "@/components/ui/command";
 import { useEffect, useState } from "react";
 
 interface HeaderProps {

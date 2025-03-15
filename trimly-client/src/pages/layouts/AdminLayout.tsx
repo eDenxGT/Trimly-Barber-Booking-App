@@ -26,9 +26,9 @@ export const AdminLayout = () => {
 	const handleLogout = () => {
 		logoutReq(undefined, {
 		   onSuccess: (data) => {
+		      navigate("/admin")
 		      dispatch(adminLogout());
 		      successToast(data.message);
-		      navigate("/admin")
 		   },
 		   onError: (err: any) => {
 		      errorToast(err.response.data.message);

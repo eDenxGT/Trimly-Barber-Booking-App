@@ -1,7 +1,7 @@
 import { TRole } from "../constants";
 
 export interface AdminDTO {
-  adminId?: string;
+  userId?: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -11,7 +11,7 @@ export interface AdminDTO {
 }
 
 export interface ClientDTO {
-  clientId?: string;
+  userId?: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -21,7 +21,7 @@ export interface ClientDTO {
 }
 
 export interface BarberDTO {
-  barberId?: string;
+  userId?: string;
   firstName: string;
   lastName: string;
   email: string;

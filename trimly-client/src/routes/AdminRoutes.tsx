@@ -4,6 +4,8 @@ import { AdminAuth } from "@/pages/admin/AdminAuth";
 import { AdminBarberManagement } from "@/pages/admin/AdminBarberManagement";
 import { AdminClientManagement } from "@/pages/admin/AdminClientManagement";
 import { AdminDashboard } from "@/pages/admin/AdminDashboard";
+import { AdminChangePassword } from "@/pages/admin/settings/AdminChangePassword";
+import { AdminSettingsPage } from "@/pages/admin/settings/AdminSettings";
 import { AdminLayout } from "@/pages/layouts/AdminLayout";
 import { AdminAuthRoute } from "@/utils/protected/ProtectedRoute";
 import { NoAdminAuthRoute } from "@/utils/protected/PublicRoute";
@@ -25,8 +27,13 @@ export const AdminRoutes = () => {
 					/>
 				}>
 				<Route path="dashboard" element={<AdminDashboard />} />
-				<Route path="clients" element={<AdminClientManagement />}/>
-				<Route path="barbers" element={<AdminBarberManagement />}/>
+				<Route path="clients" element={<AdminClientManagement />} />
+				<Route path="barbers" element={<AdminBarberManagement />} />
+				<Route path="settings" element={<AdminSettingsPage />} />
+				<Route
+					path="settings/change-password"
+					element={<AdminChangePassword />}
+				/>
 			</Route>
 
 			{/*//? Forgot and reset pages */}

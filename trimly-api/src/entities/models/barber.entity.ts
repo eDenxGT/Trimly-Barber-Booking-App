@@ -1,7 +1,7 @@
 import { IUserEntity } from "./user.entity";
 
 export interface IBarberEntity extends IUserEntity {
-   barberId: string,
+   userId: string,
    shopId: string,
    isOwner: boolean
 }
