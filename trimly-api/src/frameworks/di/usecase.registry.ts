@@ -56,6 +56,8 @@ import { UpdateUserStatusUseCase } from "./../../useCases/users/update-user-stat
 import { IUpdateUserStatusUseCase } from "@/entities/useCaseInterfaces/users/update-user-status-usecase.interface";
 import { IChangeUserPasswordUseCase } from "@/entities/useCaseInterfaces/users/change-user-password-usecase.interface";
 import { ChangeUserPasswordUseCase } from "@/useCases/users/change-user-password.usecase";
+import { IUpdateUserDetailsUseCase } from "@/entities/useCaseInterfaces/users/update-user-details-usecase.interface";
+import { UpdateUserDetailsUseCase } from "@/useCases/users/update-user-details.usecase";
 
 export class UseCaseRegistry {
 	static registerUseCases(): void {
@@ -118,6 +120,13 @@ export class UseCaseRegistry {
 			"IChangeUserPasswordUseCase",
 			{
 				useClass: ChangeUserPasswordUseCase,
+			}
+		);
+
+		container.register<IUpdateUserDetailsUseCase>(
+			"IUpdateUserDetailsUseCase",
+			{
+				useClass: UpdateUserDetailsUseCase,
 			}
 		);
 

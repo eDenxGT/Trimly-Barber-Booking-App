@@ -3,7 +3,7 @@ import { UpdatePasswordData } from "@/hooks/client/useClientPassword";
 import { IAxiosResponse } from "@/types/Response";
 
 export type Client = {
-	_id: string;
+	_id?: string;
 	userId: string;
 	firstName: string;
 	lastName: string;
@@ -23,6 +23,11 @@ export type ClientResponse = {
 	client: Client;
 };
 
+export type IUpdateClientData = Pick<
+	Client,
+	"firstName" | "lastName" | "email" | "phoneNumber" | "profileImage"
+>;
+
 export const updateClientPassword = async ({
 	oldPassword,
 	newPassword,
@@ -33,6 +38,15 @@ export const updateClientPassword = async ({
 			oldPassword,
 			newPassword,
 		}
+	);
+	return response.data;
+};
+
+
+export const updateClientProfile = async (data: IUpdateClientData) => {
+	const response = await clientAxiosInstance.put<ClientResponse>(
+		"/client/details",
+		data
 	);
 	return response.data;
 };

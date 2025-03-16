@@ -26,10 +26,9 @@ export class UpdateUserStatusUseCase implements IUpdateUserStatusUseCase {
 
 			const newStatus = user.status === "active" ? "blocked" : "active";
 
-			await this.clientRepository.findByIdAndUpdateStatus(
-				userId,
-				newStatus
-			);
+			await this.clientRepository.findByIdAndUpdate(userId, {
+				status: newStatus,
+			});
 		} else if (userType === "barber") {
 			const user = await this.barberRepository.findById(userId);
 
@@ -42,10 +41,9 @@ export class UpdateUserStatusUseCase implements IUpdateUserStatusUseCase {
 
 			const newStatus = user.status === "active" ? "blocked" : "active";
 
-			await this.barberRepository.findByIdAndUpdateStatus(
-				userId,
-				newStatus
-			);
+			await this.barberRepository.findByIdAndUpdate(userId, {
+				status: newStatus,
+			});
 		}
 	}
 }

@@ -7,4 +7,8 @@ export interface IAdminRepository {
 		email: string,
 		updates: Partial<IAdminEntity>
 	): Promise<IAdminEntity | null>;
+	findByIdAndUpdate(
+		id: any,
+		updateData: Partial<IAdminEntity>
+	): Promise<IAdminEntity | null>;
 }

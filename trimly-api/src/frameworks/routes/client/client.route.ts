@@ -31,6 +31,16 @@ export class ClientRoutes extends BaseRoute {
 				userController.changeUserPassword(req, res);
 			}
 		);
+		this.router
+			.route("/client/details")
+			.put(
+				verifyAuth,
+				authorizeRole(["client"]),
+				blockStatusMiddleware.checkStatus as RequestHandler,
+				(req: Request, res: Response) => {
+					userController.updateUserDetails(req, res);
+				}
+			);
 		// logout
 		this.router.post(
 			"/client/logout",

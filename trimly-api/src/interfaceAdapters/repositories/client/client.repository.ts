@@ -65,11 +65,19 @@ export class ClientRepository implements IClientRepository {
 		} as IClientEntity;
 	}
 
-	async findByIdAndUpdateStatus(id: any, status: string): Promise<void> {
-		await ClientModel.findByIdAndUpdate(id, {
-			$set: {
-				status: status,
-			},
-		});
+	async findByIdAndUpdate(
+		id: any,
+		updateData: Partial<IClientEntity>
+	): Promise<IClientEntity | null> {
+		const client = await ClientModel.findByIdAndUpdate(
+			id,
+			{ $set: updateData },
+			{ new: true }
+		).lean();
+		if (!client) return null;
+		return {
+			...client,
+			id: client._id.toString(),
+		} as IClientEntity;
 	}
 }

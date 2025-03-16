@@ -12,6 +12,8 @@ import {
 } from "@/shared/constants";
 import { CustomRequest } from "../middlewares/auth.middleware";
 import { IChangeUserPasswordUseCase } from "@/entities/useCaseInterfaces/users/change-user-password-usecase.interface";
+import { IUpdateUserDetailsUseCase } from "@/entities/useCaseInterfaces/users/update-user-details-usecase.interface";
+import { use } from "react";
 
 @injectable()
 export class UserController implements IUserController {
@@ -21,7 +23,9 @@ export class UserController implements IUserController {
 		@inject("IUpdateUserStatusUseCase")
 		private updateUserStatusUseCase: IUpdateUserStatusUseCase,
 		@inject("IChangeUserPasswordUseCase")
-		private changePasswordUseCase: IChangeUserPasswordUseCase
+		private changePasswordUseCase: IChangeUserPasswordUseCase,
+		@inject("IUpdateUserDetailsUseCase")
+		private updateUserDetailsUseCase: IUpdateUserDetailsUseCase
 	) {}
 
 	async getAllUsers(req: Request, res: Response): Promise<void> {
@@ -160,18 +164,26 @@ export class UserController implements IUserController {
 
 	async updateUserDetails(req: Request, res: Response): Promise<void> {
 		try {
-			// const { oldPassword, newPassword } = req.body;
-			// const { email, role } = (req as CustomRequest).user;
-			// await this.changePasswordUseCase.execute({
-			// 	oldPassword,
-			// 	newPassword,
-			// 	email,
-			// 	role,
-			// });
-			// res.status(HTTP_STATUS.OK).json({
-			// 	success: true,
-			// 	message: SUCCESS_MESSAGES.UPDATE_SUCCESS,
-			// });
+			console.log(req.body);
+			const data = req.body;
+			const { id, role } = (req as CustomRequest).user;
+			const updatedUser = await this.updateUserDetailsUseCase.execute(
+				id,
+				role,
+				data
+			);
+			if (!updatedUser) {
+				throw new CustomError(
+					ERROR_MESSAGES.USER_NOT_FOUND,
+					HTTP_STATUS.NOT_FOUND
+				);
+			}
+			const { password, ...userWithoutPassword } = updatedUser;
+			res.status(HTTP_STATUS.OK).json({
+				success: true,
+				message: SUCCESS_MESSAGES.UPDATE_SUCCESS,
+				user: userWithoutPassword,
+			});
 		} catch (error) {
 			if (error instanceof ZodError) {
 				const errors = error.errors.map((err) => ({

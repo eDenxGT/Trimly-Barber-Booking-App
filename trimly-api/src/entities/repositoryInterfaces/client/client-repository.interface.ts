@@ -13,5 +13,8 @@ export interface IClientRepository {
 		email: string,
 		updates: Partial<IClientEntity>
 	): Promise<IClientEntity | null>;
-	findByIdAndUpdateStatus(id: any, status: string): Promise<void>;
+	findByIdAndUpdate(
+		id: any,
+		updateData: Partial<IClientEntity>
+	): Promise<IClientEntity | null>;
 }

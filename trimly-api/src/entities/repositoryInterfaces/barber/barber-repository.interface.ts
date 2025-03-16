@@ -13,5 +13,8 @@ export interface IBarberRepository {
 		email: string,
 		updates: Partial<IBarberEntity>
 	): Promise<IBarberEntity | null>;
-	findByIdAndUpdateStatus(id: any, status: string): Promise<void>;
+	findByIdAndUpdate(
+		id: any,
+		updateData: Partial<IBarberEntity>
+	): Promise<IBarberEntity | null>;
 }

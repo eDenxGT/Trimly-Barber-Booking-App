@@ -55,16 +55,13 @@ export class LoginUserController implements ILoginUserController {
 				refreshTokenName
 			);
 
+			const { password, ...userWithoutPassword } = user;
+
 			res.status(HTTP_STATUS.OK).json({
 				success: true,
 				message: SUCCESS_MESSAGES.LOGIN_SUCCESS,
 				user: {
-					id: user.id,
-					firstName: user.firstName,
-					lastName: user.lastName,
-					profileImage: user?.profileImage,
-					email: user.email,
-					role: user.role,
+					...userWithoutPassword,
 				},
 			});
 		} catch (error) {

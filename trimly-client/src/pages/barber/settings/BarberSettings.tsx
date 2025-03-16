@@ -44,9 +44,9 @@ export function BarberSettingsPage() {
 	const handleLogout = () => {
 		logoutReq(undefined, {
 			onSuccess: (data) => {
-				navigate("/barber");
-				setConfirmLogout(false);
 				dispatch(barberLogout());
+				setConfirmLogout(false);
+				navigate("/barber");
 				successToast(data.message);
 			},
 			onError: (err: any) => {
@@ -87,7 +87,10 @@ export function BarberSettingsPage() {
 							<Typography variant="subtitle1">
 								Personal Information
 							</Typography>
-							<IconButton>
+							<IconButton
+								onClick={() =>
+									navigate("/barber/settings/profile")
+								}>
 								<ChevronRight />
 							</IconButton>
 						</Box>

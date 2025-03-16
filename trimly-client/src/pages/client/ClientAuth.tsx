@@ -13,10 +13,10 @@ import { useNavigate } from "react-router-dom";
 export const ClientAuth = () => {
 	const [isLogin, setIsLogin] = useState(true);
 	const dispatch = useDispatch();
-	const navigate = useNavigate()
+	const navigate = useNavigate();
 
-	const { mutate: loginClient } = useLoginMutation();
-	const { mutate: registerClient } = useRegisterMutation();
+	const { mutate: loginClient, isPending: isLoginPending } = useLoginMutation();
+	const { mutate: registerClient, isPending } = useRegisterMutation();
 
 	const { errorToast, successToast } = useToaster();
 
@@ -38,7 +38,7 @@ export const ClientAuth = () => {
 				onSuccess: (data) => {
 					successToast(data.message);
 					dispatch(clientLogin(data.user));
-					navigate("/home")
+					navigate("/home");
 				},
 				onError: (error: any) => {
 					errorToast(error.response.data.message);
@@ -58,12 +58,14 @@ export const ClientAuth = () => {
 					transition={{ duration: 0.5 }}>
 					{isLogin ? (
 						<SignIn
+							isLoading={isLoginPending}
 							userType="client"
 							onSubmit={handleLoginSubmit}
 							setRegister={() => setIsLogin(false)}
 						/>
 					) : (
 						<SignUp
+							isLoading={isPending}
 							userType="client"
 							onSubmit={handleSignUpSubmit}
 							setLogin={() => setIsLogin(true)}

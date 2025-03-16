@@ -6,6 +6,14 @@ interface Client {
 	lastName: string;
 	email: string;
 	role: string;
+	phoneNumber: string;
+	profileImage: string;
+	location: {
+		name: string;
+		latitude: number;
+		longitude: number;
+		detail: Record<string, string>;
+	};
 }
 
 interface ClientState {
