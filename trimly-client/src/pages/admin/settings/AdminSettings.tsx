@@ -37,15 +37,15 @@ export function AdminSettingsPage() {
 	const [confirmDelete, setConfirmDelete] = useState(false);
 	const [confirmLogout, setConfirmLogout] = useState(false);
 
-	const dispatch = useDispatch()
+	const dispatch = useDispatch();
 	const { mutate: logoutReq } = useLogout(logoutAdmin);
-	const {successToast, errorToast} = useToaster()
+	const { successToast, errorToast } = useToaster();
 
 	const handleLogout = () => {
 		logoutReq(undefined, {
 			onSuccess: (data) => {
 				navigate("/admin");
-				setConfirmLogout(false)
+				setConfirmLogout(false);
 				dispatch(adminLogout());
 				successToast(data.message);
 			},
@@ -83,7 +83,10 @@ export function AdminSettingsPage() {
 							<Typography variant="subtitle1">
 								Personal Information
 							</Typography>
-							<IconButton>
+							<IconButton
+								onClick={() =>
+									navigate("/admin/settings/profile")
+								}>
 								<ChevronRight />
 							</IconButton>
 						</Box>

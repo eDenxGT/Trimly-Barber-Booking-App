@@ -5,6 +5,7 @@ import { AdminBarberManagement } from "@/pages/admin/AdminBarberManagement";
 import { AdminClientManagement } from "@/pages/admin/AdminClientManagement";
 import { AdminDashboard } from "@/pages/admin/AdminDashboard";
 import { AdminChangePassword } from "@/pages/admin/settings/AdminChangePassword";
+import { AdminProfileEdit } from "@/pages/admin/settings/AdminEditProfile";
 import { AdminSettingsPage } from "@/pages/admin/settings/AdminSettings";
 import { AdminLayout } from "@/pages/layouts/AdminLayout";
 import { AdminAuthRoute } from "@/utils/protected/ProtectedRoute";
@@ -34,6 +35,7 @@ export const AdminRoutes = () => {
 					path="settings/change-password"
 					element={<AdminChangePassword />}
 				/>
+				<Route path="settings/profile" element={<AdminProfileEdit />} />
 			</Route>
 
 			{/*//? Forgot and reset pages */}

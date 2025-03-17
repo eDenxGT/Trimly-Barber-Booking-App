@@ -29,7 +29,6 @@ export interface IClient extends User {
 		name?: string;
 		latitude?: number | null;
 		longitude?: number | null;
-		detail?: Record<string, string>;
 	};
 }
 

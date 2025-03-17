@@ -3,6 +3,7 @@ import ResetPassword from "@/components/auth/ResetPassword";
 import BarberAuth from "@/pages/barber/BarberAuth";
 import { BarberDashboard } from "@/pages/barber/BarberDashboard";
 import { BarberChangePassword } from "@/pages/barber/settings/BarberChangePassword";
+import { BarberProfileEdit } from "@/pages/barber/settings/BarberEditProfile";
 import { BarberSettingsPage } from "@/pages/barber/settings/BarberSettings";
 import { BarberLayout } from "@/pages/layouts/BarberLayout";
 import { BarberAuthRoute } from "@/utils/protected/ProtectedRoute";
@@ -29,6 +30,10 @@ export const BarberRoutes = () => {
 				<Route
 					path="settings/change-password"
 					element={<BarberChangePassword />}
+				/>
+				<Route
+					path="settings/profile"
+					element={<BarberProfileEdit />}
 				/>
 			</Route>
 

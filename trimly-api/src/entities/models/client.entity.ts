@@ -5,6 +5,5 @@ export interface IClientEntity extends IUserEntity {
 		name: string;
 		latitude: number;
 		longitude: number;
-		detail: Record<string, string>;
 	};
 }

@@ -17,7 +17,6 @@ export const clientSchema = new Schema<IClientModel>(
 			name: { type: String, required: false },
 			latitude: { type: Number, required: false },
 			longitude: { type: Number, required: false },
-			detail: { type: Map, of: String, required: false },
 		},
 	},
 	{

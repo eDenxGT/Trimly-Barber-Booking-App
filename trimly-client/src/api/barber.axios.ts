@@ -20,7 +20,7 @@ barberAxiosInstance.interceptors.response.use(
 			if (!isRefreshing) {
 				isRefreshing = true;
 				try {
-					await barberAxiosInstance.post("/_ba/barber/refresh-token");
+					await barberAxiosInstance.post("/barber/refresh-token");
 					isRefreshing = false;
 					return barberAxiosInstance(originalRequest);
 				} catch (refreshError) {

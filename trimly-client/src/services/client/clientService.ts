@@ -40,6 +40,5 @@ export const updateClientProfile = async (
 		"/client/details",
 		data
 	);
-	console.log(response);
 	return response.data;
 };

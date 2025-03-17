@@ -1,10 +1,22 @@
 import { barberAxiosInstance } from "@/api/barber.axios";
 import { IAxiosResponse } from "@/types/Response";
+import { IBarber } from "@/types/User";
 
 export interface UpdatePasswordData {
 	oldPassword: string;
 	newPassword: string;
 }
+
+export type BarberResponse = {
+	success: boolean;
+	message: string;
+	user: IBarber;
+};
+
+export type IUpdateBarberData = Pick<
+	IBarber,
+	"firstName" | "lastName" | "email" | "phoneNumber" | "profileImage"
+>;
 
 export const updateBarberPassword = async ({
 	oldPassword,
@@ -16,6 +28,16 @@ export const updateBarberPassword = async ({
 			oldPassword,
 			newPassword,
 		}
+	);
+	return response.data;
+};
+
+export const updateBarberProfile = async (
+	data: IUpdateBarberData
+): Promise<BarberResponse> => {
+	const response = await barberAxiosInstance.put<BarberResponse>(
+		"/barber/details",
+		data
 	);
 	return response.data;
 };

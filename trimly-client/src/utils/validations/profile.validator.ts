@@ -21,6 +21,5 @@ export const profileUpdateSchema = Yup.object({
 		name: Yup.string().max(100, "Location cannot exceed 100 characters"),
 		latitude: Yup.number().nullable(),
 		longitude: Yup.number().nullable(),
-		detail: Yup.object(), 
 	}),
 });

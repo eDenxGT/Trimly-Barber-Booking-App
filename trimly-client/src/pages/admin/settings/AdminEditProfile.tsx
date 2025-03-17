@@ -9,97 +9,164 @@ import {
 	Container,
 	IconButton,
 	Box,
+	CircularProgress,
+	Chip,
 } from "@mui/material";
-import { Camera, Save } from "lucide-react";
+import { Camera, Save, Shield } from "lucide-react";
 import { useFormik } from "formik";
 import { motion } from "framer-motion";
-import { LocationInputField } from "@/components/common/location/LocationInputField";
 import { profileUpdateSchema } from "@/utils/validations/profile.validator";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { uploadToCloudinary } from "@/services/cloudinary/cloudinary";
-import { useClientProfileMutation } from "@/hooks/client/useClientProfile";
+import { useAdminProfileMutation } from "@/hooks/admin/useAdminProfile";
 import { useToaster } from "@/hooks/ui/useToaster";
-import { clientLogin } from "@/store/slices/client.slice";
+import { adminLogin } from "@/store/slices/admin.slice";
 
-export function ClientProfileEdit() {
-	const client = useSelector((state: RootState) => state.client.client);
+export function AdminProfileEdit() {
+	const admin = useSelector((state: RootState) => state.admin.admin);
+	const dispatch = useDispatch();
+	const { successToast, errorToast } = useToaster();
+	const { mutate: updateProfile } = useAdminProfileMutation();
 
-	const [avatar, setAvatar] = useState(client?.profileImage || "");
+	const [avatar, setAvatar] = useState(admin?.profileImage || "");
 	const [newAvatar, setNewAvatar] = useState<string | null>(null);
 	const [loading, setLoading] = useState(false);
-	const { successToast, errorToast } = useToaster();
 	const uploadedImageUrl = useRef<string | undefined>(undefined);
-	const dispatch = useDispatch();
 
-	const { mutate: updateProfile } = useClientProfileMutation();
+	const styles = {
+		textField: {
+			mb: 2,
+			"& .MuiOutlinedInput-root": {
+				"&:hover fieldset": {
+					borderColor: "var(--primary)",
+				},
+				"&.Mui-focused fieldset": {
+					borderColor: "var(--primary)",
+				},
+			},
+			"& .MuiInputLabel-root.Mui-focused": {
+				color: "var(--primary)",
+			},
+			"& .MuiFormHelperText-root": {
+				fontSize: "0.75rem",
+				lineHeight: "1rem",
+				minHeight: "1rem",
+			},
+		},
+      button: {
+         backgroundColor: "var(--yellow)",
+         "&:hover": {
+           backgroundColor: "var(--yellow-hover)",
+         },
+         mt: 2,
+       },
+       avatarContainer: {
+         display: "flex",
+         flexDirection: "column",
+         alignItems: "center",
+         justifyContent: "center",
+         mb: { xs: 3, md: 0 },
+       },
+       avatar: {
+         width: 150,
+         height: 150,
+         boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+         border: "4px solid white",
+       },
+       cameraButton: {
+         position: "absolute",
+         bottom: 5,
+         right: 5,
+         backgroundColor: "var(--yellow)",
+         color: "white",
+         "&:hover": {
+           backgroundColor: "var(--yellow-hover)",
+         },
+         width: 36,
+         height: 36,
+       },
+		formContainer: {
+			p: 4,
+			borderRadius: 2,
+		},
+		formTitle: {
+			mb: 2,
+			fontWeight: "bold",
+			color: "#333",
+		},
+		adminChip: {
+			backgroundColor: "var(--primary-light)",
+			color: "var(--primary-dark)",
+			fontWeight: "bold",
+			mb: 4,
+		},
+		roleInfo: {
+			display: "flex",
+			alignItems: "center",
+			mb: 1,
+			color: "text.secondary",
+		},
+	};
 
 	const formik = useFormik({
 		initialValues: {
-			firstName: client?.firstName || "",
-			lastName: client?.lastName || "",
-			email: client?.email || "",
-			phoneNumber: client?.phoneNumber || "",
+			firstName: admin?.firstName || "",
+			lastName: admin?.lastName || "",
+			email: admin?.email || "",
+			phoneNumber: admin?.phoneNumber || "",
 			profileImageFile: null as File | null,
-			profileImage: client?.profileImage || "",
-			location: client?.location || {
-				name: "",
-				latitude: null as number | null,
-				longitude: null as number | null,
-			},
+			profileImage: admin?.profileImage || "",
 		},
 		validationSchema: profileUpdateSchema,
 		onSubmit: async (values) => {
 			setLoading(true);
 
-			if (values.profileImageFile) {
-				try {
+			try {
+				if (values.profileImageFile) {
 					const uploadedUrl = await uploadToCloudinary(
 						values.profileImageFile
 					);
 					if (!uploadedUrl) {
+						errorToast("Failed to upload image");
 						setLoading(false);
 						return;
 					}
 					uploadedImageUrl.current = uploadedUrl;
 					formik.setFieldValue("profileImage", uploadedUrl, false);
-					formik.setFieldValue("profileImageFile", null, false);
-				} catch (error) {
-					console.error("Upload failed:", error);
-
-					setLoading(false);
-					return;
 				}
-			}
 
-			if (newAvatar) {
-				setAvatar(newAvatar);
-				setNewAvatar(null);
-			}
-			handleUpdateClientProfile();
+				if (newAvatar) {
+					setAvatar(newAvatar);
+					setNewAvatar(null);
+				}
 
-			setLoading(false);
+				updateProfile(
+					{
+						...values,
+						profileImage:
+							uploadedImageUrl.current || values.profileImage,
+					},
+					{
+						onSuccess: (data) => {
+							successToast(data.message);
+							dispatch(adminLogin(data.user));
+						},
+						onError: (error: any) => {
+							errorToast(
+								error.response?.data?.message || "Update failed"
+							);
+						},
+					}
+				);
+			} catch (error) {
+				console.error("Profile update failed:", error);
+				errorToast("An unexpected error occurred");
+			} finally {
+				setLoading(false);
+			}
 		},
 	});
-
-	const handleUpdateClientProfile = async () => {
-		updateProfile(
-			{
-				...formik.values,
-				profileImage: uploadedImageUrl.current,
-			},
-			{
-				onSuccess: (data) => {
-					successToast(data.message);
-					console.log(data);
-					dispatch(clientLogin(data.user));
-				},
-				onError: (error: any) => {
-					errorToast(error.response.data.message);
-				},
-			}
-		);
-	};
 
 	const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.target.files && e.target.files[0]) {
@@ -116,74 +183,39 @@ export function ClientProfileEdit() {
 		}
 	};
 
-	const textFieldStyle = {
-		"& .MuiOutlinedInput-root": {
-			"&:hover fieldset": {
-				borderColor: "var(--yellow)",
-			},
-			"&.Mui-focused fieldset": {
-				borderColor: "var(--yellow)",
-			},
-		},
-		"& .MuiInputLabel-root.Mui-focused": {
-			color: "var(--yellow)",
-		},
-		"& .MuiFormHelperText-root": {
-			fontSize: "0.75rem",
-			lineHeight: "1rem",
-			minHeight: "1rem",
-		},
-	};
-
-	const buttonStyle = {
-		backgroundColor: "var(--yellow)",
-		"&:hover": {
-			backgroundColor: "var(--yellow-hover)",
-		},
-	};
-
 	return (
 		<Container maxWidth="md" sx={{ py: 5, mt: 6 }}>
 			<motion.div
 				initial={{ y: 20, opacity: 0 }}
 				animate={{ y: 0, opacity: 1 }}
-				transition={{ delay: 0.2 }}>
-				<Paper elevation={3} sx={{ p: 4, mt: 4 }}>
-					<Typography variant="h4" component="h1" gutterBottom>
+				transition={{ duration: 0.4 }}>
+				<Paper elevation={3} sx={styles.formContainer}>
+					<Typography
+						variant="h4"
+						component="h1"
+						sx={styles.formTitle}>
 						Edit Profile
 					</Typography>
 
 					<form onSubmit={formik.handleSubmit}>
 						<Grid container spacing={4}>
+							{/* Avatar Section */}
 							<Grid
 								item
 								xs={12}
 								md={4}
-								sx={{
-									display: "flex",
-									flexDirection: "column",
-									alignItems: "center",
-								}}>
+								sx={styles.avatarContainer}>
 								<Box sx={{ position: "relative", mb: 2 }}>
 									<Avatar
 										src={newAvatar || avatar}
-										alt="Profile Avatar"
-										sx={{ width: 150, height: 150 }}
+										alt={`${admin?.firstName} ${admin?.lastName}`}
+										sx={styles.avatar}
 									/>
 									<IconButton
-										sx={{
-											position: "absolute",
-											bottom: 0,
-											right: 0,
-											backgroundColor: "var(--yellow)",
-											color: "white",
-											"&:hover": {
-												backgroundColor:
-													"var(--yellow-hover)",
-											},
-										}}
-										component="label">
-										<Camera size={20} />
+										sx={styles.cameraButton}
+										component="label"
+										aria-label="Upload new profile picture">
+										<Camera size={18} />
 										<input
 											type="file"
 											hidden
@@ -192,26 +224,30 @@ export function ClientProfileEdit() {
 										/>
 									</IconButton>
 								</Box>
+								<Typography
+									variant="body2"
+									color="text.secondary"
+									align="center">
+									Update profile picture
+								</Typography>
 
-								{newAvatar && (
-									<Box sx={{ textAlign: "center", mb: 2 }}>
-										<Typography
-											variant="body2"
-											color="text.secondary"
-											gutterBottom>
-											New avatar preview
+								<Box sx={{ mt: 3, width: "100%" }}>
+									<Box sx={styles.roleInfo}>
+										<Shield
+											size={16}
+											style={{
+												marginRight: "8px",
+											}}
+										/>
+										<Typography variant="body2">
+											Is Super Admin:{" "}
+											{admin?.isSuperAdmin ? "Yes" : "No"}
 										</Typography>
-										<Button
-											size="small"
-											variant="outlined"
-											color="error"
-											onClick={() => setNewAvatar(null)}>
-											Cancel
-										</Button>
 									</Box>
-								)}
+								</Box>
 							</Grid>
 
+							{/* Form Fields Section */}
 							<Grid item xs={12} md={8}>
 								<Grid container spacing={2}>
 									<Grid item xs={12} sm={6}>
@@ -220,7 +256,6 @@ export function ClientProfileEdit() {
 											id="firstName"
 											name="firstName"
 											label="First Name"
-											placeholder="Enter your first name"
 											value={formik.values.firstName}
 											onChange={formik.handleChange}
 											onBlur={formik.handleBlur}
@@ -234,7 +269,7 @@ export function ClientProfileEdit() {
 													: ""
 											}
 											variant="outlined"
-											sx={textFieldStyle}
+											sx={styles.textField}
 										/>
 									</Grid>
 									<Grid item xs={12} sm={6}>
@@ -243,7 +278,6 @@ export function ClientProfileEdit() {
 											id="lastName"
 											name="lastName"
 											label="Last Name"
-											placeholder="Enter your last name"
 											value={formik.values.lastName}
 											onChange={formik.handleChange}
 											onBlur={formik.handleBlur}
@@ -257,7 +291,7 @@ export function ClientProfileEdit() {
 													: ""
 											}
 											variant="outlined"
-											sx={textFieldStyle}
+											sx={styles.textField}
 										/>
 									</Grid>
 									<Grid item xs={12}>
@@ -265,8 +299,7 @@ export function ClientProfileEdit() {
 											fullWidth
 											id="email"
 											name="email"
-											label="Email Address"
-											placeholder="Enter your email"
+											label="Email"
 											type="email"
 											value={formik.values.email}
 											onChange={formik.handleChange}
@@ -281,7 +314,7 @@ export function ClientProfileEdit() {
 													: ""
 											}
 											variant="outlined"
-											sx={textFieldStyle}
+											sx={styles.textField}
 										/>
 									</Grid>
 									<Grid item xs={12}>
@@ -290,7 +323,6 @@ export function ClientProfileEdit() {
 											id="phoneNumber"
 											name="phoneNumber"
 											label="Phone Number"
-											placeholder="Enter your phone number"
 											value={formik.values.phoneNumber}
 											onChange={formik.handleChange}
 											onBlur={formik.handleBlur}
@@ -306,61 +338,18 @@ export function ClientProfileEdit() {
 													: ""
 											}
 											variant="outlined"
-											sx={textFieldStyle}
+											sx={styles.textField}
 										/>
-									</Grid>
-									<Grid item xs={12}>
-										<LocationInputField
-											initialValue={
-												formik.values?.location?.name
-											}
-											placeholder="Search location..."
-											onSelect={(loc) => {
-												formik.setFieldValue(
-													"location",
-													{
-														name: loc.display,
-														latitude: loc.lat,
-														longitude: loc.lon,
-														details: loc.details,
-													}
-												);
-											}}
-											onChange={(value) => {
-												formik.setFieldValue(
-													"location",
-													{
-														...formik.values
-															.location,
-														name: value,
-													}
-												);
-											}}
-										/>
-										{/* {formik.values.location.latitude &&
-											formik.values.location
-												.longitude && (
-												<Typography
-													variant="caption"
-													color="text.secondary">
-													Coordinates:{" "}
-													{formik.values.location.latitude.toFixed(
-														6
-													)}
-													,{" "}
-													{formik.values.location.longitude.toFixed(
-														6
-													)}
-												</Typography>
-											)} */}
 									</Grid>
 								</Grid>
 							</Grid>
 
+							{/* Submit Button Section */}
 							<Grid
 								item
 								xs={12}
 								sx={{
+									mt: 2,
 									display: "flex",
 									justifyContent: "flex-end",
 								}}>
@@ -369,8 +358,17 @@ export function ClientProfileEdit() {
 									variant="contained"
 									size="large"
 									disabled={loading}
-									startIcon={<Save />}
-									sx={buttonStyle}>
+									startIcon={
+										loading ? (
+											<CircularProgress
+												size={20}
+												color="inherit"
+											/>
+										) : (
+											<Save />
+										)
+									}
+									sx={styles.button}>
 									{loading ? "Saving..." : "Save Changes"}
 								</Button>
 							</Grid>
