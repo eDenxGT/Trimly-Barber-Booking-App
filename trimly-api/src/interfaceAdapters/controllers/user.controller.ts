@@ -13,7 +13,6 @@ import {
 import { CustomRequest } from "../middlewares/auth.middleware";
 import { IChangeUserPasswordUseCase } from "@/entities/useCaseInterfaces/users/change-user-password-usecase.interface";
 import { IUpdateUserDetailsUseCase } from "@/entities/useCaseInterfaces/users/update-user-details-usecase.interface";
-import { use } from "react";
 
 @injectable()
 export class UserController implements IUserController {
