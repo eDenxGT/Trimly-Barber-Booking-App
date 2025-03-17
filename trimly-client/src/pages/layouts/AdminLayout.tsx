@@ -41,9 +41,8 @@ export const AdminLayout = () => {
 			{/* Header */}
 			<PrivateHeader
 				className="z-40"
-				userName={user?.firstName}
+				user={user}
 				onLogout={handleLogout}
-				// userAvatar={userAvatar}
 				notifications={notifications}
 				onSidebarToggle={() => setIsSideBarVisible(!isSideBarVisible)}
 			/>

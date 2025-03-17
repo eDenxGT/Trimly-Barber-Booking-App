@@ -36,10 +36,8 @@ export const ClientLayout = () => {
 			{/* Header */}
 			<PrivateHeader
 				className="z-40"
-				userName={user?.firstName}
-				// userLocation={userLocation}
+				user={user}
 				onLogout={handleLogout}
-				// userAvatar={userAvatar}
 				notifications={notifications}
 				onSidebarToggle={() => setIsSideBarVisible(!isSideBarVisible)}
 			/>

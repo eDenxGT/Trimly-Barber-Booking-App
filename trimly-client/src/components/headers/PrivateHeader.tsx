@@ -25,11 +25,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
+import { IClient, UserDTO } from "@/types/User";
+import { useNavigate } from "react-router-dom";
 
 interface HeaderProps {
-	userName?: string;
-	userLocation?: string;
-	userAvatar?: string;
+	user: UserDTO | null;
 	notifications?: number;
 	onSidebarToggle?: () => void;
 	onLogout: () => void;
@@ -37,15 +37,23 @@ interface HeaderProps {
 }
 
 export function PrivateHeader({
-	userName = "Aaron Ramsdale",
-	userLocation = "California, US",
-	userAvatar = "",
+	user,
 	notifications = 2,
 	onSidebarToggle,
 	onLogout,
 	className,
 }: HeaderProps) {
 	const [open, setOpen] = useState(false);
+	const navigate = useNavigate();
+
+	const isClient = user?.role === "client";
+	const isBarber = user?.role === "barber";
+	const isAdmin = user?.role === "admin";
+
+	const displayName = user?.firstName || user?.lastName || "User";
+	const initials = `${user?.firstName?.[0] || ""}${
+		user?.lastName?.[0] || ""
+	}`;
 
 	useEffect(() => {
 		const down = (e: KeyboardEvent) => {
@@ -58,34 +66,18 @@ export function PrivateHeader({
 		return () => document.removeEventListener("keydown", down);
 	}, []);
 
-	const searchItems = [
-		{
-			category: "Barbers",
-			items: [
-				{
-					id: 1,
-					name: "Classic Cuts Barbershop",
-					type: "barber",
-					rating: 4.8,
-				},
-				{
-					id: 2,
-					name: "Modern Style Studio",
-					type: "barber",
-					rating: 4.9,
-				},
-				{ id: 3, name: "Vintage Barbers", type: "barber", rating: 4.7 },
-			],
-		},
-		{
-			category: "Services",
-			items: [
-				{ id: 4, name: "Haircut", type: "service", price: "$30" },
-				{ id: 5, name: "Beard Trim", type: "service", price: "$20" },
-				{ id: 6, name: "Hair Coloring", type: "service", price: "$50" },
-			],
-		},
-	];
+	const userAsClient = isClient ? (user as IClient) : null;
+	const locationName = userAsClient?.location?.name;
+	const settingsPath = isClient
+		? "/settings"
+		: isBarber
+		? "/barber/settings"
+		: "/admin/settings";
+	const profilePath = isClient
+		? "/settings/profile"
+		: isBarber
+		? "/barber/settings/profile"
+		: "/admin/settings/profile";
 
 	return (
 		<header
@@ -187,17 +179,19 @@ export function PrivateHeader({
 				{/* Right Section */}
 				<div className="ml-8 flex items-center space-x-6">
 					{/* User Info */}
-					<div className="hidden md:flex items-center space-x-4">
-						<div className="flex flex-col items-end">
-							<span className="text-sm font-medium text-white">
-								Hi, {userName}
-							</span>
-							<div className="flex items-center text-xs text-gray-400">
-								<MapPin className="mr-1 h-3 w-3" />
-								{userLocation}
+					{isClient && (
+						<div className="hidden md:flex items-center space-x-4">
+							<div className="flex flex-col items-end">
+								<span className="text-sm font-medium text-white">
+									{displayName}
+								</span>
+								<div className="flex items-center text-xs text-gray-400">
+									<MapPin className="mr-1 h-3 w-3" />
+									{locationName?.slice(0, 50) || "Location"}
+								</div>
 							</div>
 						</div>
-					</div>
+					)}
 
 					{/* Notifications */}
 					<Tooltip title="Notifications" arrow placement="bottom">
@@ -282,14 +276,12 @@ export function PrivateHeader({
 									<div className="cursor-pointer">
 										<Avatar className="h-8 w-8">
 											<AvatarImage
-												src={userAvatar}
-												alt={userName}
+												className="object-cover hover:scale-110 transition-transform duration-200"
+												src={user?.profileImage}
+												alt={displayName}
 											/>
 											<AvatarFallback className="bg-[var(--yellow)] text-black">
-												{userName
-													.split(" ")
-													.map((n) => n[0])
-													.join("")}
+												{initials}
 											</AvatarFallback>
 										</Avatar>
 									</div>
@@ -302,11 +294,19 @@ export function PrivateHeader({
 									</DropdownMenuLabel>
 									<DropdownMenuSeparator className="bg-[#2a2a2a]" />
 									<DropdownMenuGroup>
-										<DropdownMenuItem className="cursor-pointer hover:bg-[#2a2a2a] focus:bg-[#2a2a2a]">
+										<DropdownMenuItem
+											onClick={() =>
+												navigate(profilePath)
+											}
+											className="cursor-pointer hover:bg-[#2a2a2a] focus:bg-[#2a2a2a]">
 											<User className="mr-2 h-4 w-4" />
 											<span>Profile</span>
 										</DropdownMenuItem>
-										<DropdownMenuItem className="cursor-pointer hover:bg-[#2a2a2a] focus:bg-[#2a2a2a]">
+										<DropdownMenuItem
+											onClick={() =>
+												navigate(settingsPath)
+											}
+											className="cursor-pointer hover:bg-[#2a2a2a] focus:bg-[#2a2a2a]">
 											<Settings2 className="mr-2 h-4 w-4" />
 											<span>Settings</span>
 										</DropdownMenuItem>

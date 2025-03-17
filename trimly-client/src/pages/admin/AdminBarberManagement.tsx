@@ -130,6 +130,7 @@ export const AdminBarberManagement: React.FC = () => {
 										<TableCell>
 											<div className="flex items-center gap-3">
 												<Avatar className="h-10 w-10 bg-gray-200">
+													
 													<AvatarFallback>
 														{getInitials(
 															barber.firstName ,

@@ -41,10 +41,8 @@ export const BarberLayout = () => {
 			{/* Header */}
 			<PrivateHeader
 				className="z-40"
-				userName={user?.firstName}
-				// userLocation={user?.location}
+				user={user}
 				onLogout={handleLogout}
-				// userAvatar={userAvatar}
 				notifications={notifications}
 				onSidebarToggle={() => setIsSideBarVisible(!isSideBarVisible)}
 			/>
