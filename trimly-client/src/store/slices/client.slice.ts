@@ -1,23 +1,10 @@
+import { IClient } from "@/types/User";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface Client {
-	id: string;
-	firstName: string;
-	lastName: string;
-	email: string;
-	role: string;
-	phoneNumber: string;
-	profileImage: string;
-	location: {
-		name: string;
-		latitude: number;
-		longitude: number;
-		detail: Record<string, string>;
-	};
-}
+
 
 interface ClientState {
-	client: Client | null;
+	client: IClient | null;
 }
 
 const initialState: ClientState = {
@@ -28,7 +15,7 @@ const clientSlice = createSlice({
 	name: "client",
 	initialState,
 	reducers: {
-		clientLogin: (state, action: PayloadAction<Client>) => {
+		clientLogin: (state, action: PayloadAction<IClient>) => {
 			state.client = action.payload;
 		},
 		clientLogout: (state) => {

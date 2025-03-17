@@ -1,36 +1,36 @@
 import { adminAxiosInstance } from "@/api/admin.axios";
+import { FetchUsersParams, UsersResponse } from "@/hooks/admin/useAllUsers";
 import { IAxiosResponse } from "@/types/Response";
+import { IClient, IBarber } from "@/types/User";
 
 export interface UpdatePasswordData {
 	oldPassword: string;
 	newPassword: string;
 }
-export const getAllUsers = async ({
+
+// export type UserType = IClient | IBarber;
+
+export const getAllUsers = async <T extends IClient | IBarber>({
 	userType,
 	page = 1,
 	limit = 10,
 	search = "",
-}: {
-	userType: string;
-	page: number;
-	limit: number;
-	search: string;
-}) => {
+ }: FetchUsersParams): Promise<UsersResponse<T>> => {
 	const response = await adminAxiosInstance.get("/admin/users", {
-		params: {
-			userType,
-			page,
-			limit,
-			search,
-		},
+	  params: { userType, page, limit, search },
 	});
-	return response.data;
-};
-
+ 
+	return {
+	  users: response.data.users,
+	  totalPages: response.data.totalPages,
+	  currentPage: response.data.currentPage,
+	};
+ };
+ 
 export const updateUserStatus = async (data: {
 	userType: string;
-	userId: any;
-}) => {
+	userId: string;
+}): Promise<IAxiosResponse> => {
 	const response = await adminAxiosInstance.patch(
 		"/admin/user-status",
 		{},
@@ -47,7 +47,7 @@ export const updateUserStatus = async (data: {
 export const updateAdminPassword = async ({
 	oldPassword,
 	newPassword,
-}: UpdatePasswordData) => {
+}: UpdatePasswordData): Promise<IAxiosResponse> => {
 	const response = await adminAxiosInstance.put<IAxiosResponse>(
 		"/admin/update-password",
 		{

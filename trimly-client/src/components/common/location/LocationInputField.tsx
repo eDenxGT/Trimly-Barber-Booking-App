@@ -33,6 +33,7 @@ interface LocationAutocompleteProps {
 	placeholder?: string;
 	className?: string;
 	disabled?: boolean;
+	onChange?: (value: string) => void; // Formik onChange function
 }
 
 export function LocationInputField({
@@ -41,6 +42,7 @@ export function LocationInputField({
 	placeholder = "Search location...",
 	className = "",
 	disabled = false,
+	onChange,
 }: LocationAutocompleteProps) {
 	const inputRef = useRef<HTMLInputElement>(null);
 	const [open, setOpen] = useState(false);
@@ -75,6 +77,17 @@ export function LocationInputField({
 		});
 	};
 
+	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const value = e.target.value;
+		setSearchTerm(value);
+		if (onChange) {
+			onChange(value);
+		}
+		if (value.length >= 1) {
+			setOpen(true);
+		}
+	};
+
 	const handleInputClick = (e: React.MouseEvent) => {
 		e.stopPropagation();
 		if (searchTerm.length >= 1) {
@@ -93,6 +106,15 @@ export function LocationInputField({
 						<input
 							ref={inputRef}
 							value={searchTerm || initialValue}
+							onChange={handleInputChange}
+							onClick={handleInputClick}
+							placeholder={placeholder}
+							className="w-full pl-10 pr-16 py-3 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:[var(--yellow)] focus:border-transparent transition-all duration-200"
+							disabled={disabled || geoLoading}
+						/>
+						{/* <input
+							ref={inputRef}
+							value={searchTerm || initialValue}
 							onChange={(e) => {
 								setSearchTerm(e.target.value);
 								if (e.target.value.length >= 1) {
@@ -108,7 +130,7 @@ export function LocationInputField({
 							placeholder={placeholder}
 							className="w-full pl-10 pr-16 py-3 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:[var(--yellow)] focus:border-transparent transition-all duration-200"
 							disabled={disabled || geoLoading}
-						/>
+						/> */}
 						{searchTerm && (
 							<Button
 								type="button"

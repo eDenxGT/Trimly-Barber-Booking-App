@@ -18,23 +18,7 @@ import { debounce } from "lodash";
 import { Pagination1 } from "@/components/common/paginations/Pagination1";
 import { useUpdateUserStatusMutation } from "@/hooks/admin/useUpdateUserStatus";
 import { useToaster } from "@/hooks/ui/useToaster";
-
-export interface IBarber {
-	_id: string;
-	userId: string;
-	firstName: string;
-	lastName: string;
-	email: string;
-	phoneNumber: string;
-	status: string;
-	isOwner: boolean;
-	shopId?: string;
-}
-
-export type BarbersData = {
-	users: IBarber[];
-	totalPages: number;
-};
+import { IBarber } from "@/types/User";
 
 export const AdminBarberManagement: React.FC = () => {
 	const [searchQuery, setSearchQuery] = useState("");
@@ -52,7 +36,7 @@ export const AdminBarberManagement: React.FC = () => {
 		return () => handler.cancel();
 	}, [searchQuery]);
 
-	const { data, isLoading, isError } = useAllUsersQuery<BarbersData>(
+	const { data, isLoading, isError } = useAllUsersQuery<IBarber>(
 		getAllUsers,
 		currentPage,
 		limit,
@@ -60,12 +44,12 @@ export const AdminBarberManagement: React.FC = () => {
 		"barber"
 	);
 
-	const barbers = (data?.users as BarbersData) || [];
+	const barbers = (data?.users) || [];
 	const totalPages = data?.totalPages || 1;
 
 	const handleStatusClick = (barber: IBarber) => {
 		updateUserStatus(
-			{ userType: "barber", userId: barber._id },
+			{ userType: "barber", userId: barber.id },
 			{
 				onSuccess: (data) => {
 					successToast(data.message);
@@ -136,7 +120,7 @@ export const AdminBarberManagement: React.FC = () => {
 							<TableBody>
 								{barbers.map((barber, index) => (
 									<TableRow
-										key={barber._id}
+										key={barber.id}
 										className="hover:bg-gray-50">
 										<TableCell>
 											{(currentPage - 1) * limit +
@@ -148,7 +132,7 @@ export const AdminBarberManagement: React.FC = () => {
 												<Avatar className="h-10 w-10 bg-gray-200">
 													<AvatarFallback>
 														{getInitials(
-															barber.firstName,
+															barber.firstName ,
 															barber.lastName
 														)}
 													</AvatarFallback>

@@ -1,15 +1,8 @@
+import { IBarber } from "@/types/User";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface Barber {
-	id: string;
-	firstName: string;
-	lastName: string;
-	email: string;
-	role: string;
-}
-
 interface BarberState {
-	barber: Barber | null;
+	barber: IBarber | null;
 }
 
 const initialState: BarberState = {
@@ -20,7 +13,7 @@ const barberSlice = createSlice({
 	name: "barber",
 	initialState,
 	reducers: {
-		barberLogin: (state, action: PayloadAction<Barber>) => {
+		barberLogin: (state, action: PayloadAction<IBarber>) => {
 			state.barber = action.payload;
 		},
 		barberLogout: (state) => {

@@ -1,17 +1,8 @@
+import { IAdmin } from "@/types/User";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface Admin {
-	id: string;
-	firstName: string;
-	lastName: string;
-	email: string;
-	role: string;
-	profileImage: string;
-	isSuperAdmin: boolean;
-}
-
 interface AdminState {
-	admin: Admin | null;
+	admin: IAdmin | null;
 }
 
 const initialState: AdminState = {
@@ -22,7 +13,7 @@ const adminSlice = createSlice({
 	name: "admin",
 	initialState,
 	reducers: {
-		adminLogin: (state, action: PayloadAction<Admin>) => {
+		adminLogin: (state, action: PayloadAction<IAdmin>) => {
 			state.admin = action.payload;
 		},
 		adminLogout: (state) => {

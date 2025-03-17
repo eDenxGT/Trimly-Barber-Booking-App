@@ -163,7 +163,6 @@ export class UserController implements IUserController {
 
 	async updateUserDetails(req: Request, res: Response): Promise<void> {
 		try {
-			console.log(req.body);
 			const data = req.body;
 			const { id, role } = (req as CustomRequest).user;
 			const updatedUser = await this.updateUserDetailsUseCase.execute(

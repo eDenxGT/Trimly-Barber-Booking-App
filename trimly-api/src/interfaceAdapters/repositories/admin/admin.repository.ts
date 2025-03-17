@@ -38,15 +38,15 @@ export class AdminRepository implements IAdminRepository {
 		id: any,
 		updateData: Partial<IAdminEntity>
 	): Promise<IAdminEntity | null> {
-		const client = await AdminModel.findByIdAndUpdate(
+		const admin = await AdminModel.findByIdAndUpdate(
 			id,
 			{ $set: updateData },
 			{ new: true }
 		).lean();
-		if (!client) return null;
+		if (!admin) return null;
 		return {
-			...client,
-			id: client._id.toString(),
+			...admin,
+			id: admin._id.toString(),
 		} as IAdminEntity;
 	}
 }

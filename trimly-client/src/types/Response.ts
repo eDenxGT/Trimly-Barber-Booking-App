@@ -1,4 +1,4 @@
-import { UserRole } from "./UserRoles";
+import { UserDTO } from "./User";
 
 export interface IAxiosResponse {
 	success: boolean;
@@ -6,14 +6,5 @@ export interface IAxiosResponse {
 }
 
 export interface IAuthResponse extends IAxiosResponse {
-	user: {
-		id: string;
-		firstName: string;
-		lastName: string;
-		email: string;
-		role: UserRole;
-		profileImage: string;
-		phoneNumber: string;
-		[key: string]: any; 
-	};
+	user: UserDTO;
 }

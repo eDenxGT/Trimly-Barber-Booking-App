@@ -43,10 +43,9 @@ export function ClientProfileEdit() {
 			profileImageFile: null as File | null,
 			profileImage: client?.profileImage || "",
 			location: client?.location || {
-				name: client?.location?.name || "",
-				latitude: client?.location?.latitude || (null as number | null),
-				longitude:
-					client?.location?.longitude || (null as number | null),
+				name: "",
+				latitude: null as number | null,
+				longitude: null as number | null,
 				detail: {} as Record<string, string>,
 			},
 		},
@@ -86,7 +85,10 @@ export function ClientProfileEdit() {
 
 	const handleUpdateClientProfile = async () => {
 		updateProfile(
-			{ ...formik.values, profileImage: uploadedImageUrl.current },
+			{
+				...formik.values,
+				profileImage: uploadedImageUrl.current,
+			},
 			{
 				onSuccess: (data) => {
 					successToast(data.message);
@@ -310,7 +312,9 @@ export function ClientProfileEdit() {
 									</Grid>
 									<Grid item xs={12}>
 										<LocationInputField
-										initialValue={formik.values?.location?.name}
+											initialValue={
+												formik.values?.location?.name
+											}
 											placeholder="Search location..."
 											onSelect={(loc) => {
 												formik.setFieldValue(
@@ -323,8 +327,18 @@ export function ClientProfileEdit() {
 													}
 												);
 											}}
+											onChange={(value) => {
+												formik.setFieldValue(
+													"location",
+													{
+														...formik.values
+															.location,
+														name: value,
+													}
+												);
+											}}
 										/>
-										{formik.values.location.latitude &&
+										{/* {formik.values.location.latitude &&
 											formik.values.location
 												.longitude && (
 												<Typography
@@ -339,7 +353,7 @@ export function ClientProfileEdit() {
 														6
 													)}
 												</Typography>
-											)}
+											)} */}
 									</Grid>
 								</Grid>
 							</Grid>

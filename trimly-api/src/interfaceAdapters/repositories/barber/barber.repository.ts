@@ -32,16 +32,22 @@ export class BarberRepository implements IBarberRepository {
 		skip: number,
 		limit: number
 	): Promise<{ user: IBarberEntity[] | []; total: number }> {
-		const [user, total] = await Promise.all([
+		const [users, total] = await Promise.all([
 			BarberModel.find(filter)
 				.sort({ createdAt: -1 })
 				.skip(skip)
-				.limit(limit),
+				.limit(limit)
+				.lean(),
 			BarberModel.countDocuments(filter),
 		]);
 
+		const transformedUsers = users.map(({ _id, ...rest }) => ({
+			id: _id.toString(),
+			...rest,
+		}));
+
 		return {
-			user,
+			user: transformedUsers,
 			total,
 		};
 	}
@@ -67,15 +73,15 @@ export class BarberRepository implements IBarberRepository {
 		id: any,
 		updateData: Partial<IBarberEntity>
 	): Promise<IBarberEntity | null> {
-		const client = await BarberModel.findByIdAndUpdate(
+		const barber = await BarberModel.findByIdAndUpdate(
 			id,
 			{ $set: updateData },
 			{ new: true }
 		).lean();
-		if (!client) return null;
+		if (!barber) return null;
 		return {
-			...client,
-			id: client._id.toString(),
+			...barber,
+			id: barber._id.toString(),
 		} as IBarberEntity;
 	}
 }

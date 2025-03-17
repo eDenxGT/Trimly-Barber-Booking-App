@@ -34,16 +34,22 @@ export class ClientRepository implements IClientRepository {
 		skip: number,
 		limit: number
 	): Promise<{ user: IClientEntity[] | []; total: number }> {
-		const [user, total] = await Promise.all([
+		const [users, total] = await Promise.all([
 			ClientModel.find(filter)
 				.sort({ createdAt: -1 })
 				.skip(skip)
-				.limit(limit),
+				.limit(limit)
+				.lean(),
 			ClientModel.countDocuments(filter),
 		]);
 
+		const transformedUsers = users.map(({ _id, ...rest }) => ({
+			id: _id.toString(),
+			...rest,
+		}));
+
 		return {
-			user,
+			user: transformedUsers,
 			total,
 		};
 	}

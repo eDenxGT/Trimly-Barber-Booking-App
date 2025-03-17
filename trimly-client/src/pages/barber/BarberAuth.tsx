@@ -23,7 +23,7 @@ const BarberAuth = () => {
 
 	const handleSignUpSubmit = (data: Omit<User, "role">) => {
 		registerBarber(
-			{ ...data, role: "barber" },
+			{ ...data, role: "barber" } ,
 			{
 				onSuccess: (data) => successToast(data.message),
 				onError: (error: any) =>

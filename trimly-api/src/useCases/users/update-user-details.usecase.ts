@@ -38,8 +38,7 @@ export class UpdateUserDetailsUseCase implements IUpdateUserDetailsUseCase {
 				HTTP_STATUS.BAD_REQUEST
 			);
 		}
-		const user = repository.findByIdAndUpdate(userId, userDetails);
-		console.log(user);
+		const user = await repository.findByIdAndUpdate(userId, userDetails);
 		if (!user) {
 			throw new CustomError(
 				ERROR_MESSAGES.USER_NOT_FOUND,

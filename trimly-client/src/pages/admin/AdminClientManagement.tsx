@@ -18,21 +18,7 @@ import { debounce } from "lodash";
 import { Pagination1 } from "@/components/common/paginations/Pagination1";
 import { useUpdateUserStatusMutation } from "@/hooks/admin/useUpdateUserStatus";
 import { useToaster } from "@/hooks/ui/useToaster";
-
-export interface IClient {
-	_id: string;
-	userId: string;
-	firstName: string;
-	lastName: string;
-	email: string;
-	phoneNumber: string;
-	status: string;
-}
-
-export type ClientsData = {
-	users: IClient[];
-	totalPages: number;
-};
+import { IClient } from "@/types/User";
 
 export const AdminClientManagement: React.FC = () => {
 	const [searchQuery, setSearchQuery] = useState("");
@@ -50,7 +36,7 @@ export const AdminClientManagement: React.FC = () => {
 		return () => handler.cancel();
 	}, [searchQuery]);
 
-	const { data, isLoading, isError } = useAllUsersQuery<ClientsData>(
+	const { data, isLoading, isError } = useAllUsersQuery<IClient>(
 		getAllUsers,
 		currentPage,
 		limit,
@@ -58,12 +44,12 @@ export const AdminClientManagement: React.FC = () => {
 		"client"
 	);
 
-	const clients = (data?.users as ClientsData) || [];
+	const clients = (data?.users) || [];
 	const totalPages = data?.totalPages || 1;
 
 	const handleStatusClick = (client: IClient) => {
 		updateUserStatus(
-			{ userType: "client", userId: client._id },
+			{ userType: "client", userId: client.id },
 			{
 				onSuccess: (data) => {
 					successToast(data.message);
@@ -132,7 +118,7 @@ export const AdminClientManagement: React.FC = () => {
 							<TableBody>
 								{clients.map((client, index) => (
 									<TableRow
-										key={client._id}
+										key={client.id}
 										className="hover:bg-gray-50">
 										<TableCell className="font-medium">
 											{(currentPage - 1) * limit +
