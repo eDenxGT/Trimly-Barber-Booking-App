@@ -5,15 +5,7 @@ import { Request, Response } from "express";
 import { BaseRoute } from "../base.route";
 
 //* ====== Controller Imports ====== *//
-import {
-	authController,
-	forgotPasswordController,
-	loginController,
-	registerController,
-	resetPasswordController,
-	sendOtpEmailController,
-	verifyOtpController,
-} from "../../di/resolver";
+import { authController } from "../../di/resolver";
 
 export class AuthRoutes extends BaseRoute {
 	constructor() {
@@ -21,29 +13,29 @@ export class AuthRoutes extends BaseRoute {
 	}
 	protected initializeRoutes(): void {
 		this.router.post("/signup", (req: Request, res: Response) => {
-			registerController.handle(req, res);
+			authController.register(req, res);
 		});
 		this.router.post("/signin", (req: Request, res: Response) => {
-			loginController.handle(req, res);
+			authController.login(req, res);
 		});
 		this.router.post("/google-auth", (req: Request, res: Response) => {
 			authController.googleAuth(req, res);
 		});
 
 		this.router.post("/send-otp", (req: Request, res: Response) => {
-			sendOtpEmailController.handle(req, res);
+			authController.sendOtpEmail(req, res);
 		});
 
 		this.router.post("/verify-otp", (req: Request, res: Response) => {
-			verifyOtpController.handle(req, res);
+			authController.verifyOtp(req, res);
 		});
 
 		this.router.post("/forgot-password", (req: Request, res: Response) => {
-			forgotPasswordController.handle(req, res);
+			authController.forgotPassword(req, res);
 		});
 
 		this.router.post("/reset-password", (req: Request, res: Response) => {
-			resetPasswordController.handle(req, res);
+			authController.resetPassword(req, res);
 		});
 	}
 }

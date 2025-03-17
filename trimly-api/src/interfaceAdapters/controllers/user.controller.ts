@@ -13,6 +13,7 @@ import {
 import { CustomRequest } from "../middlewares/auth.middleware";
 import { IChangeUserPasswordUseCase } from "@/entities/useCaseInterfaces/users/change-user-password-usecase.interface";
 import { IUpdateUserDetailsUseCase } from "@/entities/useCaseInterfaces/users/update-user-details-usecase.interface";
+import { handleErrorResponse } from "@/shared/utils/errorHandler";
 
 @injectable()
 export class UserController implements IUserController {
@@ -50,30 +51,7 @@ export class UserController implements IUserController {
 				currentPage: pageNumber,
 			});
 		} catch (error) {
-			if (error instanceof ZodError) {
-				const errors = error.errors.map((err) => ({
-					message: err.message,
-				}));
-
-				res.status(HTTP_STATUS.BAD_REQUEST).json({
-					success: false,
-					message: ERROR_MESSAGES.VALIDATION_ERROR,
-					errors,
-				});
-				return;
-			}
-			if (error instanceof CustomError) {
-				res.status(error.statusCode).json({
-					success: false,
-					message: error.message,
-				});
-				return;
-			}
-			console.log(error);
-			res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-				success: false,
-				message: ERROR_MESSAGES.SERVER_ERROR,
-			});
+			handleErrorResponse(res, error);
 		}
 	}
 
@@ -91,30 +69,7 @@ export class UserController implements IUserController {
 				message: SUCCESS_MESSAGES.UPDATE_SUCCESS,
 			});
 		} catch (error) {
-			if (error instanceof ZodError) {
-				const errors = error.errors.map((err) => ({
-					message: err.message,
-				}));
-
-				res.status(HTTP_STATUS.BAD_REQUEST).json({
-					success: false,
-					message: ERROR_MESSAGES.VALIDATION_ERROR,
-					errors,
-				});
-				return;
-			}
-			if (error instanceof CustomError) {
-				res.status(error.statusCode).json({
-					success: false,
-					message: error.message,
-				});
-				return;
-			}
-			console.log(error);
-			res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-				success: false,
-				message: ERROR_MESSAGES.SERVER_ERROR,
-			});
+			handleErrorResponse(res, error);
 		}
 	}
 
@@ -134,30 +89,7 @@ export class UserController implements IUserController {
 				message: SUCCESS_MESSAGES.UPDATE_SUCCESS,
 			});
 		} catch (error) {
-			if (error instanceof ZodError) {
-				const errors = error.errors.map((err) => ({
-					message: err.message,
-				}));
-
-				res.status(HTTP_STATUS.BAD_REQUEST).json({
-					success: false,
-					message: ERROR_MESSAGES.VALIDATION_ERROR,
-					errors,
-				});
-				return;
-			}
-			if (error instanceof CustomError) {
-				res.status(error.statusCode).json({
-					success: false,
-					message: error.message,
-				});
-				return;
-			}
-			console.log(error);
-			res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-				success: false,
-				message: ERROR_MESSAGES.SERVER_ERROR,
-			});
+			handleErrorResponse(res, error);
 		}
 	}
 
@@ -183,30 +115,7 @@ export class UserController implements IUserController {
 				user: userWithoutPassword,
 			});
 		} catch (error) {
-			if (error instanceof ZodError) {
-				const errors = error.errors.map((err) => ({
-					message: err.message,
-				}));
-
-				res.status(HTTP_STATUS.BAD_REQUEST).json({
-					success: false,
-					message: ERROR_MESSAGES.VALIDATION_ERROR,
-					errors,
-				});
-				return;
-			}
-			if (error instanceof CustomError) {
-				res.status(error.statusCode).json({
-					success: false,
-					message: error.message,
-				});
-				return;
-			}
-			console.log(error);
-			res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-				success: false,
-				message: ERROR_MESSAGES.SERVER_ERROR,
-			});
+			handleErrorResponse(res, error);
 		}
 	}
 }

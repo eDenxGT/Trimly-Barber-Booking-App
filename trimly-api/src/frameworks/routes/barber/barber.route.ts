@@ -13,9 +13,8 @@ import { BaseRoute } from "../base.route";
 
 //* ====== Controller Imports ====== *//
 import {
+	authController,
 	blockStatusMiddleware,
-	logoutController,
-	refreshTokenController,
 	userController,
 } from "../../di/resolver";
 
@@ -31,7 +30,7 @@ export class BarberRoutes extends BaseRoute {
 			authorizeRole(["barber"]),
 			blockStatusMiddleware.checkStatus as RequestHandler,
 			(req: Request, res: Response) => {
-				logoutController.handle(req, res);
+				authController.logout(req, res);
 			}
 		);
 
@@ -61,7 +60,7 @@ export class BarberRoutes extends BaseRoute {
 			decodeToken,
 			(req: Request, res: Response) => {
 				console.log("refreshing barber", req.body);
-				refreshTokenController.handle(req, res);
+				authController.refreshAccessToken(req, res);
 			}
 		);
 	}

@@ -8,9 +8,8 @@ import {
 	verifyAuth,
 } from "../../../interfaceAdapters/middlewares/auth.middleware";
 import {
+	authController,
 	blockStatusMiddleware,
-	logoutController,
-	refreshTokenController,
 	userController,
 } from "../../di/resolver";
 
@@ -48,7 +47,7 @@ export class ClientRoutes extends BaseRoute {
 			authorizeRole(["client"]),
 			blockStatusMiddleware.checkStatus as RequestHandler,
 			(req: Request, res: Response) => {
-				logoutController.handle(req, res);
+				authController.logout(req, res);
 			}
 		);
 
@@ -57,7 +56,7 @@ export class ClientRoutes extends BaseRoute {
 			decodeToken,
 			(req: Request, res: Response) => {
 				console.log("refreshing client", req.body);
-				refreshTokenController.handle(req, res);
+				authController.refreshAccessToken(req, res);
 			}
 		);
 	}

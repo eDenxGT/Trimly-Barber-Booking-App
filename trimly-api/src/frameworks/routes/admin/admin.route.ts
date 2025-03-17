@@ -13,9 +13,7 @@ import { BaseRoute } from "../base.route";
 
 //* ====== Controller Imports ====== *//
 import {
-	blockStatusMiddleware,
-	logoutController,
-	refreshTokenController,
+	authController,
 	userController,
 } from "../../di/resolver";
 
@@ -67,7 +65,7 @@ export class AdminRoutes extends BaseRoute {
 			verifyAuth,
 			authorizeRole(["admin"]),
 			(req: Request, res: Response) => {
-				logoutController.handle(req, res);
+				authController.logout(req, res);
 			}
 		);
 
@@ -75,7 +73,7 @@ export class AdminRoutes extends BaseRoute {
 			"/admin/refresh-token",
 			decodeToken,
 			(req: Request, res: Response) => {
-				refreshTokenController.handle(req, res);
+				authController.refreshAccessToken(req, res);
 			}
 		);
 	}
