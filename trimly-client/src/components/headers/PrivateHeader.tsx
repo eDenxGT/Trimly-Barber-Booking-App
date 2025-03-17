@@ -45,20 +45,20 @@ export function PrivateHeader({
 }: HeaderProps) {
 	const [open, setOpen] = useState(false);
 	const navigate = useNavigate();
-
+	
 	const isClient = user?.role === "client";
 	const isBarber = user?.role === "barber";
 	const isAdmin = user?.role === "admin";
-
+	
 	const displayName = user?.firstName || user?.lastName || "User";
 	const initials = `${user?.firstName?.[0] || ""}${
 		user?.lastName?.[0] || ""
-	}`;
-
-	useEffect(() => {
-		const down = (e: KeyboardEvent) => {
-			if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
-				e.preventDefault();
+		}`;
+		
+		useEffect(() => {
+			const down = (e: KeyboardEvent) => {
+				if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+					e.preventDefault();
 				setOpen((open) => !open);
 			}
 		};

@@ -14,6 +14,7 @@ import { RefreshTokenController } from "../../interfaceAdapters/controllers/auth
 import { ForgotPasswordController } from "@/interfaceAdapters/controllers/auth/forgot-password.controller";
 import { ResetPasswordController } from "@/interfaceAdapters/controllers/auth/reset-password.controller";
 import { AdminController } from "@/interfaceAdapters/controllers/admin/admin.controller";
+import { AuthController } from './../../interfaceAdapters/controllers/auth/auth.controller';
 
 export class ControllerRegistry {
 	static registerControllers(): void {
@@ -23,7 +24,7 @@ export class ControllerRegistry {
 		});
 
 		//* ====== Register Controllers ====== *//
-		
+
 
 // 
 		container.register("RegisterUserController", {

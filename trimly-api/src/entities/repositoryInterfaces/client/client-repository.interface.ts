@@ -1,7 +1,7 @@
 import { IClientEntity } from "../../models/client.entity";
 
 export interface IClientRepository {
-	save(data: Partial<IClientEntity>): Promise<IClientEntity>;
+	save(data: Partial<IClientEntity>): Promise<IClientEntity | null>;
 	findByEmail(email: string): Promise<IClientEntity | null>;
 	find(
 		filter: any,

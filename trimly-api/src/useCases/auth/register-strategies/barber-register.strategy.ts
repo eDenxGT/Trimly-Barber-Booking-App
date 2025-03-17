@@ -7,20 +7,29 @@ import { IBcrypt } from "@/frameworks/security/bcrypt.interface";
 import { ERROR_MESSAGES, HTTP_STATUS } from "@/shared/constants";
 import { CustomError } from "@/entities/utils/custom.error";
 import { generateUniqueId } from "@/frameworks/security/uniqueuid.bcrypt";
+import { IClientRepository } from "@/entities/repositoryInterfaces/client/client-repository.interface";
+import { IAdminRepository } from "@/entities/repositoryInterfaces/admin/admin-repository.interface";
 
 @injectable()
 export class BarberRegisterStrategy implements IRegisterStrategy {
 	constructor(
+		@inject("IAdminRepository") private adminRepository: IAdminRepository,
 		@inject("IBarberRepository")
 		private barberRepository: IBarberRepository,
+		@inject("IClientRepository")
+		private clientRepository: IClientRepository,
 		@inject("IPasswordBcrypt") private passwordBcrypt: IBcrypt
 	) {}
-	async register(user: UserDTO): Promise<IUserEntity | void> {
+	async register(user: UserDTO): Promise<IUserEntity | null> {
 		if (user.role === "barber") {
-			const existingBarber = await this.barberRepository.findByEmail(
-				user.email
-			);
-			if (existingBarber) {
+			const [existingAdmin, existingBarber, existingClient] =
+				await Promise.all([
+					this.adminRepository.findByEmail(user.email),
+					this.barberRepository.findByEmail(user.email),
+					this.clientRepository.findByEmail(user.email),
+				]);
+
+			if (existingAdmin || existingBarber || existingClient) {
 				throw new CustomError(
 					ERROR_MESSAGES.EMAIL_EXISTS,
 					HTTP_STATUS.CONFLICT
@@ -39,6 +48,7 @@ export class BarberRegisterStrategy implements IRegisterStrategy {
 				lastName,
 				email,
 				phoneNumber,
+				profileImage: user?.profileImage ?? "",
 				password: hashedPassword ?? "",
 				userId,
 				role: "barber",

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { TextField, Button } from "@mui/material";
 import { Eye, EyeOff } from "lucide-react";
-import { FcGoogle } from "react-icons/fc";
 import { useFormik } from "formik";
 import BarberToolsBG from "@/assets/common/barber-tools.png";
 import BarberHappy from "@/assets/common/barber-pointing.png";
@@ -10,12 +9,15 @@ import { signinSchema } from "@/utils/validations/signin.validator";
 import { UserRole } from "@/types/UserRoles";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { CredentialResponse } from "@react-oauth/google";
+import { GoogleAuthButton } from "./GoogleAuth";
 
 interface SignInProps {
 	userType: UserRole;
 	onSubmit: (data: { email: string; password: string }) => void;
 	setRegister?: () => void;
 	isLoading: boolean;
+	handleGoogleAuth: (credential: CredentialResponse) => void;
 }
 
 const SignIn = ({
@@ -23,6 +25,7 @@ const SignIn = ({
 	onSubmit,
 	setRegister,
 	isLoading,
+	handleGoogleAuth,
 }: SignInProps) => {
 	const [showPassword, setShowPassword] = useState(false);
 
@@ -247,21 +250,9 @@ const SignIn = ({
 									<div className="text-center my-4 text-muted-foreground text-xs">
 										OR
 									</div>
-									<Button
-										fullWidth
-										variant="outlined"
-										startIcon={<FcGoogle />}
-										sx={{
-											borderColor: "var(--yellow)",
-											color: "var(--yellow)",
-											"&:hover": {
-												borderColor:
-													"var(--yellow-hover)",
-												color: "var(--yellow-hover)",
-											},
-										}}>
-										Google
-									</Button>
+									<GoogleAuthButton
+										handleGoogleSuccess={handleGoogleAuth}
+									/>
 								</>
 							)}
 						</form>

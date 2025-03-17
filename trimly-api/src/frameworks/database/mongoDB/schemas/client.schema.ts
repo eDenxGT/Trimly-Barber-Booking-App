@@ -6,12 +6,17 @@ export const clientSchema = new Schema<IClientModel>(
 	{
 		userId: { type: String, required: true },
 		firstName: { type: String, required: true },
-		lastName: { type: String, required: true },
+		lastName: { type: String },
 		email: { type: String, required: true, unique: true },
-		password: { type: String, required: true },
+		password: {
+			type: String,
+		},
 		role: { type: String, enum: ROLES, required: true },
 		profileImage: { type: String },
-		phoneNumber: { type: String, required: true },
+		phoneNumber: {
+			type: String,
+		},
+		googleId: { type: String },
 		status: { type: String, default: "active" },
 		location: {
 			name: { type: String, required: false },

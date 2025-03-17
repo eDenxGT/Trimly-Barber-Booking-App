@@ -5,8 +5,14 @@ import { BarberModel } from "@/frameworks/database/mongoDB/models/barber.model";
 
 @injectable()
 export class BarberRepository implements IBarberRepository {
-	async save(data: Partial<IBarberEntity>): Promise<IBarberEntity> {
-		return await BarberModel.create(data);
+	async save(data: Partial<IBarberEntity>): Promise<IBarberEntity | null> {
+		const barber = await BarberModel.create(data);
+		if (!barber) return null;
+
+		return {
+			...barber.toObject(),
+			id: barber._id.toString(),
+		} as IBarberEntity;
 	}
 	async findByEmail(email: string): Promise<IBarberEntity | null> {
 		const barber = await BarberModel.findOne({ email }).lean();

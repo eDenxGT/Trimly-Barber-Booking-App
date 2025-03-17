@@ -18,6 +18,8 @@ import { BarberForgotPasswordStrategy } from "@/useCases/auth/forgot-password-st
 import { ClientResetPasswordStrategy } from "@/useCases/auth/reset-password-strategies/client-reset-password.strategy";
 import { BarberResetPasswordStrategy } from "@/useCases/auth/reset-password-strategies/barber-reset-password.strategy";
 import { AdminResetPasswordStrategy } from "@/useCases/auth/reset-password-strategies/admin-reset-password.strategy";
+import { ClientGoogleLoginStrategy } from "@/useCases/auth/login-strategies/client-google-login.strategy";
+import { BarberGoogleLoginStrategy } from "@/useCases/auth/login-strategies/barber-google-login.strategy";
 
 //* ====== Service Imports ====== *//
 import { IOtpService } from "../../entities/services/otp-service.interface";
@@ -58,6 +60,8 @@ import { IChangeUserPasswordUseCase } from "@/entities/useCaseInterfaces/users/c
 import { ChangeUserPasswordUseCase } from "@/useCases/users/change-user-password.usecase";
 import { IUpdateUserDetailsUseCase } from "@/entities/useCaseInterfaces/users/update-user-details-usecase.interface";
 import { UpdateUserDetailsUseCase } from "@/useCases/users/update-user-details.usecase";
+import { GoogleUseCase } from "@/useCases/auth/google.usecase";
+import { IGoogleUseCase } from "@/entities/useCaseInterfaces/auth/google-usecase";
 
 export class UseCaseRegistry {
 	static registerUseCases(): void {
@@ -130,6 +134,10 @@ export class UseCaseRegistry {
 			}
 		);
 
+		container.register<IGoogleUseCase>("IGoogleUseCase", {
+			useClass: GoogleUseCase,
+		});
+
 		//* ====== Register Bcrypts ====== *//
 		container.register<IBcrypt>("IPasswordBcrypt", {
 			useClass: PasswordBcrypt,
@@ -199,6 +207,14 @@ export class UseCaseRegistry {
 
 		container.register("AdminResetPasswordStrategy", {
 			useClass: AdminResetPasswordStrategy,
+		});
+
+		container.register("ClientGoogleLoginStrategy", {
+			useClass: ClientGoogleLoginStrategy,
+		});
+
+		container.register("BarberGoogleLoginStrategy", {
+			useClass: BarberGoogleLoginStrategy,
 		});
 	}
 }

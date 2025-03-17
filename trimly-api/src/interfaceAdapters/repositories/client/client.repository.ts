@@ -5,8 +5,14 @@ import { IClientEntity } from "@/entities/models/client.entity";
 
 @injectable()
 export class ClientRepository implements IClientRepository {
-	async save(data: Partial<IClientEntity>): Promise<IClientEntity> {
-		return await ClientModel.create(data);
+	async save(data: Partial<IClientEntity>): Promise<IClientEntity | null> {
+		const client = await ClientModel.create(data);
+		if (!client) return null;
+
+		return {
+			...client.toObject(),
+			id: client._id.toString(),
+		} as IClientEntity;
 	}
 
 	async findByEmail(email: string): Promise<IClientEntity | null> {

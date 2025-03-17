@@ -6,6 +6,7 @@ import { BaseRoute } from "../base.route";
 
 //* ====== Controller Imports ====== *//
 import {
+	authController,
 	forgotPasswordController,
 	loginController,
 	registerController,
@@ -24,6 +25,9 @@ export class AuthRoutes extends BaseRoute {
 		});
 		this.router.post("/signin", (req: Request, res: Response) => {
 			loginController.handle(req, res);
+		});
+		this.router.post("/google-auth", (req: Request, res: Response) => {
+			authController.googleAuth(req, res);
 		});
 
 		this.router.post("/send-otp", (req: Request, res: Response) => {

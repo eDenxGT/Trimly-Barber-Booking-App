@@ -1,7 +1,7 @@
 import { IBarberEntity } from "../../models/barber.entity";
 
 export interface IBarberRepository {
-	save(data: Partial<IBarberEntity>): Promise<IBarberEntity>;
+	save(data: Partial<IBarberEntity>): Promise<IBarberEntity | null>;
 	findByEmail(email: string): Promise<IBarberEntity | null>;
 	find(
 		filter: any,

@@ -2,7 +2,6 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { TextField, Button } from "@mui/material";
 import { Eye, EyeOff } from "lucide-react";
-import { FcGoogle } from "react-icons/fc";
 import BarberToolsBG from "@/assets/common/barber-tools.png";
 import BarberHappy from "@/assets/common/barber-happy.png";
 import { UserRole } from "@/types/UserRoles";
@@ -14,16 +13,24 @@ import OTPModal from "../modals/OTPModal";
 import { useSendOTPMutation } from "@/hooks/auth/useSendOTP";
 import { useVerifyOTPMutation } from "@/hooks/auth/useVerifyOTP";
 import { useToaster } from "@/hooks/ui/useToaster";
-import { Spinner } from "../common/progress/Spinner";
+import { CredentialResponse } from "@react-oauth/google";
+import { GoogleAuthButton } from "./GoogleAuth";
 
 interface SignUpProps {
 	userType: UserRole;
 	onSubmit: (data: User) => void;
 	setLogin?: () => void;
 	isLoading: boolean;
+	handleGoogleAuth: (credential: CredentialResponse) => void;
 }
 
-const SignUp = ({ userType, onSubmit, setLogin, isLoading }: SignUpProps) => {
+const SignUp = ({
+	userType,
+	onSubmit,
+	setLogin,
+	isLoading,
+	handleGoogleAuth,
+}: SignUpProps) => {
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 	const [isOTPModalOpen, setIsOTPModalOpen] = useState(false);
@@ -72,7 +79,7 @@ const SignUp = ({ userType, onSubmit, setLogin, isLoading }: SignUpProps) => {
 					// successToast(data.message);
 					submitRegister();
 					handleCloseOTPModal();
-					formik.resetForm()
+					formik.resetForm();
 				},
 				onError(error: any) {
 					errorToast(error.response.data.message);
@@ -474,7 +481,10 @@ const SignUp = ({ userType, onSubmit, setLogin, isLoading }: SignUpProps) => {
 							<div className="text-center my-4 text-muted-foreground text-xs">
 								OR
 							</div>
-							<Button
+							<GoogleAuthButton
+								handleGoogleSuccess={handleGoogleAuth}
+							/>
+							{/* <Button
 								fullWidth
 								variant="outlined"
 								startIcon={<FcGoogle />}
@@ -487,7 +497,7 @@ const SignUp = ({ userType, onSubmit, setLogin, isLoading }: SignUpProps) => {
 									},
 								}}>
 								Google
-							</Button>
+							</Button> */}
 						</form>
 					</motion.div>
 				</div>

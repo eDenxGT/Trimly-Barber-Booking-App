@@ -9,16 +9,39 @@ import { useLoginMutation } from "@/hooks/auth/useLogin";
 import { useDispatch } from "react-redux";
 import { clientLogin } from "@/store/slices/client.slice";
 import { useNavigate } from "react-router-dom";
+import { useGoogleMutation } from "@/hooks/auth/useGoogle";
+import { CredentialResponse } from "@react-oauth/google";
 
 export const ClientAuth = () => {
 	const [isLogin, setIsLogin] = useState(true);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	const { mutate: loginClient, isPending: isLoginPending } = useLoginMutation();
+	const { mutate: loginClient, isPending: isLoginPending } =
+		useLoginMutation();
 	const { mutate: registerClient, isPending } = useRegisterMutation();
+	const { mutate: googleLogin } = useGoogleMutation();
 
 	const { errorToast, successToast } = useToaster();
+
+	const googleAuth = (credentialResponse: CredentialResponse) => {
+		googleLogin(
+			{
+				credential: credentialResponse.credential,
+				client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+				role: "client",
+			},
+			{
+				onSuccess: (data) => {
+					successToast(data.message);
+					dispatch(clientLogin(data.user));
+					navigate("/home");
+				},
+				onError: (error: any) =>
+					errorToast(error.response.data.message),
+			}
+		);
+	};
 
 	const handleSignUpSubmit = (data: Omit<User, "role">) => {
 		registerClient(
@@ -62,6 +85,7 @@ export const ClientAuth = () => {
 							userType="client"
 							onSubmit={handleLoginSubmit}
 							setRegister={() => setIsLogin(false)}
+							handleGoogleAuth={googleAuth}
 						/>
 					) : (
 						<SignUp
@@ -69,6 +93,7 @@ export const ClientAuth = () => {
 							userType="client"
 							onSubmit={handleSignUpSubmit}
 							setLogin={() => setIsLogin(true)}
+							handleGoogleAuth={googleAuth}
 						/>
 					)}
 				</motion.div>
