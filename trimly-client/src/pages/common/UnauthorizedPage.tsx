@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, ShieldAlert } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import BarberToolsBG from "@/assets/common/barber-tools.png"
+import BarberToolsBG from "@/assets/common/barber-tools.png";
 
 export default function UnauthorizedPage() {
 	const navigate = useNavigate();
@@ -50,14 +50,13 @@ export default function UnauthorizedPage() {
 						</p>
 
 						<div className="flex flex-col gap-4">
-
 							<Button
 								variant="outline"
-								onClick={() => navigate(-1)}
+								onClick={() => navigate("/", { replace: true })}
 								className="border-[var(--yellow)] text-[var(--yellow)] hover:text-[var(--yellow-hover)] hover:border-[var(--yellow-hover)]">
 								<span className="flex items-center gap-2">
 									<ArrowLeft className="h-4 w-4" />
-									Return to Home
+									Return to Back
 								</span>
 							</Button>
 						</div>

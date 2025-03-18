@@ -2,13 +2,13 @@ import { Route, Routes } from "react-router-dom";
 import { ClientAuth } from "@/pages/client/ClientAuth";
 import { ClientLayout } from "@/pages/layouts/ClientLayout";
 import ClientHomePage from "@/pages/client/ClientHomePage";
-import { AuthRoute } from "@/utils/protected/ProtectedRoute";
 import { NoAuthRoute } from "@/utils/protected/PublicRoute";
 import ForgotPassword from "@/components/auth/ForgotPassword";
 import ResetPassword from "@/components/auth/ResetPassword";
 import { ClientSettingsPage } from "@/pages/client/settings/ClientSettings";
 import { ClientChangePassword } from "@/pages/client/settings/ClientChangePassword";
 import { ClientProfileEdit } from "@/pages/client/settings/ClientProfileEdit";
+import { ProtectedRoute } from "@/utils/protected/ProtectedRoute";
 
 export const ClientRoutes = () => {
 	return (
@@ -17,7 +17,7 @@ export const ClientRoutes = () => {
 			<Route
 				path="/"
 				element={
-					<AuthRoute
+					<ProtectedRoute
 						allowedRoles={["client"]}
 						element={<ClientLayout />}
 					/>

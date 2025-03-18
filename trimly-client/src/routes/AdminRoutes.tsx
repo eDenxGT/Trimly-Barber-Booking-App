@@ -8,21 +8,18 @@ import { AdminChangePassword } from "@/pages/admin/settings/AdminChangePassword"
 import { AdminProfileEdit } from "@/pages/admin/settings/AdminEditProfile";
 import { AdminSettingsPage } from "@/pages/admin/settings/AdminSettings";
 import { AdminLayout } from "@/pages/layouts/AdminLayout";
-import { AdminAuthRoute } from "@/utils/protected/ProtectedRoute";
-import { NoAdminAuthRoute } from "@/utils/protected/PublicRoute";
+import { ProtectedRoute } from "@/utils/protected/ProtectedRoute";
+import { NoAuthRoute } from "@/utils/protected/PublicRoute";
 import { Route, Routes } from "react-router-dom";
 
 export const AdminRoutes = () => {
 	return (
 		<Routes>
-			<Route
-				index
-				element={<NoAdminAuthRoute element={<AdminAuth />} />}
-			/>
+			<Route index element={<NoAuthRoute element={<AdminAuth />} />} />
 			<Route
 				path="/"
 				element={
-					<AdminAuthRoute
+					<ProtectedRoute
 						allowedRoles={["admin"]}
 						element={<AdminLayout />}
 					/>
@@ -42,7 +39,7 @@ export const AdminRoutes = () => {
 			<Route
 				path="/forgot-password"
 				element={
-					<NoAdminAuthRoute
+					<NoAuthRoute
 						element={
 							<ForgotPassword role="admin" signInPath="/admin" />
 						}
@@ -52,7 +49,7 @@ export const AdminRoutes = () => {
 			<Route
 				path="/reset-password/:token"
 				element={
-					<NoAdminAuthRoute
+					<NoAuthRoute
 						element={
 							<ResetPassword role="admin" signInPath="/admin" />
 						}

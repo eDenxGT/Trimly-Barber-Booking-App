@@ -1,57 +1,26 @@
 import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { JSX } from "react";
 
 interface ProtectedRouteProps {
 	element: JSX.Element;
 	allowedRoles: string[];
 }
 
-export const AuthRoute = ({ element, allowedRoles }: ProtectedRouteProps) => {
-	const userRole = useSelector(
-		(state: RootState) => state.client.client?.role
-	);
-	if (!userRole) {
-		return <Navigate to="/" />;
-	}
-
-	return allowedRoles.includes(userRole) ? (
-		element
-	) : (
-		<Navigate to="/unauthorized" />
-	);
+const getActiveSession = (state: RootState) => {
+	if (state.client.client) return { role: state.client.client.role, type: "client" };
+	if (state.barber.barber) return { role: state.barber.barber.role, type: "barber" };
+	if (state.admin.admin) return { role: state.admin.admin.role, type: "admin" };
+	return null;
 };
 
-export const BarberAuthRoute = ({
-	element,
-	allowedRoles,
-}: ProtectedRouteProps) => {
-	const userRole = useSelector(
-		(state: RootState) => state.barber.barber?.role
-	);
-	if (!userRole) {
-		return <Navigate to="/" />;
-	}
+export const ProtectedRoute = ({ element, allowedRoles }: ProtectedRouteProps) => {
+	const session = useSelector((state: RootState) => getActiveSession(state));
 
-	return allowedRoles.includes(userRole) ? (
-		element
-	) : (
-		<Navigate to="/unauthorized" />
-	);
-};
+	if (!session) return <Navigate to="/" />;
 
-export const AdminAuthRoute = ({
-	element,
-	allowedRoles,
-}: ProtectedRouteProps) => {
-	const userRole = useSelector((state: RootState) => state.admin.admin?.role);
-	if (!userRole) {
-		return <Navigate to="/" />;
-	}
+	if (!allowedRoles.includes(session.role)) return <Navigate to="/unauthorized" />;
 
-	return allowedRoles.includes(userRole) ? (
-		element
-	) : (
-		<Navigate to="/unauthorized" />
-	);
+	return element;
 };

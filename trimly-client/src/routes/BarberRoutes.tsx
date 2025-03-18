@@ -6,8 +6,8 @@ import { BarberChangePassword } from "@/pages/barber/settings/BarberChangePasswo
 import { BarberProfileEdit } from "@/pages/barber/settings/BarberEditProfile";
 import { BarberSettingsPage } from "@/pages/barber/settings/BarberSettings";
 import { BarberLayout } from "@/pages/layouts/BarberLayout";
-import { BarberAuthRoute } from "@/utils/protected/ProtectedRoute";
-import { NoBarberAuthRoute } from "@/utils/protected/PublicRoute";
+import { ProtectedRoute } from "@/utils/protected/ProtectedRoute";
+import { NoAuthRoute } from "@/utils/protected/PublicRoute";
 import { Route, Routes } from "react-router-dom";
 
 export const BarberRoutes = () => {
@@ -15,12 +15,12 @@ export const BarberRoutes = () => {
 		<Routes>
 			<Route
 				index
-				element={<NoBarberAuthRoute element={<BarberAuth />} />}
+				element={<NoAuthRoute element={<BarberAuth />} />}
 			/>
 			<Route
 				path="/"
 				element={
-					<BarberAuthRoute
+					<ProtectedRoute
 						allowedRoles={["barber"]}
 						element={<BarberLayout />}
 					/>
@@ -41,7 +41,7 @@ export const BarberRoutes = () => {
 			<Route
 				path="/forgot-password"
 				element={
-					<NoBarberAuthRoute
+					<NoAuthRoute
 						element={
 							<ForgotPassword
 								role="barber"
@@ -54,7 +54,7 @@ export const BarberRoutes = () => {
 			<Route
 				path="/reset-password/:token"
 				element={
-					<NoBarberAuthRoute
+					<NoAuthRoute
 						element={
 							<ResetPassword role="barber" signInPath="/barber" />
 						}
