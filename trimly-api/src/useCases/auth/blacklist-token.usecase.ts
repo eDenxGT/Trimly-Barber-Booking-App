@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe";
 import { IBlackListTokenUseCase } from "./../../entities/useCaseInterfaces/auth/blacklist-token-usecase.interface";
 import { IRedisTokenRepository } from "../../entities/repositoryInterfaces/redis/redis-token-repository.interface";
-import { ITokenService } from "../../entities/services/token-service.interface";
+import { ITokenService } from "../../entities/useCaseInterfaces/services/token-service.interface";
 import { JwtPayload } from "jsonwebtoken";
 
 @injectable()

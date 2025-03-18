@@ -1,5 +1,5 @@
 import { injectable } from "tsyringe";
-import { ITokenService } from "../../entities/services/token-service.interface";
+import { ITokenService } from "../../entities/useCaseInterfaces/services/token-service.interface";
 import jwt, { JwtPayload, Secret } from "jsonwebtoken";
 import { config } from "../../shared/config";
 import ms from "ms";

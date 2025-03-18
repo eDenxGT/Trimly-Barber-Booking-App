@@ -1,6 +1,6 @@
 import { inject, injectable } from "tsyringe";
 import { IRefreshTokenUseCase } from "../../entities/useCaseInterfaces/auth/refresh-token-usecase.interface";
-import { ITokenService } from "../../entities/services/token-service.interface";
+import { ITokenService } from "../../entities/useCaseInterfaces/services/token-service.interface";
 import { CustomError } from "../../entities/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../shared/constants";
 import { JwtPayload } from "jsonwebtoken";

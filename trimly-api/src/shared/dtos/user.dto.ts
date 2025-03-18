@@ -2,8 +2,8 @@ import { TRole } from "../constants";
 
 export interface AdminDTO {
 	userId?: string;
-	firstName: string;
-	lastName: string;
+	firstName?: string;
+	lastName?: string;
 	email: string;
 	password?: string;
 	isSuperAdmin?: boolean;

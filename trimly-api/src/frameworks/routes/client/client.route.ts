@@ -56,7 +56,7 @@ export class ClientRoutes extends BaseRoute {
 			decodeToken,
 			(req: Request, res: Response) => {
 				console.log("refreshing client", req.body);
-				authController.refreshAccessToken(req, res);
+				authController.handleTokenRefresh(req, res);
 			}
 		);
 	}

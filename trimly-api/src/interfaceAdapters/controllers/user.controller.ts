@@ -28,6 +28,9 @@ export class UserController implements IUserController {
 		private updateUserDetailsUseCase: IUpdateUserDetailsUseCase
 	) {}
 
+	//* ─────────────────────────────────────────────────────────────
+	//*               🛠️ Get All Users (Role Based)
+	//* ─────────────────────────────────────────────────────────────
 	async getAllUsers(req: Request, res: Response): Promise<void> {
 		try {
 			const { page = 1, limit = 10, search = "", userType } = req.query;
@@ -55,6 +58,9 @@ export class UserController implements IUserController {
 		}
 	}
 
+	//* ─────────────────────────────────────────────────────────────
+	//*                  🛠️ Update User Status
+	//* ─────────────────────────────────────────────────────────────
 	async updateUserStatus(req: Request, res: Response): Promise<void> {
 		try {
 			const { userType, userId } = req.query as {
@@ -73,11 +79,14 @@ export class UserController implements IUserController {
 		}
 	}
 
+	//* ─────────────────────────────────────────────────────────────
+	//*                  🛠️ Change User Password
+	//* ─────────────────────────────────────────────────────────────
 	async changeUserPassword(req: Request, res: Response): Promise<void> {
 		try {
 			const { oldPassword, newPassword } = req.body;
 			const { email, role } = (req as CustomRequest).user;
-
+			
 			await this.changePasswordUseCase.execute({
 				oldPassword,
 				newPassword,
@@ -92,7 +101,10 @@ export class UserController implements IUserController {
 			handleErrorResponse(res, error);
 		}
 	}
-
+	
+	//* ─────────────────────────────────────────────────────────────
+	//*                  🛠️ Update User Details
+	//* ─────────────────────────────────────────────────────────────
 	async updateUserDetails(req: Request, res: Response): Promise<void> {
 		try {
 			const data = req.body;

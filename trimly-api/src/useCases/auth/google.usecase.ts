@@ -1,51 +1,33 @@
 import { inject, injectable } from "tsyringe";
 import { IGoogleUseCase } from "@/entities/useCaseInterfaces/auth/google-usecase";
-import { ILoginStrategy } from "./login-strategies/login-strategy.interface";
-import { IRegisterStrategy } from "./register-strategies/register-strategy.interface";
 import { OAuth2Client } from "google-auth-library";
 import { IUserEntity } from "@/entities/models/user.entity";
 import { ERROR_MESSAGES, HTTP_STATUS, TRole } from "@/shared/constants";
 import { CustomError } from "@/entities/utils/custom.error";
+import { IClientRepository } from "@/entities/repositoryInterfaces/client/client-repository.interface";
+import { IBarberRepository } from "@/entities/repositoryInterfaces/barber/barber-repository.interface";
+import { UserDTO } from "@/shared/dtos/user.dto";
+import { IRegisterUserUseCase } from "@/entities/useCaseInterfaces/auth/register-usecase.interface";
 
 @injectable()
 export class GoogleUseCase implements IGoogleUseCase {
-	private registerStrategies: Record<string, IRegisterStrategy>;
-	private loginStrategies: Record<string, ILoginStrategy>;
 	private oAuthClient: OAuth2Client;
 	constructor(
-		@inject("ClientGoogleLoginStrategy")
-		private clientGoogleLogin: ILoginStrategy,
-		@inject("BarberGoogleLoginStrategy")
-		private barberGoogleLogin: ILoginStrategy,
-		@inject("ClientRegisterStrategy")
-		private clientRegister: IRegisterStrategy,
-		@inject("BarberRegisterStrategy")
-		private barberRegister: IRegisterStrategy
+		@inject("IRegisterUserUseCase")
+		private registerUserUseCase: IRegisterUserUseCase,
+		@inject("IClientRepository")
+		private clientRepository: IClientRepository,
+		@inject("IBarberRepository")
+		private barberRepository: IBarberRepository
 	) {
-		this.registerStrategies = {
-			client: this.clientRegister,
-			barber: this.barberRegister,
-		};
-		this.loginStrategies = {
-			client: this.clientGoogleLogin,
-			barber: this.barberGoogleLogin,
-		};
 		this.oAuthClient = new OAuth2Client();
 	}
+
 	async execute(
 		credential: string,
 		client_id: string,
 		role: TRole
 	): Promise<Partial<IUserEntity>> {
-		const registerStrategy = this.registerStrategies[role];
-		const loginStrategy = this.loginStrategies[role];
-		if (!registerStrategy || !loginStrategy) {
-			throw new CustomError(
-				ERROR_MESSAGES.INVALID_ROLE,
-				HTTP_STATUS.FORBIDDEN
-			);
-		}
-
 		const ticket = await this.oAuthClient.verifyIdToken({
 			idToken: credential,
 			audience: client_id,
@@ -68,23 +50,46 @@ export class GoogleUseCase implements IGoogleUseCase {
 		if (!email) {
 			throw new CustomError("Email is required", HTTP_STATUS.BAD_REQUEST);
 		}
-		const existingUser = await loginStrategy.login({ email, role });
 
-		if (!existingUser) {
-			const newUser = await registerStrategy.register({
-				firstName: firstName as string,
-				lastName: lastName as string,
-				role,
-				googleId,
-				email,
-				profileImage,
-			});
-			if (!newUser) {
-				throw new CustomError("", 0);
-			}
-			return newUser;
+		let repository;
+		if (role === "client") {
+			repository = this.clientRepository;
+		} else if (role === "barber") {
+			repository = this.barberRepository;
+		} else {
+			throw new CustomError(
+				ERROR_MESSAGES.INVALID_ROLE,
+				HTTP_STATUS.BAD_REQUEST
+			);
 		}
 
-		return existingUser;
+		const existingUser = await repository.findByEmail(email);
+
+		if (existingUser && existingUser.status !== "active") {
+			throw new CustomError(
+				ERROR_MESSAGES.BLOCKED,
+				HTTP_STATUS.FORBIDDEN
+			);
+		}
+
+		if (existingUser) return existingUser;
+
+		const newUser = await this.registerUserUseCase.execute({
+			firstName,
+			lastName,
+			role,
+			googleId,
+			email,
+			profileImage,
+		} as UserDTO);
+
+		if (!newUser) {
+			throw new CustomError(
+				"Registration failed",
+				HTTP_STATUS.INTERNAL_SERVER_ERROR
+			);
+		}
+
+		return newUser;
 	}
 }

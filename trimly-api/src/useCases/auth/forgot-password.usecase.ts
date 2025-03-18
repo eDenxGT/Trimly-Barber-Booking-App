@@ -1,40 +1,53 @@
 import { inject, injectable } from "tsyringe";
 import { IForgotPasswordUseCase } from "@/entities/useCaseInterfaces/auth/forgot-password-usecase.interface";
-import { IForgotPasswordStrategy } from "./forgot-password-strategies/forgot-password-strategy.interface";
 import { CustomError } from "@/entities/utils/custom.error";
 import { ERROR_MESSAGES, HTTP_STATUS } from "@/shared/constants";
+import { ITokenService } from "@/entities/useCaseInterfaces/services/token-service.interface";
+import { IRedisTokenRepository } from "@/entities/repositoryInterfaces/redis/redis-token-repository.interface";
+import { IEmailService } from "@/entities/useCaseInterfaces/services/email-service.interface";
+import { config } from "@/shared/config";
+import { IClientRepository } from "@/entities/repositoryInterfaces/client/client-repository.interface";
+import { IBarberRepository } from "@/entities/repositoryInterfaces/barber/barber-repository.interface";
+import { IAdminRepository } from "@/entities/repositoryInterfaces/admin/admin-repository.interface";
 
 @injectable()
 export class ForgotPasswordUseCase implements IForgotPasswordUseCase {
-	private strategies: Record<string, IForgotPasswordStrategy>;
 	constructor(
-		@inject("ClientForgotPasswordStrategy")
-		private clientForgotPassword: IForgotPasswordStrategy,
-		@inject("BarberForgotPasswordStrategy")
-		private barberForgotPassword: IForgotPasswordStrategy,
-		@inject("AdminForgotPasswordStrategy")
-		private adminForgotPassword: IForgotPasswordStrategy
-	) {
-		this.strategies = {
-			client: clientForgotPassword,
-			barber: barberForgotPassword,
-			admin: adminForgotPassword,
-		};
-	}
-	async execute({
-		email,
-		role,
-	}: {
-		email: string;
-		role: string;
-	}): Promise<void> {
-		const strategy = this.strategies[role];
-		if (!strategy) {
-			throw new CustomError(
-				ERROR_MESSAGES.INVALID_ROLE,
-				HTTP_STATUS.FORBIDDEN
-			);
+		@inject("IClientRepository") private clientRepository: IClientRepository,
+		@inject("IBarberRepository") private barberRepository: IBarberRepository,
+		@inject("IAdminRepository") private adminRepository: IAdminRepository,
+		@inject("ITokenService") private tokenService: ITokenService,
+		@inject("IRedisTokenRepository") private redisTokenRepository: IRedisTokenRepository,
+		@inject("IEmailService") private emailService: IEmailService
+	) {}
+
+	async execute({ email, role }: { email: string; role: string }): Promise<void> {
+		let repository;
+		if (role === "client") {
+			repository = this.clientRepository;
+		} else if (role === "barber") {
+			repository = this.barberRepository;
+		} else if (role === "admin") {
+			repository = this.adminRepository;
+		} else {
+			throw new CustomError(ERROR_MESSAGES.INVALID_ROLE, HTTP_STATUS.FORBIDDEN);
 		}
-		await strategy.forgotPassword(email);
+
+		const user = await repository.findByEmail(email);
+		if (!user) {
+			throw new CustomError(ERROR_MESSAGES.EMAIL_NOT_FOUND, HTTP_STATUS.NOT_FOUND);
+		}
+
+		const resetToken = this.tokenService.generateResetToken(email);
+
+		try {
+			await this.redisTokenRepository.storeResetToken(user.id ?? "", resetToken);
+		} catch (error) {
+			console.error("Failed to store reset token in Redis:", error);
+			throw new CustomError(ERROR_MESSAGES.SERVER_ERROR, HTTP_STATUS.INTERNAL_SERVER_ERROR);
+		}
+
+		const resetUrl = new URL(`/reset-password/${resetToken}`, config.cors.ALLOWED_ORIGIN).toString();
+		await this.emailService.sendResetEmail(email, "Trimly - Reset your password", resetUrl);
 	}
 }

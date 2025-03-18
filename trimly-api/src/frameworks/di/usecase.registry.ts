@@ -6,30 +6,15 @@ import { IBcrypt } from "../../frameworks/security/bcrypt.interface";
 import { PasswordBcrypt } from "../../frameworks/security/password.bcrypt";
 import { OtpBcrypt } from "../security/otp.bcrypt";
 
-//* ====== Strategy Imports ====== *//
-import { ClientRegisterStrategy } from "../../useCases/auth/register-strategies/client-register.strategy";
-import { ClientLoginStrategy } from "../../useCases/auth/login-strategies/client-login.strategy";
-import { BarberRegisterStrategy } from "../../useCases/auth/register-strategies/barber-register.strategy";
-import { BarberLoginStrategy } from "@/useCases/auth/login-strategies/barber-login.strategy";
-import { AdminLoginStrategy } from "@/useCases/auth/login-strategies/admin-login.strategy";
-import { ClientForgotPasswordStrategy } from "@/useCases/auth/forgot-password-strategies/client-forgot-password.strategy";
-import { AdminForgotPasswordStrategy } from "@/useCases/auth/forgot-password-strategies/admin-forgot-password.strategy";
-import { BarberForgotPasswordStrategy } from "@/useCases/auth/forgot-password-strategies/barber-forgot-password.strategy";
-import { ClientResetPasswordStrategy } from "@/useCases/auth/reset-password-strategies/client-reset-password.strategy";
-import { BarberResetPasswordStrategy } from "@/useCases/auth/reset-password-strategies/barber-reset-password.strategy";
-import { AdminResetPasswordStrategy } from "@/useCases/auth/reset-password-strategies/admin-reset-password.strategy";
-import { ClientGoogleLoginStrategy } from "@/useCases/auth/login-strategies/client-google-login.strategy";
-import { BarberGoogleLoginStrategy } from "@/useCases/auth/login-strategies/barber-google-login.strategy";
-
 //* ====== Service Imports ====== *//
-import { IOtpService } from "../../entities/services/otp-service.interface";
-import { OtpService } from "../../interfaceAdapters/services/otp.service";
-import { IEmailService } from "../../entities/services/email-service.interface";
-import { EmailService } from "../../interfaceAdapters/services/email.service";
-import { IUserExistenceService } from "../../entities/services/user-existence-service.interface";
-import { UserExistenceService } from "../../interfaceAdapters/services/user-existence.service";
-import { ITokenService } from "../../entities/services/token-service.interface";
-import { JWTService } from "../../interfaceAdapters/services/jwt.service";
+import { JWTService } from "@/useCases/services/jwt.service";
+import { ITokenService } from "@/entities/useCaseInterfaces/services/token-service.interface";
+import { UserExistenceService } from "@/useCases/services/user-existence.service";
+import { IUserExistenceService } from "@/entities/useCaseInterfaces/services/user-existence-service.interface";
+import { IOtpService } from "@/entities/useCaseInterfaces/services/otp-service.interface";
+import { OtpService } from "@/useCases/services/otp.service";
+import { EmailService } from "@/useCases/services/email.service";
+import { IEmailService } from "@/entities/useCaseInterfaces/services/email-service.interface";
 
 //* ====== UseCase Imports ====== *//
 import { IRegisterUserUseCase } from "../../entities/useCaseInterfaces/auth/register-usecase.interface";
@@ -162,59 +147,6 @@ export class UseCaseRegistry {
 
 		container.register<ITokenService>("ITokenService", {
 			useClass: JWTService,
-		});
-
-		//* ====== Register Strategies ====== *//
-		container.register("ClientRegisterStrategy", {
-			useClass: ClientRegisterStrategy,
-		});
-
-		container.register("ClientLoginStrategy", {
-			useClass: ClientLoginStrategy,
-		});
-
-		container.register("BarberRegisterStrategy", {
-			useClass: BarberRegisterStrategy,
-		});
-
-		container.register("BarberLoginStrategy", {
-			useClass: BarberLoginStrategy,
-		});
-
-		container.register("AdminLoginStrategy", {
-			useClass: AdminLoginStrategy,
-		});
-
-		container.register("ClientForgotPasswordStrategy", {
-			useClass: ClientForgotPasswordStrategy,
-		});
-
-		container.register("BarberForgotPasswordStrategy", {
-			useClass: BarberForgotPasswordStrategy,
-		});
-
-		container.register("AdminForgotPasswordStrategy", {
-			useClass: AdminForgotPasswordStrategy,
-		});
-
-		container.register("ClientResetPasswordStrategy", {
-			useClass: ClientResetPasswordStrategy,
-		});
-
-		container.register("BarberResetPasswordStrategy", {
-			useClass: BarberResetPasswordStrategy,
-		});
-
-		container.register("AdminResetPasswordStrategy", {
-			useClass: AdminResetPasswordStrategy,
-		});
-
-		container.register("ClientGoogleLoginStrategy", {
-			useClass: ClientGoogleLoginStrategy,
-		});
-
-		container.register("BarberGoogleLoginStrategy", {
-			useClass: BarberGoogleLoginStrategy,
 		});
 	}
 }

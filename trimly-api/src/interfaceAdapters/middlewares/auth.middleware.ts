@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { JwtPayload } from "jsonwebtoken";
-import { JWTService } from "../services/jwt.service";
 import { ERROR_MESSAGES, HTTP_STATUS } from "../../shared/constants";
 import client from "../../frameworks/cache/redis.client";
+import { JWTService } from "@/useCases/services/jwt.service";
 
 const tokenService = new JWTService();
 

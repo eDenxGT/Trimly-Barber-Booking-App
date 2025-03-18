@@ -19,7 +19,7 @@ export class AuthRoutes extends BaseRoute {
 			authController.login(req, res);
 		});
 		this.router.post("/google-auth", (req: Request, res: Response) => {
-			authController.googleAuth(req, res);
+			authController.authenticateWithGoogle(req, res);
 		});
 
 		this.router.post("/send-otp", (req: Request, res: Response) => {

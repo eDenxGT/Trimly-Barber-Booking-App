@@ -73,7 +73,7 @@ export class AdminRoutes extends BaseRoute {
 			"/admin/refresh-token",
 			decodeToken,
 			(req: Request, res: Response) => {
-				authController.refreshAccessToken(req, res);
+				authController.handleTokenRefresh(req, res);
 			}
 		);
 	}

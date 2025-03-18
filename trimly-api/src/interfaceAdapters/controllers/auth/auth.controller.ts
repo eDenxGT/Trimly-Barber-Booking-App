@@ -58,7 +58,10 @@ export class AuthController implements IAuthController {
 		private revokeRefreshToken: IRevokeRefreshTokenUseCase
 	) {}
 
-	async googleAuth(req: Request, res: Response): Promise<void> {
+	//* ─────────────────────────────────────────────────────────────
+	//*                  🛠️ Google Authentication
+	//* ─────────────────────────────────────────────────────────────
+	async authenticateWithGoogle(req: Request, res: Response): Promise<void> {
 		try {
 			const { credential, client_id, role } = req.body;
 			const user = await this.googleUseCase.execute(
@@ -97,6 +100,9 @@ export class AuthController implements IAuthController {
 		}
 	}
 
+	//* ─────────────────────────────────────────────────────────────
+	//*                  🛠️ User Forgot Password
+	//* ─────────────────────────────────────────────────────────────
 	async forgotPassword(req: Request, res: Response): Promise<void> {
 		try {
 			const validatedData = forgotPasswordValidationSchema.parse(
@@ -119,6 +125,9 @@ export class AuthController implements IAuthController {
 		}
 	}
 
+	//* ─────────────────────────────────────────────────────────────
+	//*                     🛠️ User Login
+	//* ─────────────────────────────────────────────────────────────
 	async login(req: Request, res: Response): Promise<void> {
 		try {
 			const data = req.body as LoginUserDTO;
@@ -166,6 +175,9 @@ export class AuthController implements IAuthController {
 		}
 	}
 
+	//* ─────────────────────────────────────────────────────────────
+	//*                     🛠️ User Logout
+	//* ─────────────────────────────────────────────────────────────
 	async logout(req: Request, res: Response): Promise<void> {
 		try {
 			await this.blackListTokenUseCase.execute(
@@ -189,7 +201,10 @@ export class AuthController implements IAuthController {
 		}
 	}
 
-	refreshAccessToken(req: Request, res: Response): void {
+	//* ─────────────────────────────────────────────────────────────
+	//*                 🛠️ Token Refresh Handler
+	//* ─────────────────────────────────────────────────────────────
+	handleTokenRefresh(req: Request, res: Response): void {
 		try {
 			const refreshToken = (req as CustomRequest).user.refresh_token;
 			const newTokens = this.refreshTokenUseCase.execute(refreshToken);
@@ -215,6 +230,9 @@ export class AuthController implements IAuthController {
 		}
 	}
 
+	//* ─────────────────────────────────────────────────────────────
+	//*                     🛠️ User Register
+	//* ─────────────────────────────────────────────────────────────
 	async register(req: Request, res: Response): Promise<void> {
 		try {
 			const { role } = req.body as UserDTO;
@@ -237,6 +255,9 @@ export class AuthController implements IAuthController {
 		}
 	}
 
+	//* ─────────────────────────────────────────────────────────────
+	//*                    🛠️ User Reset Password
+	//* ─────────────────────────────────────────────────────────────
 	async resetPassword(req: Request, res: Response): Promise<void> {
 		try {
 			const validatedData = resetPasswordValidationSchema.parse(req.body);
@@ -257,6 +278,9 @@ export class AuthController implements IAuthController {
 		}
 	}
 
+	//* ─────────────────────────────────────────────────────────────
+	//*                     🛠️ Sent Otp Email
+	//* ─────────────────────────────────────────────────────────────
 	async sendOtpEmail(req: Request, res: Response): Promise<void> {
 		try {
 			const { email } = req.body;
@@ -270,22 +294,10 @@ export class AuthController implements IAuthController {
 		}
 	}
 
+	//* ─────────────────────────────────────────────────────────────
+	//*                      🛠️ Verify Otp
+	//* ─────────────────────────────────────────────────────────────
 	async verifyOtp(req: Request, res: Response): Promise<void> {
-		try {
-			const { email, otp } = req.body;
-			const validatedData = otpMailValidationSchema.parse({ email, otp });
-			await this.verifyOtpUseCase.execute(validatedData);
-
-			res.status(HTTP_STATUS.OK).json({
-				success: true,
-				message: SUCCESS_MESSAGES.VERIFICATION_SUCCESS,
-			});
-		} catch (error) {
-			handleErrorResponse(res, error);
-		}
-	}
-
-	async handle(req: Request, res: Response): Promise<void> {
 		try {
 			const { email, otp } = req.body;
 			const validatedData = otpMailValidationSchema.parse({ email, otp });

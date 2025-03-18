@@ -60,7 +60,7 @@ export class BarberRoutes extends BaseRoute {
 			decodeToken,
 			(req: Request, res: Response) => {
 				console.log("refreshing barber", req.body);
-				authController.refreshAccessToken(req, res);
+				authController.handleTokenRefresh(req, res);
 			}
 		);
 	}

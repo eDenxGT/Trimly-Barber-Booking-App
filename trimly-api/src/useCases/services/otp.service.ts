@@ -1,5 +1,5 @@
 import { inject, injectable } from "tsyringe";
-import { IOtpService } from "../../entities/services/otp-service.interface";
+import { IOtpService } from "../../entities/useCaseInterfaces/services/otp-service.interface";
 import { config } from "../../shared/config";
 import { IOtpRepository } from "../../entities/repositoryInterfaces/auth/otp-repository.interface";
 import { IBcrypt } from "../../frameworks/security/bcrypt.interface";

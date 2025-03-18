@@ -1,5 +1,5 @@
 import { inject, injectable } from "tsyringe";
-import { IUserExistenceService } from "../../entities/services/user-existence-service.interface";
+import { IUserExistenceService } from "../../entities/useCaseInterfaces/services/user-existence-service.interface";
 import { IClientRepository } from './../../entities/repositoryInterfaces/client/client-repository.interface';
 
 @injectable()

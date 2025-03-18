@@ -1,6 +1,6 @@
 import { injectable } from "tsyringe";
 import nodemailer from "nodemailer";
-import { IEmailService } from "../../entities/services/email-service.interface";
+import { IEmailService } from "../../entities/useCaseInterfaces/services/email-service.interface";
 import { config } from "../../shared/config";
 import { PASSWORD_RESET_MAIL_CONTENT, VERIFICATION_MAIL_CONTENT } from "../../shared/constants";
 
