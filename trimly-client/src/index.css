@@ -2,7 +2,7 @@
 @import "tailwindcss";
 @plugin "tailwindcss-animate";
 
-@custom-variant dark (&:is(.dark *));
+/* @custom-variant dark (&:is(.dark *)); */
 
 @layer utilities {
   .font-young {

@@ -1,26 +1,35 @@
+import { createSelector } from "reselect";
+import { RootState } from "@/store/store";
 import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
 import { JSX } from "react";
+
+export const getActiveSession = createSelector(
+	(state: RootState) => state.client.client,
+	(state: RootState) => state.barber.barber,
+	(state: RootState) => state.admin.admin,
+	(client, barber, admin) => {
+		if (client) return { role: client.role, type: "client" };
+		if (barber) return { role: barber.role, type: "barber" };
+		if (admin) return { role: admin.role, type: "admin" };
+		return null;
+	}
+);
 
 interface ProtectedRouteProps {
 	element: JSX.Element;
 	allowedRoles: string[];
 }
 
-const getActiveSession = (state: RootState) => {
-	if (state.client.client) return { role: state.client.client.role, type: "client" };
-	if (state.barber.barber) return { role: state.barber.barber.role, type: "barber" };
-	if (state.admin.admin) return { role: state.admin.admin.role, type: "admin" };
-	return null;
-};
-
-export const ProtectedRoute = ({ element, allowedRoles }: ProtectedRouteProps) => {
-	const session = useSelector((state: RootState) => getActiveSession(state));
+export const ProtectedRoute = ({
+	element,
+	allowedRoles,
+}: ProtectedRouteProps) => {
+	const session = useSelector(getActiveSession);
 
 	if (!session) return <Navigate to="/" />;
-
-	if (!allowedRoles.includes(session.role)) return <Navigate to="/unauthorized" />;
+	if (!allowedRoles.includes(session.role))
+		return <Navigate to="/unauthorized" />;
 
 	return element;
 };

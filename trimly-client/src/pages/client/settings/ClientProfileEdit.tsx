@@ -13,7 +13,7 @@ import {
 import { Camera, Save } from "lucide-react";
 import { useFormik } from "formik";
 import { motion } from "framer-motion";
-import { LocationInputField } from "@/components/common/location/LocationInputField";
+import { LocationInputField } from "@/components/common/fields/LocationInputField";
 import { profileUpdateSchema } from "@/utils/validations/profile.validator";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";

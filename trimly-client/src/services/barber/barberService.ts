@@ -1,4 +1,5 @@
 import { barberAxiosInstance } from "@/api/barber.axios";
+import { IBarberShopFormValues } from "@/hooks/barber/useBarberShopForm";
 import { IAxiosResponse } from "@/types/Response";
 import { IBarber } from "@/types/User";
 
@@ -39,5 +40,13 @@ export const updateBarberProfile = async (
 		"/barber/details",
 		data
 	);
+	return response.data;
+};
+
+export const registerBarberShop = async (
+	data: IBarberShopFormValues
+): Promise<IAxiosResponse> => {
+	const response = await barberAxiosInstance.post<IAxiosResponse>("/barber/shop", data);
+
 	return response.data;
 };

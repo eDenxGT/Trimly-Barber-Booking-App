@@ -1,10 +1,12 @@
 import ForgotPassword from "@/components/auth/ForgotPassword";
 import ResetPassword from "@/components/auth/ResetPassword";
+import BarberShopRegistration from "@/components/barber/BarberShopRegistration";
 import BarberAuth from "@/pages/barber/BarberAuth";
 import { BarberDashboard } from "@/pages/barber/BarberDashboard";
 import { BarberChangePassword } from "@/pages/barber/settings/BarberChangePassword";
 import { BarberProfileEdit } from "@/pages/barber/settings/BarberEditProfile";
 import { BarberSettingsPage } from "@/pages/barber/settings/BarberSettings";
+import { BarberShopRegister } from "@/pages/barber/shop/BarberShopRegister";
 import { BarberLayout } from "@/pages/layouts/BarberLayout";
 import { ProtectedRoute } from "@/utils/protected/ProtectedRoute";
 import { NoAuthRoute } from "@/utils/protected/PublicRoute";
@@ -34,6 +36,10 @@ export const BarberRoutes = () => {
 				<Route
 					path="settings/profile"
 					element={<BarberProfileEdit />}
+				/>
+				<Route
+					path="shop"
+					element={<BarberShopRegister />}
 				/>
 			</Route>
 

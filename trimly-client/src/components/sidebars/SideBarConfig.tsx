@@ -1,4 +1,4 @@
-import { Home, LayoutDashboard, Settings, Users } from "lucide-react";
+import { Home, LayoutDashboard, LucideScissors, Settings, Users } from "lucide-react";
 
 const navItems = {
 	client: [
@@ -47,13 +47,13 @@ const navItems = {
 		{
 			title: "Dashboard",
 			icon: LayoutDashboard,
-			path: "/tutor/dashboard",
+			path: "/barber/dashboard",
 		},
-		// {
-		// 	title: "Create New Course",
-		// 	icon: <PlusCircle className="h-5 w-5" />,
-		// 	href: "/tutor/courses/new",
-		// },
+		{
+			title: "Shop",
+			icon: LucideScissors,
+			path: "/barber/shop",
+		},
 		// {
 		// 	title: "My Courses",
 		// 	icon: <BookOpen className="h-5 w-5" />,
