@@ -52,11 +52,13 @@ Whether you're looking for a quick trim, a fresh new style, or a professional **
 
 ## 📂 Project Structure  
 
+```
 📦 Trimly
 ├── 📁 trimly-api          # Backend (Express.js)
 ├── 📁 trimly-client       # Frontend (React)
 ├── 📄 .gitignore          # Git Ignore File
 └── 📄 README.md           # You’re reading this! 🚀
+```
 
 ---
 
