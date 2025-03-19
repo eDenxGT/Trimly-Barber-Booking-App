@@ -66,6 +66,7 @@ Whether you're looking for a quick trim, a fresh new style, or a professional **
 
 - Email: edenxgt@gmail.com
 - GitHub: https://github.com/eDenxGT
+- Discord: edenxgt.
 - Website: Under Development
 
 ### 💈 Trimly – Your haircut, your style, your way! 🚀
