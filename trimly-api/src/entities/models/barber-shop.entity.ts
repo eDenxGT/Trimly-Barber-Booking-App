@@ -1,4 +1,4 @@
-export interface IBarberShop {
+export interface IBarberShopEntity {
 	id: string;
 	name: string;
 	owner: string; 
