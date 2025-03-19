@@ -14,14 +14,14 @@ import { IAdminRepository } from "@/entities/repositoryInterfaces/admin/admin-re
 export class ResetPasswordUseCase implements IResetPasswordUseCase {
 	constructor(
 		@inject("IClientRepository")
-		private clientRepository: IClientRepository,
+		private _clientRepository: IClientRepository,
 		@inject("IBarberRepository")
-		private barberRepository: IBarberRepository,
-		@inject("IAdminRepository") private adminRepository: IAdminRepository,
-		@inject("ITokenService") private tokenService: ITokenService,
+		private _barberRepository: IBarberRepository,
+		@inject("IAdminRepository") private _adminRepository: IAdminRepository,
+		@inject("ITokenService") private _tokenService: ITokenService,
 		@inject("IRedisTokenRepository")
-		private redisTokenRepository: IRedisTokenRepository,
-		@inject("IPasswordBcrypt") private passwordBcrypt: IBcrypt
+		private _redisTokenRepository: IRedisTokenRepository,
+		@inject("IPasswordBcrypt") private _passwordBcrypt: IBcrypt
 	) {}
 
 	async execute({
@@ -33,7 +33,7 @@ export class ResetPasswordUseCase implements IResetPasswordUseCase {
 		role: string;
 		token: string;
 	}): Promise<void> {
-		const payload = this.tokenService.verifyResetToken(
+		const payload = this._tokenService.verifyResetToken(
 			token
 		) as ResetTokenPayload;
 		if (!payload || !payload.email) {
@@ -47,11 +47,11 @@ export class ResetPasswordUseCase implements IResetPasswordUseCase {
 		let repository;
 
 		if (role === "client") {
-			repository = this.clientRepository;
+			repository = this._clientRepository;
 		} else if (role === "barber") {
-			repository = this.barberRepository;
+			repository = this._barberRepository;
 		} else if (role === "admin") {
-			repository = this.adminRepository;
+			repository = this._adminRepository;
 		} else {
 			throw new CustomError(
 				ERROR_MESSAGES.INVALID_ROLE,
@@ -67,7 +67,7 @@ export class ResetPasswordUseCase implements IResetPasswordUseCase {
 			);
 		}
 
-		const tokenValid = await this.redisTokenRepository.verifyResetToken(
+		const tokenValid = await this._redisTokenRepository.verifyResetToken(
 			user.id ?? "",
 			token
 		);
@@ -78,7 +78,7 @@ export class ResetPasswordUseCase implements IResetPasswordUseCase {
 			);
 		}
 
-		const isSamePasswordAsOld = await this.passwordBcrypt.compare(
+		const isSamePasswordAsOld = await this._passwordBcrypt.compare(
 			password,
 			user.password
 		);
@@ -89,10 +89,10 @@ export class ResetPasswordUseCase implements IResetPasswordUseCase {
 			);
 		}
 
-		const hashedPassword = await this.passwordBcrypt.hash(password);
+		const hashedPassword = await this._passwordBcrypt.hash(password);
 
 		await repository.updateByEmail(email, { password: hashedPassword });
 
-		await this.redisTokenRepository.deleteResetToken(user.id ?? "");
+		await this._redisTokenRepository.deleteResetToken(user.id ?? "");
 	}
 }

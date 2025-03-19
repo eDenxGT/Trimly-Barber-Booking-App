@@ -14,10 +14,10 @@ import { IBarberEntity } from "@/entities/models/barber.entity";
 export class UpdateUserDetailsUseCase implements IUpdateUserDetailsUseCase {
 	constructor(
 		@inject("IClientRepository")
-		private clientRepository: IClientRepository,
+		private _clientRepository: IClientRepository,
 		@inject("IBarberRepository")
-		private barberRepository: IBarberRepository,
-		@inject("IAdminRepository") private adminRepository: IAdminRepository
+		private _barberRepository: IBarberRepository,
+		@inject("IAdminRepository") private _adminRepository: IAdminRepository
 	) {}
 	async execute(
 		userId: string,
@@ -27,11 +27,11 @@ export class UpdateUserDetailsUseCase implements IUpdateUserDetailsUseCase {
 		let repository;
 
 		if (role === "client") {
-			repository = this.clientRepository;
+			repository = this._clientRepository;
 		} else if (role === "barber") {
-			repository = this.barberRepository;
+			repository = this._barberRepository;
 		} else if (role === "admin") {
-			repository = this.adminRepository;
+			repository = this._adminRepository;
 		} else {
 			throw new CustomError(
 				ERROR_MESSAGES.INVALID_ROLE,

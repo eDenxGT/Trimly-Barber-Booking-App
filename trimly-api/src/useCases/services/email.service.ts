@@ -6,10 +6,10 @@ import { PASSWORD_RESET_MAIL_CONTENT, VERIFICATION_MAIL_CONTENT } from "../../sh
 
 @injectable()
 export class EmailService implements IEmailService {
-	private transporter;
+	private _transporter;
 
 	constructor() {
-		this.transporter = nodemailer.createTransport({
+		this._transporter = nodemailer.createTransport({
 			service: "gmail",
 			auth: {
 				user: config.nodemailer.EMAIL_USER,
@@ -29,7 +29,7 @@ export class EmailService implements IEmailService {
 			subject,
 			html: VERIFICATION_MAIL_CONTENT(otp),
 		};
-		await this.transporter.sendMail(mailOptions);
+		await this._transporter.sendMail(mailOptions);
 	}
 	
 	async sendResetEmail(
@@ -43,7 +43,7 @@ export class EmailService implements IEmailService {
 			subject,
 			html: PASSWORD_RESET_MAIL_CONTENT(resetLink),
 		}
-		await this.transporter.sendMail(mailOptions);
+		await this._transporter.sendMail(mailOptions);
 	}
 
 	async sendEmail(to: string, subject: string, content: string): Promise<void> {

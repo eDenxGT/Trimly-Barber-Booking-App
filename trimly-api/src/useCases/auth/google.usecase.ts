@@ -11,16 +11,16 @@ import { IRegisterUserUseCase } from "@/entities/useCaseInterfaces/auth/register
 
 @injectable()
 export class GoogleUseCase implements IGoogleUseCase {
-	private oAuthClient: OAuth2Client;
+	private _oAuthClient: OAuth2Client;
 	constructor(
 		@inject("IRegisterUserUseCase")
-		private registerUserUseCase: IRegisterUserUseCase,
+		private _registerUserUseCase: IRegisterUserUseCase,
 		@inject("IClientRepository")
-		private clientRepository: IClientRepository,
+		private _clientRepository: IClientRepository,
 		@inject("IBarberRepository")
-		private barberRepository: IBarberRepository
+		private _barberRepository: IBarberRepository
 	) {
-		this.oAuthClient = new OAuth2Client();
+		this._oAuthClient = new OAuth2Client();
 	}
 
 	async execute(
@@ -28,7 +28,7 @@ export class GoogleUseCase implements IGoogleUseCase {
 		client_id: string,
 		role: TRole
 	): Promise<Partial<IUserEntity>> {
-		const ticket = await this.oAuthClient.verifyIdToken({
+		const ticket = await this._oAuthClient.verifyIdToken({
 			idToken: credential,
 			audience: client_id,
 		});
@@ -53,9 +53,9 @@ export class GoogleUseCase implements IGoogleUseCase {
 
 		let repository;
 		if (role === "client") {
-			repository = this.clientRepository;
+			repository = this._clientRepository;
 		} else if (role === "barber") {
-			repository = this.barberRepository;
+			repository = this._barberRepository;
 		} else {
 			throw new CustomError(
 				ERROR_MESSAGES.INVALID_ROLE,
@@ -74,7 +74,7 @@ export class GoogleUseCase implements IGoogleUseCase {
 
 		if (existingUser) return existingUser;
 
-		const newUser = await this.registerUserUseCase.execute({
+		const newUser = await this._registerUserUseCase.execute({
 			firstName,
 			lastName,
 			role,

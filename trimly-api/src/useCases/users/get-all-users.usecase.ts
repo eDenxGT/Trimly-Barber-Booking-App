@@ -10,8 +10,8 @@ import { HTTP_STATUS } from "@/shared/constants";
 export class GetAllUsersUseCase implements IGetAllUsersUseCase {
 	constructor(
 		@inject("IClientRepository")
-		private clientRepository: IClientRepository,
-		@inject("IBarberRepository") private barberRepository: IBarberRepository
+		private _clientRepository: IClientRepository,
+		@inject("IBarberRepository") private _barberRepository: IBarberRepository
 	) {}
 	async execute(
 		userType: string,
@@ -36,7 +36,7 @@ export class GetAllUsersUseCase implements IGetAllUsersUseCase {
 		const skip = (validPageNumber - 1) * validPageSize;
 		const limit = validPageSize;
 		if (userType === "client") {
-			const { user, total } = await this.clientRepository.find(
+			const { user, total } = await this._clientRepository.find(
 				filter,
 				skip,
 				limit
@@ -50,7 +50,7 @@ export class GetAllUsersUseCase implements IGetAllUsersUseCase {
 			return response;
 		}
 		if (userType === "barber") {
-			const { user, total } = await this.barberRepository.find(
+			const { user, total } = await this._barberRepository.find(
 				filter,
 				skip,
 				limit

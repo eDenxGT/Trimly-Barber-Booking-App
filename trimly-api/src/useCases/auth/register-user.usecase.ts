@@ -14,11 +14,11 @@ import { IUserEntity } from "../../entities/models/user.entity";
 export class RegisterUserUseCase implements IRegisterUserUseCase {
 	constructor(
 		@inject("IBarberRepository")
-		private barberRepository: IBarberRepository,
+		private _barberRepository: IBarberRepository,
 		@inject("IClientRepository")
-		private clientRepository: IClientRepository,
-		@inject("IAdminRepository") private adminRepository: IAdminRepository,
-		@inject("IPasswordBcrypt") private passwordBcrypt: IBcrypt
+		private _clientRepository: IClientRepository,
+		@inject("IAdminRepository") private _adminRepository: IAdminRepository,
+		@inject("IPasswordBcrypt") private _passwordBcrypt: IBcrypt
 	) {}
 
 	async execute(user: UserDTO): Promise<IUserEntity | null> {
@@ -26,9 +26,9 @@ export class RegisterUserUseCase implements IRegisterUserUseCase {
 
 		const [existingBarber, existingClient, existingAdmin] =
 			await Promise.all([
-				this.barberRepository.findByEmail(email),
-				this.clientRepository.findByEmail(email),
-				this.adminRepository.findByEmail(email),
+				this._barberRepository.findByEmail(email),
+				this._clientRepository.findByEmail(email),
+				this._adminRepository.findByEmail(email),
 			]);
 
 		if (existingBarber || existingClient || existingAdmin) {
@@ -39,16 +39,16 @@ export class RegisterUserUseCase implements IRegisterUserUseCase {
 		}
 
 		const hashedPassword = password
-			? await this.passwordBcrypt.hash(password)
+			? await this._passwordBcrypt.hash(password)
 			: null;
 
 		const userId = generateUniqueId(role);
 
 		let repository;
 		if (role === "client") {
-			repository = this.clientRepository;
+			repository = this._clientRepository;
 		} else if (role === "barber") {
-			repository = this.barberRepository;
+			repository = this._barberRepository;
 		} else {
 			throw new CustomError(
 				ERROR_MESSAGES.INVALID_ROLE,

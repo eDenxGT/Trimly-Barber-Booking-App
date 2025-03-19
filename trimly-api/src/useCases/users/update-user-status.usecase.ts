@@ -10,12 +10,12 @@ import { CustomError } from "@/entities/utils/custom.error";
 export class UpdateUserStatusUseCase implements IUpdateUserStatusUseCase {
 	constructor(
 		@inject("IClientRepository")
-		private clientRepository: IClientRepository,
-		@inject("IBarberRepository") private barberRepository: IBarberRepository
+		private _clientRepository: IClientRepository,
+		@inject("IBarberRepository") private _barberRepository: IBarberRepository
 	) {}
 	async execute(userType: string, userId: any): Promise<void> {
 		if (userType === "client") {
-			const user = await this.clientRepository.findById(userId);
+			const user = await this._clientRepository.findById(userId);
 
 			if (!user) {
 				throw new CustomError(
@@ -26,11 +26,11 @@ export class UpdateUserStatusUseCase implements IUpdateUserStatusUseCase {
 
 			const newStatus = user.status === "active" ? "blocked" : "active";
 
-			await this.clientRepository.findByIdAndUpdate(userId, {
+			await this._clientRepository.findByIdAndUpdate(userId, {
 				status: newStatus,
 			});
 		} else if (userType === "barber") {
-			const user = await this.barberRepository.findById(userId);
+			const user = await this._barberRepository.findById(userId);
 
 			if (!user) {
 				throw new CustomError(
@@ -41,7 +41,7 @@ export class UpdateUserStatusUseCase implements IUpdateUserStatusUseCase {
 
 			const newStatus = user.status === "active" ? "blocked" : "active";
 
-			await this.barberRepository.findByIdAndUpdate(userId, {
+			await this._barberRepository.findByIdAndUpdate(userId, {
 				status: newStatus,
 			});
 		}

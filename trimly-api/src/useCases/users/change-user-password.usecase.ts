@@ -11,11 +11,11 @@ import { CustomError } from "@/entities/utils/custom.error";
 export class ChangeUserPasswordUseCase implements IChangeUserPasswordUseCase {
 	constructor(
 		@inject("IClientRepository")
-		private clientRepository: IClientRepository,
+		private _clientRepository: IClientRepository,
 		@inject("IBarberRepository")
-		private barberRepository: IBarberRepository,
-		@inject("IAdminRepository") private adminRepository: IAdminRepository,
-		@inject("IPasswordBcrypt") private passwordBcrypt: IBcrypt
+		private _barberRepository: IBarberRepository,
+		@inject("IAdminRepository") private _adminRepository: IAdminRepository,
+		@inject("IPasswordBcrypt") private _passwordBcrypt: IBcrypt
 	) {}
 
 	async execute({
@@ -32,11 +32,11 @@ export class ChangeUserPasswordUseCase implements IChangeUserPasswordUseCase {
 		let repository;
 
 		if (role === "client") {
-			repository = this.clientRepository;
+			repository = this._clientRepository;
 		} else if (role === "barber") {
-			repository = this.barberRepository;
+			repository = this._barberRepository;
 		} else if (role === "admin") {
-			repository = this.adminRepository;
+			repository = this._adminRepository;
 		} else {
 			throw new CustomError(
 				ERROR_MESSAGES.INVALID_ROLE,
@@ -52,7 +52,7 @@ export class ChangeUserPasswordUseCase implements IChangeUserPasswordUseCase {
 			);
 		}
 
-		const isCorrectOldPassword = await this.passwordBcrypt.compare(
+		const isCorrectOldPassword = await this._passwordBcrypt.compare(
 			oldPassword,
 			user.password
 		);
@@ -71,7 +71,7 @@ export class ChangeUserPasswordUseCase implements IChangeUserPasswordUseCase {
 			);
 		}
 
-		const hashedNewPassword = await this.passwordBcrypt.hash(newPassword);
+		const hashedNewPassword = await this._passwordBcrypt.hash(newPassword);
 		await repository.updateByEmail(email, { password: hashedNewPassword });
 	}
 }

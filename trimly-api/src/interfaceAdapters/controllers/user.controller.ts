@@ -19,13 +19,13 @@ import { handleErrorResponse } from "@/shared/utils/errorHandler";
 export class UserController implements IUserController {
 	constructor(
 		@inject("IGetAllUsersUseCase")
-		private getAllUsersUseCase: IGetAllUsersUseCase,
+		private _getAllUsersUseCase: IGetAllUsersUseCase,
 		@inject("IUpdateUserStatusUseCase")
-		private updateUserStatusUseCase: IUpdateUserStatusUseCase,
+		private _updateUserStatusUseCase: IUpdateUserStatusUseCase,
 		@inject("IChangeUserPasswordUseCase")
-		private changePasswordUseCase: IChangeUserPasswordUseCase,
+		private _changePasswordUseCase: IChangeUserPasswordUseCase,
 		@inject("IUpdateUserDetailsUseCase")
-		private updateUserDetailsUseCase: IUpdateUserDetailsUseCase
+		private _updateUserDetailsUseCase: IUpdateUserDetailsUseCase
 	) {}
 
 	//* ─────────────────────────────────────────────────────────────
@@ -40,7 +40,7 @@ export class UserController implements IUserController {
 				typeof userType === "string" ? userType : "client";
 			const searchTermString = typeof search === "string" ? search : "";
 
-			const { user, total } = await this.getAllUsersUseCase.execute(
+			const { user, total } = await this._getAllUsersUseCase.execute(
 				userTypeString,
 				pageNumber,
 				pageSize,
@@ -68,7 +68,7 @@ export class UserController implements IUserController {
 				userId: any;
 			};
 
-			await this.updateUserStatusUseCase.execute(userType, userId);
+			await this._updateUserStatusUseCase.execute(userType, userId);
 
 			res.status(HTTP_STATUS.OK).json({
 				success: true,
@@ -87,7 +87,7 @@ export class UserController implements IUserController {
 			const { oldPassword, newPassword } = req.body;
 			const { email, role } = (req as CustomRequest).user;
 			
-			await this.changePasswordUseCase.execute({
+			await this._changePasswordUseCase.execute({
 				oldPassword,
 				newPassword,
 				email,
@@ -109,7 +109,7 @@ export class UserController implements IUserController {
 		try {
 			const data = req.body;
 			const { id, role } = (req as CustomRequest).user;
-			const updatedUser = await this.updateUserDetailsUseCase.execute(
+			const updatedUser = await this._updateUserDetailsUseCase.execute(
 				id,
 				role,
 				data

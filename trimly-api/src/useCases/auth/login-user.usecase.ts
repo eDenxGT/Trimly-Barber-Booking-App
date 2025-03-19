@@ -12,21 +12,21 @@ import { IBcrypt } from "../../frameworks/security/bcrypt.interface";
 @injectable()
 export class LoginUserUseCase implements ILoginUserUseCase {
 	constructor(
-		@inject("IClientRepository") private clientRepository: IClientRepository,
-		@inject("IBarberRepository") private barberRepository: IBarberRepository,
-		@inject("IAdminRepository") private adminRepository: IAdminRepository,
-		@inject("IPasswordBcrypt") private passwordBcrypt: IBcrypt
+		@inject("IClientRepository") private _clientRepository: IClientRepository,
+		@inject("IBarberRepository") private _barberRepository: IBarberRepository,
+		@inject("IAdminRepository") private _adminRepository: IAdminRepository,
+		@inject("IPasswordBcrypt") private _passwordBcrypt: IBcrypt
 	) {}
 
 	async execute(user: LoginUserDTO): Promise<Partial<IUserEntity>> {
 		let repository;
 
 		if (user.role === "client") {
-			repository = this.clientRepository;
+			repository = this._clientRepository;
 		} else if (user.role === "barber") {
-			repository = this.barberRepository;
+			repository = this._barberRepository;
 		} else if (user.role === "admin") {
-			repository = this.adminRepository;
+			repository = this._adminRepository;
 		} else {
 			throw new CustomError(ERROR_MESSAGES.INVALID_ROLE, HTTP_STATUS.BAD_REQUEST);
 		}
@@ -41,7 +41,7 @@ export class LoginUserUseCase implements ILoginUserUseCase {
 		}
 
 		if (user.password) {
-			const isPasswordMatch = await this.passwordBcrypt.compare(user.password, userData.password);
+			const isPasswordMatch = await this._passwordBcrypt.compare(user.password, userData.password);
 			if (!isPasswordMatch) {
 				throw new CustomError(ERROR_MESSAGES.INVALID_CREDENTIALS, HTTP_STATUS.FORBIDDEN);
 			}

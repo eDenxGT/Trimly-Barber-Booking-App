@@ -13,22 +13,22 @@ import { IAdminRepository } from "@/entities/repositoryInterfaces/admin/admin-re
 @injectable()
 export class ForgotPasswordUseCase implements IForgotPasswordUseCase {
 	constructor(
-		@inject("IClientRepository") private clientRepository: IClientRepository,
-		@inject("IBarberRepository") private barberRepository: IBarberRepository,
-		@inject("IAdminRepository") private adminRepository: IAdminRepository,
-		@inject("ITokenService") private tokenService: ITokenService,
-		@inject("IRedisTokenRepository") private redisTokenRepository: IRedisTokenRepository,
-		@inject("IEmailService") private emailService: IEmailService
+		@inject("IClientRepository") private _clientRepository: IClientRepository,
+		@inject("IBarberRepository") private _barberRepository: IBarberRepository,
+		@inject("IAdminRepository") private _adminRepository: IAdminRepository,
+		@inject("ITokenService") private _tokenService: ITokenService,
+		@inject("IRedisTokenRepository") private _redisTokenRepository: IRedisTokenRepository,
+		@inject("IEmailService") private _emailService: IEmailService
 	) {}
 
 	async execute({ email, role }: { email: string; role: string }): Promise<void> {
 		let repository;
 		if (role === "client") {
-			repository = this.clientRepository;
+			repository = this._clientRepository;
 		} else if (role === "barber") {
-			repository = this.barberRepository;
+			repository = this._barberRepository;
 		} else if (role === "admin") {
-			repository = this.adminRepository;
+			repository = this._adminRepository;
 		} else {
 			throw new CustomError(ERROR_MESSAGES.INVALID_ROLE, HTTP_STATUS.FORBIDDEN);
 		}
@@ -38,16 +38,16 @@ export class ForgotPasswordUseCase implements IForgotPasswordUseCase {
 			throw new CustomError(ERROR_MESSAGES.EMAIL_NOT_FOUND, HTTP_STATUS.NOT_FOUND);
 		}
 
-		const resetToken = this.tokenService.generateResetToken(email);
+		const resetToken = this._tokenService.generateResetToken(email);
 
 		try {
-			await this.redisTokenRepository.storeResetToken(user.id ?? "", resetToken);
+			await this._redisTokenRepository.storeResetToken(user.id ?? "", resetToken);
 		} catch (error) {
 			console.error("Failed to store reset token in Redis:", error);
 			throw new CustomError(ERROR_MESSAGES.SERVER_ERROR, HTTP_STATUS.INTERNAL_SERVER_ERROR);
 		}
 
 		const resetUrl = new URL(`/reset-password/${resetToken}`, config.cors.ALLOWED_ORIGIN).toString();
-		await this.emailService.sendResetEmail(email, "Trimly - Reset your password", resetUrl);
+		await this._emailService.sendResetEmail(email, "Trimly - Reset your password", resetUrl);
 	}
 }

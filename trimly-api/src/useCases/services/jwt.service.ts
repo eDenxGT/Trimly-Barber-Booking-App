@@ -16,20 +16,20 @@ export interface ResetTokenPayload extends JwtPayload {
 
 @injectable()
 export class JWTService implements ITokenService {
-	private accessSecret: Secret;
-	private accessExpiresIn: string;
-	private refreshSecret: Secret;
-	private refreshExpiresIn: string;
-	private resetSecret: Secret;
-	private resetExpiresIn: string;
+	private _accessSecret: Secret;
+	private _accessExpiresIn: string;
+	private _refreshSecret: Secret;
+	private _refreshExpiresIn: string;
+	private _resetSecret: Secret;
+	private _resetExpiresIn: string;
 
 	constructor() {
-		this.accessSecret = config.jwt.ACCESS_SECRET_KEY;
-		this.accessExpiresIn = config.jwt.ACCESS_EXPIRES_IN;
-		this.refreshSecret = config.jwt.REFRESH_SECRET_KEY;
-		this.refreshExpiresIn = config.jwt.REFRESH_EXPIRES_IN;
-		this.resetSecret = config.jwt.RESET_SECRET_KEY;
-		this.resetExpiresIn = config.jwt.RESET_EXPIRES_IN;
+		this._accessSecret = config.jwt.ACCESS_SECRET_KEY;
+		this._accessExpiresIn = config.jwt.ACCESS_EXPIRES_IN;
+		this._refreshSecret = config.jwt.REFRESH_SECRET_KEY;
+		this._refreshExpiresIn = config.jwt.REFRESH_EXPIRES_IN;
+		this._resetSecret = config.jwt.RESET_SECRET_KEY;
+		this._resetExpiresIn = config.jwt.RESET_EXPIRES_IN;
 	}
 
 	generateAccessToken(payload: {
@@ -37,8 +37,8 @@ export class JWTService implements ITokenService {
 		email: string;
 		role: string;
 	}): string {
-		return jwt.sign(payload, this.accessSecret, {
-			expiresIn: this.accessExpiresIn as ms.StringValue,
+		return jwt.sign(payload, this._accessSecret, {
+			expiresIn: this._accessExpiresIn as ms.StringValue,
 		});
 	}
 	generateRefreshToken(payload: {
@@ -46,13 +46,13 @@ export class JWTService implements ITokenService {
 		email: string;
 		role: string;
 	}): string {
-		return jwt.sign(payload, this.refreshSecret, {
-			expiresIn: this.refreshExpiresIn as ms.StringValue,
+		return jwt.sign(payload, this._refreshSecret, {
+			expiresIn: this._refreshExpiresIn as ms.StringValue,
 		});
 	}
 	verifyAccessToken(token: string): JwtPayload | null {
 		try {
-			return jwt.verify(token, this.accessSecret) as JwtPayload;
+			return jwt.verify(token, this._accessSecret) as JwtPayload;
 		} catch (error) {
 			console.error("Access token verification failed:", error);
 			return null;
@@ -60,7 +60,7 @@ export class JWTService implements ITokenService {
 	}
 	verifyRefreshToken(token: string): string | JwtPayload | null {
 		try {
-			return jwt.verify(token, this.refreshSecret) as JwtPayload;
+			return jwt.verify(token, this._refreshSecret) as JwtPayload;
 		} catch (error) {
 			console.error("Access token verification failed:", error);
 			return null;
@@ -75,14 +75,14 @@ export class JWTService implements ITokenService {
 		}
 	}
 	generateResetToken(email: string): string {
-		return jwt.sign({ email }, this.resetSecret, {
-			expiresIn: this.resetExpiresIn as ms.StringValue,
+		return jwt.sign({ email }, this._resetSecret, {
+			expiresIn: this._resetExpiresIn as ms.StringValue,
 		});
 	}
 
 	verifyResetToken(token: string): ResetTokenPayload | null {
 		try {
-			return jwt.verify(token, this.resetSecret) as ResetTokenPayload;
+			return jwt.verify(token, this._resetSecret) as ResetTokenPayload;
 		} catch (error) {
 			console.error("Reset token verification failed:", error);
 			return null;
