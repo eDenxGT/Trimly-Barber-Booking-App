@@ -16,11 +16,12 @@ import { errorHandler } from "../../interfaceAdapters/middlewares/error.middlewa
 //* ====== Route Imports ====== *//
 import { AuthRoutes } from "../routes/auth/auth.route";
 import { PrivateRoutes } from "../routes/private/private.route";
+import morganLogger from "@/interfaceAdapters/middlewares/logger";
 
 //* ====== Express App ====== *//
 export class Server {
 	private _app: Application;
-	
+
 	constructor() {
 		this._app = express();
 
@@ -31,7 +32,8 @@ export class Server {
 
 	//* ====== Middlewares Configurations ====== *//
 	private configureMiddlewares(): void {
-		this._app.use(morgan(config.loggerStatus));
+		// this._app.use(morgan(config.loggerStatus));
+		this._app.use(morganLogger);
 
 		this._app.use(helmet());
 
@@ -62,7 +64,7 @@ export class Server {
 	//* ====== Routes Configurations ====== *//
 	private configureRoutes(): void {
 		this._app.use("/api/v1/auth", new AuthRoutes().router);
-		this._app.use("/api/v1/pvt", new PrivateRoutes().router)
+		this._app.use("/api/v1/pvt", new PrivateRoutes().router);
 
 		this._app.use("*", notFound);
 	}
