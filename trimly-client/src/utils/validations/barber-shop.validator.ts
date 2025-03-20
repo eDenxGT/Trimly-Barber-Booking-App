@@ -3,9 +3,10 @@ import * as Yup from "yup";
 export const barberShopValidationSchema = Yup.object({
 	name: Yup.string().required("Shop name is required"),
 	description: Yup.string().required("Description is required"),
-	location: Yup.object().shape({
-		display: Yup.string().required("Location is required"),
+	address: Yup.object().shape({
+		display: Yup.string().required("Location is required"), 	
 	}),
+
 	contactNumber: Yup.string()
 		.matches(/^\+?[1-9]\d{9}$/, "Invalid phone number")
 		.required("Contact number is required"),

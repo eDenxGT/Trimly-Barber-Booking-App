@@ -15,6 +15,7 @@ import { BaseRoute } from "../base.route";
 import {
 	authController,
 	blockStatusMiddleware,
+	shopController,
 	userController,
 } from "../../di/resolver";
 
@@ -42,6 +43,17 @@ export class BarberRoutes extends BaseRoute {
 				blockStatusMiddleware.checkStatus as RequestHandler,
 				(req: Request, res: Response) => {
 					userController.updateUserDetails(req, res);
+				}
+			);
+
+		this.router
+			.route("/barber/shop")
+			.post(
+				verifyAuth,
+				authorizeRole(["barber"]),
+				blockStatusMiddleware.checkStatus as RequestHandler,
+				(req: Request, res: Response) => {
+					shopController.registerShop(req, res);
 				}
 			);
 

@@ -80,15 +80,30 @@ export const ShopDetailsForm: React.FC<ShopDetailsFormProps> = ({ formik }) => {
 						Location
 					</Label>
 					<LocationInputField
-						initialValue={formik.values.location.display}
 						onSelect={(location) => {
-							formik.setFieldValue("location", location);
+							console.log(location);
+							formik.setFieldValue("address", {
+								...formik.values.address,
+								display: location.display,
+								city:
+									location.details?.city ||
+									location.details?.town ||
+									location.details?.village ||
+									"",
+								state: location.details?.state || "",
+								zipCode: location.details?.zipCode || "",
+								country: location.details?.country || "",
+								location: {
+									latitude: location.lat || 0,
+									longitude: location.lon || 0,
+								},
+							});
 						}}
-						placeholder="Search for your shop location"
 						onChange={(value) => {
-							formik.setFieldValue("location.display", value);
+							formik.setFieldValue("address.street", value);
 						}}
 					/>
+
 					{formik.touched.location?.display &&
 						formik.errors.location?.display && (
 							<p className="text-sm text-red-500">

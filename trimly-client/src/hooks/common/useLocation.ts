@@ -9,6 +9,7 @@ interface LocationData {
 	county?: string;
 	state?: string;
 	country: string;
+	zipCode?: string;
 	lat: number;
 	lon: number;
 }
@@ -64,6 +65,7 @@ const useLocation = () => {
 					town: address.town || "",
 					county: address.county || "",
 					state: address.state || "",
+					zipCode: address.postcode || "",
 					country: address.country || "",
 					lat: parseFloat(place.lat),
 					lon: parseFloat(place.lon),
@@ -123,6 +125,7 @@ const useLocation = () => {
 								county: address.county || "",
 								state: address.state || "",
 								country: address.country || "",
+								zipCode: address.postcode || "",
 								lat: coords.latitude,
 								lon: coords.longitude,
 							};

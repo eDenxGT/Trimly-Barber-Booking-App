@@ -14,6 +14,8 @@ import { IBarberRepository } from "../../entities/repositoryInterfaces/barber/ba
 import { BarberRepository } from "../../interfaceAdapters/repositories/barber/barber.repository";
 import { IAdminRepository } from "@/entities/repositoryInterfaces/admin/admin-repository.interface";
 import { AdminRepository } from "@/interfaceAdapters/repositories/admin/admin.repository";
+import { IShopRepository } from "@/entities/repositoryInterfaces/shop/shop-repository.interface";
+import { ShopRepository } from "@/interfaceAdapters/repositories/shop/shop.repository";
 
 export class RepositoryRegistry {
 	static registerRepositories(): void {
@@ -39,7 +41,11 @@ export class RepositoryRegistry {
 		});
 
 		container.register<IAdminRepository>("IAdminRepository", {
-			useClass: AdminRepository
-		})
+			useClass: AdminRepository,
+		});
+
+		container.register<IShopRepository>("IShopRepository", {
+			useClass: ShopRepository,
+		});
 	}
 }

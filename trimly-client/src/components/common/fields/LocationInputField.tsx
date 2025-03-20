@@ -25,6 +25,7 @@ interface LocationAutocompleteProps {
 			village?: string;
 			town?: string;
 			county?: string;
+			zipCode?: string;
 			state?: string;
 			country?: string;
 		};
@@ -71,6 +72,7 @@ export function LocationInputField({
 				village: currLoc.village,
 				town: currLoc.town,
 				county: currLoc.county,
+				zipCode: currLoc.zipCode,
 				state: currLoc.state,
 				country: currLoc.country,
 			},
@@ -189,6 +191,7 @@ export function LocationInputField({
 												city: place.city,
 												village: place.village,
 												town: place.town,
+												zipCode: place.zipCode,
 												county: place.county,
 												state: place.state,
 												country: place.country,

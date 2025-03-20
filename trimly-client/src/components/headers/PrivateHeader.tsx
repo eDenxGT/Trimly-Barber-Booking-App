@@ -45,20 +45,20 @@ export function PrivateHeader({
 }: HeaderProps) {
 	const [open, setOpen] = useState(false);
 	const navigate = useNavigate();
-	
+
 	const isClient = user?.role === "client";
 	const isBarber = user?.role === "barber";
 	const isAdmin = user?.role === "admin";
-	
+
 	const displayName = user?.firstName || user?.lastName || "User";
 	const initials = `${user?.firstName?.[0] || ""}${
 		user?.lastName?.[0] || ""
-		}`;
-		
-		useEffect(() => {
-			const down = (e: KeyboardEvent) => {
-				if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
-					e.preventDefault();
+	}`;
+
+	useEffect(() => {
+		const down = (e: KeyboardEvent) => {
+			if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+				e.preventDefault();
 				setOpen((open) => !open);
 			}
 		};
@@ -85,41 +85,43 @@ export function PrivateHeader({
 				"fixed top-0 left-0 right-0 h-16 border-b bg-[#121212] shadow-md",
 				className
 			)}>
-			<div className="container flex h-full items-center px-4">
+			<div className="container justify-between flex h-full items-center  px-4">
 				{/* Hamburger menu button */}
-				<Tooltip title="Toggle sidebar" arrow placement="bottom">
-					<Button
-						variant="text"
-						sx={{
-							minWidth: "auto",
-							padding: "8px",
-							color: "white",
-							"&:hover": {
-								backgroundColor: "#2a2a2a",
-							},
-						}}
-						onClick={onSidebarToggle}>
-						<Menu className="h-6 w-6" />
-					</Button>
-				</Tooltip>
+				<div className="flex items-center">
+					<Tooltip title="Toggle sidebar" arrow placement="bottom">
+						<Button
+							variant="text"
+							sx={{
+								minWidth: "auto",
+								padding: "8px",
+								color: "white",
+								"&:hover": {
+									backgroundColor: "#2a2a2a",
+								},
+							}}
+							onClick={onSidebarToggle}>
+							<Menu className="h-6 w-6" />
+						</Button>
+					</Tooltip>
 
-				{/* Logo */}
-				<div className="ml-2 mr-8 flex items-center space-x-2">
-					<img src="/logo.svg" alt="Logo" className="w-7 h-7" />
-					<span className="text-2xl font-young text-white">
-						Trimly
-					</span>
+					{/* Logo */}
+					<div className="ml-2 mr-8 flex items-center space-x-2">
+						<img src="/logo.svg" alt="Logo" className="w-7 h-7" />
+						<span className="text-2xl font-young text-white">
+							Trimly
+						</span>
+					</div>
 				</div>
 
 				{/* Search */}
-				<div className="flex-1 max-w-2xl mx-auto">
-					{/* <Tooltip
+				{/* <div className="flex-1 max-w-2xl mx-auto"> */}
+				{/* <Tooltip
 						title="Press ⌘K to search"
 						arrow
 						placement="bottom">
 						<Button
-							variant="text"
-							fullWidth
+						variant="text"
+						fullWidth
 							sx={{
 								justifyContent: "space-between",
 								backgroundColor: "#1e1e1e",
@@ -129,19 +131,19 @@ export function PrivateHeader({
 								borderRadius: "6px",
 								"&:hover": {
 									backgroundColor: "#2a2a2a",
-								},
-							}}
+									},
+									}}
 							onClick={() => setOpen(true)}>
 							<div className="flex items-center">
-								<Search className="mr-2 h-4 w-4" />
-								<span className="text-muted-foreground">
+							<Search className="mr-2 h-4 w-4" />
+							<span className="text-muted-foreground">
 									Search barbers or services...
-								</span>
-							</div>
+									</span>
+									</div>
 						</Button>
 					</Tooltip>
 					<CommandDialog open={open} onOpenChange={setOpen}>
-						<Command className="rounded-lg border shadow-md">
+					<Command className="rounded-lg border shadow-md">
 							<CommandInput placeholder="Type to search..." />
 							<CommandList>
 								<CommandEmpty>No results found.</CommandEmpty>
@@ -159,22 +161,22 @@ export function PrivateHeader({
 													<span>{item.name}</span>
 													{item.type === "barber" ? (
 														<Badge variant="secondary">
-															⭐ {item.rating}
+														⭐ {item.rating}
 														</Badge>
-													) : (
-														<Badge variant="outline">
+														) : (
+															<Badge variant="outline">
 															{item.price}
-														</Badge>
-													)}
-												</div>
+															</Badge>
+															)}
+															</div>
 											</CommandItem>
-										))}
+											))}
 									</CommandGroup>
-								))}
+									))}
 							</CommandList>
-						</Command>
+							</Command>
 					</CommandDialog> */}
-				</div>
+				{/* </div> */}
 
 				{/* Right Section */}
 				<div className="ml-8 flex items-center space-x-6">

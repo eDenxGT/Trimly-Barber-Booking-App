@@ -32,6 +32,7 @@ export const SUCCESS_MESSAGES = {
 	DATA_RETRIEVED: "Data retrieved successfully",
 	ACTION_SUCCESS: "Action performed successfully",
 	EMAIL_SENT_SUCCESSFULLY: "Email Sent Successfully",
+	WAITING_FOR_ADMIN_APPROVAL: "Registration request submitted. Awaiting admin approval.",
 } as const;
 
 export const ERROR_MESSAGES = {

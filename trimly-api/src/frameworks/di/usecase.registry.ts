@@ -47,6 +47,8 @@ import { IUpdateUserDetailsUseCase } from "@/entities/useCaseInterfaces/users/up
 import { UpdateUserDetailsUseCase } from "@/useCases/users/update-user-details.usecase";
 import { GoogleUseCase } from "@/useCases/auth/google.usecase";
 import { IGoogleUseCase } from "@/entities/useCaseInterfaces/auth/google-usecase";
+import { IRegisterShopUseCase } from "@/entities/useCaseInterfaces/shop/register-shop-usecase.interface";
+import { RegisterShopUseCase } from "@/useCases/shop/register-shop.usecase";
 
 export class UseCaseRegistry {
 	static registerUseCases(): void {
@@ -121,6 +123,10 @@ export class UseCaseRegistry {
 
 		container.register<IGoogleUseCase>("IGoogleUseCase", {
 			useClass: GoogleUseCase,
+		});
+
+		container.register<IRegisterShopUseCase>("IRegisterShopUseCase", {
+			useClass: RegisterShopUseCase,
 		});
 
 		//* ====== Register Bcrypts ====== *//

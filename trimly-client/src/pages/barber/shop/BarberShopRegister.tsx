@@ -19,11 +19,11 @@ export function BarberShopRegister() {
 		handleImageChange,
 		handleCropApply,
 		handleCropCancel,
+		isLoading,
 		handleDayToggle,
 		currentField,
 		cropperHook,
 	} = useBarberShopForm();
-	const fs = false;
 	const containerVariants = {
 		hidden: { opacity: 0 },
 		visible: {
@@ -60,7 +60,11 @@ export function BarberShopRegister() {
 					<InfoAlert />
 				</motion.div>
 
-				<form onSubmit={formik.handleSubmit}>
+				<form
+					onSubmit={(e) => {
+						e.preventDefault(); 
+						formik.handleSubmit();
+					}}>
 					{/* Basic Shop Details */}
 					<motion.div variants={itemVariants}>
 						<ShopDetailsForm formik={formik} />
@@ -69,7 +73,6 @@ export function BarberShopRegister() {
 					{/* Shop Images */}
 					<motion.div variants={itemVariants}>
 						<ShopImagesForm
-							formik={formik}
 							bannerPreview={bannerPreview}
 							logoPreview={logoPreview}
 							handleImageChange={handleImageChange}
@@ -94,11 +97,11 @@ export function BarberShopRegister() {
 					<motion.div variants={itemVariants}>
 						<div className="flex justify-end">
 							<Button
-								onClick={formik.submitForm}
 								type="submit"
 								className="min-w-36 bg-indigo-600 hover:bg-indigo-700 text-white"
-								disabled={fs}>
-								{fs ? (
+								// disabled={isLoading}
+								>
+								{isLoading ? (
 									<>
 										<span className="mr-2">Submitting</span>
 										<div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
@@ -125,8 +128,8 @@ export function BarberShopRegister() {
 				setZoom={cropperHook.setZoom}
 				rotation={cropperHook.rotation}
 				setRotation={cropperHook.setRotation}
-				aspect={currentField === "logoImage" ? 1 : 16 / 9}
-				cropShape={currentField === "logoImage" ? "round" : "rect"}
+				aspect={currentField === "logoImageFile" ? 1 : 16 / 9}
+				cropShape={currentField === "logoImageFile" ? "round" : "rect"}
 			/>
 		</div>
 	);

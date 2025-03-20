@@ -4,36 +4,33 @@ import { useCropImage } from "@/hooks/common/useCropImage";
 import { barberShopValidationSchema } from "@/utils/validations/barber-shop.validator";
 import { useCreateBarberShop } from "./useCreateBarberShop";
 import { useToaster } from "@/hooks/ui/useToaster";
+import { uploadToCloudinary } from "@/services/cloudinary/cloudinary";
 
 export interface IBarberShopFormValues {
 	name: string;
-	description: string;
-	location: {
-		display: string;
-		lat?: number;
-		lon?: number;
-		details?: {
-			name?: string;
-			city?: string;
-			village?: string;
-			town?: string;
-			county?: string;
-			state?: string;
-			country?: string;
+	description?: string;
+	address: {
+		display?: string;
+		city?: string;
+		state?: string;
+		country?: string;
+		zipCode?: string;
+		location: {
+			latitude: number;
+			longitude: number;
 		};
 	};
-	contactNumber: string;
-	email: string;
-	website: string;
-	bannerImage: File | null;
-	logoImage: File | null;
-	daysOpen: string[];
-	openingTime: string;
-	closingTime: string;
 	amenities: {
 		wifi: boolean;
 		parking: boolean;
 	};
+	openingTime: string;
+	closingTime: string;
+	daysOpen: string[];
+	bannerImageFile: File | null;
+	bannerImage: string | null;
+	logoImage: string | null;
+	logoImageFile: File | null;
 }
 
 export const DAYS_OF_WEEK = [
@@ -49,63 +46,80 @@ export const DAYS_OF_WEEK = [
 export const useBarberShopForm = () => {
 	const [bannerPreview, setBannerPreview] = useState<string | null>(null);
 	const [logoPreview, setLogoPreview] = useState<string | null>(null);
-	const [selectedDays, setSelectedDays] = useState<string[]>([]);
 	const [currentField, setCurrentField] = useState<
-		"bannerImage" | "logoImage" | null
+		"bannerImageFile" | "logoImageFile" | null
 	>(null);
 
 	const cropperHook = useCropImage();
-	const { mutate: registerShop } = useCreateBarberShop();
+	const {
+		mutate: registerShop,
+		isPending,
+		isError,
+		isSuccess,
+	} = useCreateBarberShop();
 	const { successToast, errorToast } = useToaster();
 
-	const handleCreateBarberShopSubmit = (data: IBarberShopFormValues) => {
-		registerShop(data, {
-			onSuccess: (data) => {
-				successToast(data.message);
-			},
-			onError: (error: any) => {
-				errorToast(error.response.data.message);
-			},
-		});
+	const handleCreateBarberShopSubmit = async (
+		data: IBarberShopFormValues
+	) => {
+		try {
+			const uploadedBanner = data.bannerImageFile
+				? await uploadToCloudinary(data.bannerImageFile as File)
+				: null;
+			const uploadedLogo = data.logoImageFile
+				? await uploadToCloudinary(data.logoImageFile as File)
+				: null;
+
+			registerShop(
+				{
+					...data,
+					bannerImage: uploadedBanner || "",
+					logoImage: uploadedLogo || "",
+				},
+				{
+					onSuccess: (res) => successToast(res.message),
+					onError: (error: any) =>
+						errorToast(error.response.data.message),
+				}
+			);
+		} catch (error) {
+			console.log(error);
+			errorToast("Image upload failed");
+		}
 	};
 
 	const formik = useFormik<IBarberShopFormValues>({
 		initialValues: {
 			name: "",
 			description: "",
-			location: {
+			address: {
 				display: "",
+				city: "",
+				state: "",
+				country: "",
+				zipCode: "",
+				location: { latitude: 0, longitude: 0 },
 			},
-			contactNumber: "",
-			email: "",
-			website: "",
-			bannerImage: null,
-			logoImage: null,
-			daysOpen: [],
+			amenities: { wifi: false, parking: false },
 			openingTime: "",
 			closingTime: "",
-			amenities: {
-				wifi: false,
-				parking: false,
-			},
+			daysOpen: [],
+			bannerImage: null,
+			bannerImageFile: null as File | null,
+			logoImageFile: null as File | null,
+			logoImage: null,
 		},
 		validationSchema: barberShopValidationSchema,
 		onSubmit: async (values) => {
-			try {
-				console.log("Form values:", values);
-				handleCreateBarberShopSubmit(values);
-			} catch (error) {
-				console.log(error);
-			}
+			await handleCreateBarberShopSubmit(values);
 		},
 	});
 
 	const handleImageChange = (
 		event: React.ChangeEvent<HTMLInputElement>,
-		fieldName: "bannerImage" | "logoImage"
+		fieldName: "bannerImageFile" | "logoImageFile"
 	) => {
 		const file = event.target.files?.[0] || null;
-
 		if (file) {
 			setCurrentField(fieldName);
 			cropperHook.startCropping(file);
@@ -114,31 +128,20 @@ export const useBarberShopForm = () => {
 
 	const handleCropApply = async () => {
 		if (!currentField) return;
-
 		const result = await cropperHook.cropImage();
-
 		if (result) {
 			formik.setFieldValue(currentField, result.file);
-
-			if (currentField === "bannerImage") {
+			if (currentField === "bannerImageFile")
 				setBannerPreview(result.preview);
-			} else {
-				setLogoPreview(result.preview);
-			}
+			else setLogoPreview(result.preview);
 		}
-
-		setCurrentField(null);
-	};
-
-	const handleCropCancel = () => {
-		cropperHook.cancelCropping();
 		setCurrentField(null);
 	};
 
 	const handleDayToggle = (day: string) => {
 		const currentDays = [...formik.values.daysOpen];
 		const dayIndex = currentDays.indexOf(day);
-
+		console.log(formik.values);
 		if (dayIndex === -1) {
 			currentDays.push(day);
 		} else {
@@ -146,18 +149,24 @@ export const useBarberShopForm = () => {
 		}
 
 		formik.setFieldValue("daysOpen", currentDays);
-		setSelectedDays(currentDays);
+		// setSelectedDays(currentDays);
+	};
+
+	const handleCropCancel = () => {
+		cropperHook.cancelCropping();
+		setCurrentField(null);
 	};
 
 	return {
+		isLoading: !isError && isPending && !isSuccess,
 		formik,
 		bannerPreview,
 		logoPreview,
 		handleImageChange,
 		handleCropApply,
-		handleCropCancel,
-		handleDayToggle,
 		currentField,
 		cropperHook,
+		handleCropCancel,
+		handleDayToggle,
 	};
 };

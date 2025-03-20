@@ -1,7 +1,12 @@
 import { Schema } from "mongoose";
+import { IBarberShopModel } from "../models/barber-shop.model";
 
-export const barberShopSchema = new Schema(
+export const barberShopSchema = new Schema<IBarberShopModel>(
 	{
+		shopId: {
+			type: String,
+			required: true,
+		},
 		name: {
 			type: String,
 			required: true,
@@ -14,18 +19,28 @@ export const barberShopSchema = new Schema(
 		paymentMode: {
 			type: String,
 			enum: ["shop_wallet", "direct_payment"],
-			default: "wallet",
+			default: "shop_wallet",
 		},
+		description: { type: String },
+		contactNumber: { type: String },
+		bannerImage: String,
+		logoImage: String,
 		address: {
+			display: { type: String },
 			street: { type: String },
 			city: { type: String },
 			state: { type: String },
 			country: { type: String },
-			zipCode: { type: String, required: true },
+			zipCode: { type: String },
 			location: {
 				latitude: { type: Number, required: true },
 				longitude: { type: Number, required: true },
 			},
+		},
+		status: {
+			type: String,
+			enum: ["active", "pending", "blocked"],
+			default: "pending",
 		},
 		commissionPercentage: {
 			type: Number,
@@ -40,25 +55,13 @@ export const barberShopSchema = new Schema(
 			of: Number,
 			default: {},
 		},
-		openingHours: {
-			type: [
-				{
-					day: { type: String, required: true },
-					open: { type: String },
-					close: { type: String },
-					closed: { type: Boolean, default: false },
-				},
-			],
-			default: [
-				{ day: "Monday", open: "9:00 AM", close: "9:00 PM" },
-				{ day: "Tuesday", open: "9:00 AM", close: "9:00 PM" },
-				{ day: "Wednesday", open: "9:00 AM", close: "9:00 PM" },
-				{ day: "Thursday", open: "9:00 AM", close: "9:00 PM" },
-				{ day: "Friday", open: "9:00 AM", close: "9:00 PM" },
-				{ day: "Saturday", open: "9:00 AM", close: "9:00 PM" },
-				{ day: "Sunday", closed: true },
-			],
+		amenities: {
+			wifi: { type: Boolean },
+			parking: { type: Boolean },
 		},
+		daysOpen: [{ type: String }],
+		openingTime: { type: String },
+		closingTime: { type: String },
 		createdBy: { type: String, required: true },
 		approvedBy: { type: String },
 	},
