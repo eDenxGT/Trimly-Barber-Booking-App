@@ -13,10 +13,11 @@ export class GenerateTokenUseCase implements IGenerateTokenUseCase {
 	) {}
 	async execute(
 		id: string,
+		userId: string,
 		email: string,
 		role: string
 	): Promise<{ accessToken: string; refreshToken: string }> {
-		const payload = { id, email, role };
+		const payload = { id, email, userId, role };
 
 		const accessToken = this._tokenService.generateAccessToken(payload);
 		const refreshToken = this._tokenService.generateRefreshToken(payload);

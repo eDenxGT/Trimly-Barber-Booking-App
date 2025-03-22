@@ -7,7 +7,9 @@ import { JwtPayload } from "jsonwebtoken";
 
 @injectable()
 export class RefreshTokenUseCase implements IRefreshTokenUseCase {
-	constructor(@inject("ITokenService") private _tokenService: ITokenService) {}
+	constructor(
+		@inject("ITokenService") private _tokenService: ITokenService
+	) {}
 	execute(refreshToken: string): { role: string; accessToken: string } {
 		const payload = this._tokenService.verifyRefreshToken(refreshToken);
 		if (!payload) {
@@ -20,6 +22,7 @@ export class RefreshTokenUseCase implements IRefreshTokenUseCase {
 			role: (payload as JwtPayload).role,
 			accessToken: this._tokenService.generateAccessToken({
 				id: (payload as JwtPayload).id,
+				userId: (payload as JwtPayload).userId,
 				email: (payload as JwtPayload).email,
 				role: (payload as JwtPayload).role,
 			}),

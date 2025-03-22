@@ -3,11 +3,13 @@ import { JwtPayload } from "jsonwebtoken";
 export interface ITokenService {
 	generateAccessToken(payload: {
 		id: string;
+		userId: string;
 		email: string;
 		role: string;
 	}): string;
 	generateRefreshToken(payload: {
 		id: string;
+		userId: string;
 		email: string;
 		role: string;
 	}): string;

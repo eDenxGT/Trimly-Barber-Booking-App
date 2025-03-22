@@ -49,6 +49,14 @@ import { GoogleUseCase } from "@/useCases/auth/google.usecase";
 import { IGoogleUseCase } from "@/entities/useCaseInterfaces/auth/google-usecase";
 import { IRegisterShopUseCase } from "@/entities/useCaseInterfaces/shop/register-shop-usecase.interface";
 import { RegisterShopUseCase } from "@/useCases/shop/register-shop.usecase";
+import { IGetAllShopsUseCase } from "@/entities/useCaseInterfaces/shop/get-all-shops-usecase.interface";
+import { GetAllShopsUseCase } from "@/useCases/shop/get-all-shops.usecase";
+import { IUpdateShopUseCase } from "@/entities/useCaseInterfaces/shop/update-shop-usecase.interface";
+import { UpdateShopUseCase } from "@/useCases/shop/update-shop.usecase";
+import { ISendEmailUseCase } from "@/entities/useCaseInterfaces/common/send-email-usecase.interface";
+import { SendEmailUseCase } from "@/useCases/common/send-email.usecase";
+import { IGetUserDetailsUseCase } from "@/entities/useCaseInterfaces/users/get-user-details-usecase.interface";
+import { GetUserDetailsUseCase } from "@/useCases/users/get-user-details.usecase";
 
 export class UseCaseRegistry {
 	static registerUseCases(): void {
@@ -127,6 +135,22 @@ export class UseCaseRegistry {
 
 		container.register<IRegisterShopUseCase>("IRegisterShopUseCase", {
 			useClass: RegisterShopUseCase,
+		});
+
+		container.register<IGetAllShopsUseCase>("IGetAllShopsUseCase", {
+			useClass: GetAllShopsUseCase,
+		});
+
+		container.register<IUpdateShopUseCase>("IUpdateShopUseCase", {
+			useClass: UpdateShopUseCase,
+		});
+
+		container.register<ISendEmailUseCase>("ISendEmailUseCase", {
+			useClass: SendEmailUseCase,
+		});
+
+		container.register<IGetUserDetailsUseCase>("IGetUserDetailsUseCase", {
+			useClass: GetUserDetailsUseCase,
 		});
 
 		//* ====== Register Bcrypts ====== *//

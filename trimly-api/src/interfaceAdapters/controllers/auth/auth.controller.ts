@@ -75,6 +75,7 @@ export class AuthController implements IAuthController {
 
 			const tokens = await this._generateTokenUseCase.execute(
 				user.id,
+				user.userId as string,
 				user.email,
 				user.role
 			);
@@ -146,6 +147,7 @@ export class AuthController implements IAuthController {
 
 			const tokens = await this._generateTokenUseCase.execute(
 				user.id,
+				user.userId as string,
 				user.email,
 				user.role
 			);

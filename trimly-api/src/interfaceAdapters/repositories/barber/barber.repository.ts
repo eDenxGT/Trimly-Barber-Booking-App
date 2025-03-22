@@ -32,6 +32,16 @@ export class BarberRepository implements IBarberRepository {
 			id: barber._id.toString(),
 		} as IBarberEntity;
 	}
+	
+	async findByUserId(userId: string): Promise<IBarberEntity | null> {
+		const barber = await BarberModel.findOne({ userId }).lean();
+		if (!barber) return null;
+
+		return {
+			...barber,
+			id: barber._id.toString(),
+		} as IBarberEntity;
+	}
 
 	async find(
 		filter: any,

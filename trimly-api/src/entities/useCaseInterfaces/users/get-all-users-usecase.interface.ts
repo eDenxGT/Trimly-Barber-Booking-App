@@ -1,10 +1,10 @@
-import { PaginatedUsers } from "../../models/paginated-users.entity";
+import { IPaginatedUsers } from "../../models/paginated/paginated-users.entity";
 
 export interface IGetAllUsersUseCase {
-  execute(
-    userType: string,
-    pageNumber: number,
-    pageSize: number,
-    searchTerm: string
-  ): Promise<PaginatedUsers>;
+	execute(
+		userType: string,
+		pageNumber: number,
+		pageSize: number,
+		searchTerm: string
+	): Promise<IPaginatedUsers>;
 }

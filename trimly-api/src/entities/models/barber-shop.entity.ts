@@ -7,6 +7,7 @@ export interface IBarberShopEntity {
 	paymentMode?: "shop_wallet" | "direct_payment";
 	description?: string;
 	contactNumber?: string;
+	email?: string;
 	address: {
 		display?: string;
 		street?: string;

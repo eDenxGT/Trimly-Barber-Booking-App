@@ -24,6 +24,7 @@ export function BarberShopRegister() {
 		currentField,
 		cropperHook,
 	} = useBarberShopForm();
+	
 	const containerVariants = {
 		hidden: { opacity: 0 },
 		visible: {
@@ -99,7 +100,7 @@ export function BarberShopRegister() {
 							<Button
 								type="submit"
 								className="min-w-36 bg-indigo-600 hover:bg-indigo-700 text-white"
-								// disabled={isLoading}
+								disabled={isLoading}
 								>
 								{isLoading ? (
 									<>

@@ -1,4 +1,12 @@
-import { Home, LayoutDashboard, LucideScissors, Settings, Users } from "lucide-react";
+import {
+	Home,
+	LayoutDashboard,
+	LucideScissors,
+	NotepadText,
+	Settings,
+	Store,
+	Users,
+} from "lucide-react";
 
 const navItems = {
 	client: [
@@ -87,11 +95,6 @@ const navItems = {
 			path: "/admin/dashboard",
 		},
 		// {
-		// 	title: "Courses",
-		// 	icon: <BookOpen className="h-5 w-5" />,
-		// 	link: "/admin/courses",
-		// },
-		// {
 		// 	title: "Categories",
 		// 	icon: <Layers className="h-5 w-5" />,
 		// 	link: "/admin/categories",
@@ -116,11 +119,16 @@ const navItems = {
 		// 	icon: <Users className="h-5 w-5" />,
 		// 	link: "/admin/tutors",
 		// },
-		// {
-		// 	title: "Tutor Applications",
-		// 	icon: <NotepadText className="h-5 w-5" />,
-		// 	link: "/admin/tutors/applications",
-		// },
+		{
+			title: "Manage Shops",
+			icon: Store,
+			path: "/admin/shops",
+		},
+		{
+			title: "Shop Applications",
+			icon: NotepadText,
+			path: "/admin/shop-applications",
+		},
 		// {
 		// 	title: "Tutor Withdrawals",
 		// 	icon: <PiHandWithdrawDuotone className="h-5 w-5" />,

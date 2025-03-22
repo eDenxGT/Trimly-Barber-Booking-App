@@ -4,6 +4,8 @@ import { AdminAuth } from "@/pages/admin/AdminAuth";
 import { AdminBarberManagement } from "@/pages/admin/AdminBarberManagement";
 import { AdminClientManagement } from "@/pages/admin/AdminClientManagement";
 import { AdminDashboard } from "@/pages/admin/AdminDashboard";
+import { AdminBarberShopApplication } from "@/pages/admin/AdminShopApplications";
+import { AdminBarberShopManagement } from "@/pages/admin/AdminShopManagement";
 import { AdminChangePassword } from "@/pages/admin/settings/AdminChangePassword";
 import { AdminProfileEdit } from "@/pages/admin/settings/AdminEditProfile";
 import { AdminSettingsPage } from "@/pages/admin/settings/AdminSettings";
@@ -27,6 +29,11 @@ export const AdminRoutes = () => {
 				<Route path="dashboard" element={<AdminDashboard />} />
 				<Route path="clients" element={<AdminClientManagement />} />
 				<Route path="barbers" element={<AdminBarberManagement />} />
+				<Route path="shops" element={<AdminBarberShopManagement />} />
+				<Route
+					path="shop-applications"
+					element={<AdminBarberShopApplication />}
+				/>
 				<Route path="settings" element={<AdminSettingsPage />} />
 				<Route
 					path="settings/change-password"

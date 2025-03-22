@@ -14,6 +14,7 @@ import { BaseRoute } from "../base.route";
 //* ====== Controller Imports ====== *//
 import {
 	authController,
+	shopController,
 	userController,
 } from "../../di/resolver";
 
@@ -48,6 +49,23 @@ export class AdminRoutes extends BaseRoute {
 				userController.changeUserPassword(req, res);
 			}
 		);
+
+		this.router
+			.route("/admin/shops")
+			.get(
+				verifyAuth,
+				authorizeRole(["admin"]),
+				(req: Request, res: Response) => {
+					shopController.getAllShops(req, res);
+				}
+			)
+			.put(
+				verifyAuth,
+				authorizeRole(["admin"]),
+				(req: Request, res: Response) => {
+					shopController.updateShopStatus(req, res);
+				}
+			);
 
 		this.router
 			.route("/admin/details")

@@ -22,6 +22,7 @@ export const barberShopSchema = new Schema<IBarberShopModel>(
 			default: "shop_wallet",
 		},
 		description: { type: String },
+		email: { type: String },
 		contactNumber: { type: String },
 		bannerImage: String,
 		logoImage: String,

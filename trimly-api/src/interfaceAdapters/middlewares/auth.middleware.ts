@@ -8,6 +8,7 @@ const tokenService = new JWTService();
 
 export interface CustomJwtPayload extends JwtPayload {
 	id: string;
+	userId: string;
 	email: string;
 	role: string;
 	access_token: string;
@@ -151,6 +152,7 @@ export const decodeToken = async (
 		console.log(`Decoded`, user);
 		(req as CustomRequest).user = {
 			id: user?.id,
+			userId: user?.userId,
 			email: user?.email,
 			role: user?.role,
 			access_token: token.access_token,

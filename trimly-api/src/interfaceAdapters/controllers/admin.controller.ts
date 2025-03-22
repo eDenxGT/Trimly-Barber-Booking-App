@@ -8,5 +8,7 @@ import { IGetAllUsersUseCase } from "@/entities/useCaseInterfaces/users/get-all-
 
 @injectable()
 export class AdminController implements IAdminController {
-	constructor() {}
+	constructor() {
+		
+	}
 }

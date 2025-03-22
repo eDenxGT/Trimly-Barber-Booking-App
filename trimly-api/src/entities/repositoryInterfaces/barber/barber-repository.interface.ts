@@ -9,6 +9,8 @@ export interface IBarberRepository {
 		limit: number
 	): Promise<{ user: IBarberEntity[] | []; total: number }>;
 	findById(id: any): Promise<IBarberEntity | null>;
+	findByUserId(userId: string): Promise<IBarberEntity | null>;
+
 	updateByEmail(
 		email: string,
 		updates: Partial<IBarberEntity>

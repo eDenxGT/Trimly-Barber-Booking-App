@@ -5,12 +5,22 @@ import { barberShopValidationSchema } from "@/utils/validations/barber-shop.vali
 import { useCreateBarberShop } from "./useCreateBarberShop";
 import { useToaster } from "@/hooks/ui/useToaster";
 import { uploadToCloudinary } from "@/services/cloudinary/cloudinary";
+import { useMutation } from "@tanstack/react-query";
+import { IAxiosResponse } from "@/types/Response";
 
-export interface IBarberShopFormValues {
+export interface IBarberShopData {
+	id?: string;
+	shopId?: string;
+	owner?: string;
+	ownerName?: string;
+	barbers?: string[];
 	name: string;
 	description?: string;
+	contactNumber?: string;
+	paymentMode?: "shop_wallet" | "direct_payment";
 	address: {
 		display?: string;
+		street?: string;
 		city?: string;
 		state?: string;
 		country?: string;
@@ -20,17 +30,22 @@ export interface IBarberShopFormValues {
 			longitude: number;
 		};
 	};
+	commissionPercentage?: number;
+	daysOpen: string[];
+	openingTime: string;
+	closingTime: string;
+	email?: string;
 	amenities: {
 		wifi: boolean;
 		parking: boolean;
 	};
-	openingTime: string;
-	closingTime: string;
-	daysOpen: string[];
+	status?: "active" | "pending" | "blocked";
 	bannerImageFile: File | null;
 	bannerImage: string | null;
 	logoImage: string | null;
 	logoImageFile: File | null;
+	createdBy?: string;
+	approvedBy?: string;
 }
 
 export const DAYS_OF_WEEK = [
@@ -59,9 +74,7 @@ export const useBarberShopForm = () => {
 	} = useCreateBarberShop();
 	const { successToast, errorToast } = useToaster();
 
-	const handleCreateBarberShopSubmit = async (
-		data: IBarberShopFormValues
-	) => {
+	const handleCreateBarberShopSubmit = async (data: IBarberShopData) => {
 		try {
 			const uploadedBanner = data.bannerImageFile
 				? await uploadToCloudinary(data.bannerImageFile as File)
@@ -77,7 +90,10 @@ export const useBarberShopForm = () => {
 					logoImage: uploadedLogo || "",
 				},
 				{
-					onSuccess: (res) => successToast(res.message),
+					onSuccess: (res) => {
+						formik.resetForm();
+						successToast(res.message);
+					},
 					onError: (error: any) =>
 						errorToast(error.response.data.message),
 				}
@@ -88,25 +104,27 @@ export const useBarberShopForm = () => {
 		}
 	};
 
-	const formik = useFormik<IBarberShopFormValues>({
+	const formik = useFormik<IBarberShopData>({
 		initialValues: {
 			name: "",
 			description: "",
+			contactNumber: "",
 			address: {
 				display: "",
+				street: "",
 				city: "",
 				state: "",
 				country: "",
 				zipCode: "",
 				location: { latitude: 0, longitude: 0 },
 			},
-			amenities: { wifi: false, parking: false },
+			daysOpen: [],
 			openingTime: "",
 			closingTime: "",
-			daysOpen: [],
+			amenities: { wifi: false, parking: false },
+			bannerImageFile: null,
 			bannerImage: null,
-			bannerImageFile: null as File | null,
-			logoImageFile: null as File | null,
+			logoImageFile: null,
 			logoImage: null,
 		},
 		validationSchema: barberShopValidationSchema,
@@ -141,7 +159,6 @@ export const useBarberShopForm = () => {
 	const handleDayToggle = (day: string) => {
 		const currentDays = [...formik.values.daysOpen];
 		const dayIndex = currentDays.indexOf(day);
-		console.log(formik.values);
 		if (dayIndex === -1) {
 			currentDays.push(day);
 		} else {
@@ -169,4 +186,12 @@ export const useBarberShopForm = () => {
 		handleCropCancel,
 		handleDayToggle,
 	};
+};
+
+export const useShopStatusMutation = (
+	mutationFn: (data: Partial<IBarberShopData>) => Promise<IAxiosResponse>
+) => {
+	return useMutation<IAxiosResponse, Error, Partial<IBarberShopData>>({
+		mutationFn,
+	});
 };

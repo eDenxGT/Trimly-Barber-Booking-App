@@ -1,5 +1,5 @@
 import { inject, injectable } from "tsyringe";
-import { PaginatedUsers } from "@/entities/models/paginated-users.entity";
+import { IPaginatedUsers } from "@/entities/models/paginated/paginated-users.entity";
 import { IGetAllUsersUseCase } from "@/entities/useCaseInterfaces/users/get-all-users-usecase.interface";
 import { IClientRepository } from "@/entities/repositoryInterfaces/client/client-repository.interface";
 import { IBarberRepository } from "@/entities/repositoryInterfaces/barber/barber-repository.interface";
@@ -11,14 +11,15 @@ export class GetAllUsersUseCase implements IGetAllUsersUseCase {
 	constructor(
 		@inject("IClientRepository")
 		private _clientRepository: IClientRepository,
-		@inject("IBarberRepository") private _barberRepository: IBarberRepository
+		@inject("IBarberRepository")
+		private _barberRepository: IBarberRepository
 	) {}
 	async execute(
 		userType: string,
 		pageNumber: number,
 		pageSize: number,
 		searchTerm: string
-	): Promise<PaginatedUsers> {
+	): Promise<IPaginatedUsers> {
 		let filter: any = {};
 		if (userType) {
 			filter.role = userType;
@@ -42,7 +43,7 @@ export class GetAllUsersUseCase implements IGetAllUsersUseCase {
 				limit
 			);
 
-			const response: PaginatedUsers = {
+			const response: IPaginatedUsers = {
 				user,
 				total: Math.ceil(total / validPageSize),
 			};
@@ -56,7 +57,7 @@ export class GetAllUsersUseCase implements IGetAllUsersUseCase {
 				limit
 			);
 
-			const response: PaginatedUsers = {
+			const response: IPaginatedUsers = {
 				user,
 				total: Math.ceil(total / validPageSize),
 			};

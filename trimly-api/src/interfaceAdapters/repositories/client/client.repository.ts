@@ -35,6 +35,16 @@ export class ClientRepository implements IClientRepository {
 		} as IClientEntity;
 	}
 
+	async findByUserId(userId: string): Promise<IClientEntity | null> {
+		const client = await ClientModel.findOne({ userId }).lean();
+		if (!client) return null;
+
+		return {
+			...client,
+			id: client._id.toString(),
+		} as IClientEntity;
+	}
+
 	async find(
 		filter: any,
 		skip: number,

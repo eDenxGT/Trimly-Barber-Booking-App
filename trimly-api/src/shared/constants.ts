@@ -1,3 +1,5 @@
+import { config } from "./config";
+
 export const ROLES = {
 	ADMIN: "admin",
 	CLIENT: "client",
@@ -32,7 +34,8 @@ export const SUCCESS_MESSAGES = {
 	DATA_RETRIEVED: "Data retrieved successfully",
 	ACTION_SUCCESS: "Action performed successfully",
 	EMAIL_SENT_SUCCESSFULLY: "Email Sent Successfully",
-	WAITING_FOR_ADMIN_APPROVAL: "Registration request submitted. Awaiting admin approval.",
+	WAITING_FOR_ADMIN_APPROVAL:
+		"Registration request submitted. Awaiting admin approval.",
 } as const;
 
 export const ERROR_MESSAGES = {
@@ -56,9 +59,13 @@ export const ERROR_MESSAGES = {
 	UNAUTHORIZED_ACCESS: "Unauthorized access.",
 	SERVER_ERROR: "An error occurred, please try again later.",
 	VALIDATION_ERROR: "Validation error occurred.",
+	SHOP_UNDER_VERIFICATION:
+		"You already registered for a barber shop. Wait for admin approval.",
+	SHOP_EXISTS: "You already have a registered barber shop",
 	MISSING_PARAMETERS: "Missing required parameters.",
 	WRONG_CURRENT_PASSWORD: "Current password is wrong",
-	SAME_CURR_NEW_PASSWORD: "Please enter a different password from current password",
+	SAME_CURR_NEW_PASSWORD:
+		"Please enter a different password from current password",
 } as const;
 
 export const VERIFICATION_MAIL_CONTENT = (
@@ -184,5 +191,91 @@ export const PASSWORD_RESET_MAIL_CONTENT = (
    <div style="text-align: center; margin-top: 20px; font-size: 12px; color: #888;">
       © ${new Date().getFullYear()} Trimly. All rights reserved.<br>
       <span style="color: #FEBA43;">✦</span> Your Style, Our Priority <span style="color: #FEBA43;">✦</span>
+   </div>
+</div>`;
+
+export const SHOP_APPROVED_MAIL_CONTENT = (
+	shopName: string,
+	ownerName: string
+) => `<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
+   <!-- Logo Text Section -->
+   <div style="text-align: center; margin-bottom: 30px;">
+      <h1 style="font-size: 48px; font-weight: bold; margin: 0;">
+         ✂️ <span style="color: #FEBA43;">Trimly</span>
+      </h1>
+   </div>
+
+   <h2 style="color: #FEBA43; text-align: center; margin-bottom: 30px;">
+      🎉 Congratulations, ${ownerName}! Your shop is now approved! 🚀
+   </h2>
+   
+   <p style="font-size: 16px; line-height: 1.5; margin-bottom: 20px;">
+      Your barbershop <strong>${shopName}</strong> has been successfully approved and is now live on the Trimly platform! ✂️  
+      You can start managing your appointments, attracting clients, and growing your business.
+   </p>
+   
+   <div style="text-align: center; margin: 30px 0;">
+      <a href="${config.cors.ALLOWED_ORIGIN}/barber/dashboard" 
+         style="background-color: #FEBA43; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-size: 16px; display: inline-block;">
+         Go to Dashboard
+      </a>
+   </div>
+   
+   <p style="font-size: 14px; color: #666;">
+      📅 Keep your profile updated, add your available slots, and start receiving bookings today!
+   </p>
+   
+   <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: center;">
+      <p style="font-size: 14px; color: #888;">
+         Need help? We're here for you! 💡<br>
+         Contact us at <a href="mailto:support@trimly.in" style="color: #FEBA43; text-decoration: none;">support@trimly.in</a>
+      </p>
+   </div>
+
+   <div style="text-align: center; margin-top: 20px; font-size: 12px; color: #888;">
+      © ${new Date().getFullYear()} Trimly. All rights reserved.
+   </div>
+</div>`;
+
+export const SHOP_REJECTED_MAIL_CONTENT = (
+	shopName: string,
+	ownerName: string
+) => `<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
+   <!-- Logo Text Section -->
+   <div style="text-align: center; margin-bottom: 30px;">
+      <h1 style="font-size: 48px; font-weight: bold; margin: 0;">
+         ✂️ <span style="color: #FEBA43;">Trimly</span>
+      </h1>
+   </div>
+
+   <h2 style="color: #FEBA43; text-align: center; margin-bottom: 30px;">
+      ❌ Hello, ${ownerName}. Your shop application was not approved.
+   </h2>
+   
+   <p style="font-size: 16px; line-height: 1.5; margin-bottom: 20px;">
+      We appreciate your interest in joining Trimly. Unfortunately, your barbershop <strong>${shopName}</strong> 
+      did not meet our approval criteria at this time. 🚧
+   </p>
+   
+   <p style="font-size: 14px; color: #666;">
+      🔍 If you believe this was an error, or if you would like to improve your application, please review our guidelines and reapply.
+   </p>
+
+   <div style="text-align: center; margin: 30px 0;">
+      <a href="https://trimly.in/support" 
+         style="background-color: #FEBA43; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-size: 16px; display: inline-block;">
+         Contact Support
+      </a>
+   </div>
+   
+   <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: center;">
+      <p style="font-size: 14px; color: #888;">
+         Need help? We're here for you! 💡<br>
+         Contact us at <a href="mailto:support@trimly.in" style="color: #FEBA43; text-decoration: none;">support@trimly.in</a>
+      </p>
+   </div>
+
+   <div style="text-align: center; margin-top: 20px; font-size: 12px; color: #888;">
+      © ${new Date().getFullYear()} Trimly. All rights reserved.
    </div>
 </div>`;

@@ -6,6 +6,7 @@ import ms from "ms";
 
 interface JWTPayloadData {
 	id: string;
+	userId: string;
 	email: string;
 	role: string;
 }
@@ -34,6 +35,7 @@ export class JWTService implements ITokenService {
 
 	generateAccessToken(payload: {
 		id: string;
+		userId: string;
 		email: string;
 		role: string;
 	}): string {
@@ -43,6 +45,7 @@ export class JWTService implements ITokenService {
 	}
 	generateRefreshToken(payload: {
 		id: string;
+		userId: string;
 		email: string;
 		role: string;
 	}): string {

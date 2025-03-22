@@ -34,6 +34,16 @@ export class AdminRepository implements IAdminRepository {
 		} as IAdminEntity;
 	}
 
+	async findByUserId(userId: string): Promise<IAdminEntity | null> {
+		const admin = await AdminModel.findOne({ userId }).lean();
+		if (!admin) return null;
+
+		return {
+			...admin,
+			id: admin._id.toString(),
+		} as IAdminEntity;
+	}
+
 	async findByIdAndUpdate(
 		id: any,
 		updateData: Partial<IAdminEntity>

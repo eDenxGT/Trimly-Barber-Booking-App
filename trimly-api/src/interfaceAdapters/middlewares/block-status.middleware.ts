@@ -12,13 +12,13 @@ import { IBarberRepository } from "@/entities/repositoryInterfaces/barber/barber
 export class BlockStatusMiddleware {
 	constructor(
 		@inject("IClientRepository")
-		private readonly clientRepository: IClientRepository,
+		private readonly _clientRepository: IClientRepository,
 		@inject("IBarberRepository")
-		private readonly barberRepository: IBarberRepository,
+		private readonly _barberRepository: IBarberRepository,
 		@inject("IBlackListTokenUseCase")
-		private readonly blacklistTokenUseCase: IBlackListTokenUseCase,
+		private readonly _blacklistTokenUseCase: IBlackListTokenUseCase,
 		@inject("IRevokeRefreshTokenUseCase")
-		private readonly revokeRefreshTokenUseCase: IRevokeRefreshTokenUseCase
+		private readonly _revokeRefreshTokenUseCase: IRevokeRefreshTokenUseCase
 	) {}
 	checkStatus = async (
 		req: CustomRequest,
@@ -36,7 +36,7 @@ export class BlockStatusMiddleware {
 			const { id, role } = req.user;
 			let status: string | undefined = "active";
 			if (role === "client") {
-				const client = await this.clientRepository.findById(id);
+				const client = await this._clientRepository.findById(id);
 				if (!client) {
 					res.status(HTTP_STATUS.NOT_FOUND).json({
 						success: false,
@@ -46,7 +46,7 @@ export class BlockStatusMiddleware {
 				}
 				status = client.status;
 			} else if (role === "barber") {
-				const barber = await this.barberRepository.findById(id);
+				const barber = await this._barberRepository.findById(id);
 				if (!barber) {
 					res.status(HTTP_STATUS.NOT_FOUND).json({
 						success: false,
@@ -63,9 +63,9 @@ export class BlockStatusMiddleware {
 				return;
 			}
 			if (status !== "active") {
-				await this.blacklistTokenUseCase.execute(req.user.access_token);
+				await this._blacklistTokenUseCase.execute(req.user.access_token);
 
-				await this.revokeRefreshTokenUseCase.execute(
+				await this._revokeRefreshTokenUseCase.execute(
 					req.user.refresh_token
 				);
 
